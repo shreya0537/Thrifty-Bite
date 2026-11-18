@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thrifty Bite | Restaurant Dashboard</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/theme.css">
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="brand">
+        THRIFTY BITE
+        <span>RESTAURANT DASHBOARD</span>
+    </div>
+
+    <nav class="nav-links">
+        <a href="home.html">Storefront</a>
+    </nav>
+
+    <div class="nav-right">
+        <span class="muted small" id="restaurantName">Restaurant</span>
+        <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="page-header">
+        <h1>Restaurant Dashboard</h1>
+        <p>Manage your profile, food categories, menu and incoming orders.</p>
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="profile">Profile</button>
+        <button class="tab-btn" data-tab="categories">Categories</button>
+        <button class="tab-btn" data-tab="menu">Menu</button>
+        <button class="tab-btn" data-tab="orders">Orders</button>
+    </div>
+
+    <!-- ============ PROFILE ============ -->
+    <div class="tab-panel active" id="tab-profile">
+        <div class="card">
+            <h2>Restaurant Profile</h2>
+            <form id="profileForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Restaurant Name</label>
+                        <input type="text" id="profileName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Owner Name</label>
+                        <input type="text" id="profileOwnerName" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Mobile</label>
+                        <input type="tel" id="profileMobile">
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" id="profileAddress">
+                    </div>
+                </div>
+                <button type="submit" class="btn">Save Profile</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============ CATEGORIES ============ -->
+    <div class="tab-panel" id="tab-categories">
+        <div class="card">
+            <h2>Food Categories</h2>
+            <form id="categoryForm" class="flex gap-8">
+                <input type="text" id="categoryName" placeholder="e.g. Biryani, Desserts" required>
+                <button type="submit" class="btn btn-sm">Add</button>
+            </form>
+            <div class="mt-20" id="categoryList">
+                <div class="empty-state">No categories yet.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ MENU ============ -->
+    <div class="tab-panel" id="tab-menu">
+        <div class="card">
+            <h2 id="menuFormTitle">Add Menu Item</h2>
+            <form id="menuForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="menuName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="menuCategory" required></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="menuDescription" required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Price (₹)</label>
+                        <input type="number" id="menuPrice" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Discount Price (₹)</label>
+                        <input type="number" id="menuDiscountPrice" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select id="menuIsVeg">
+                            <option value="true">Veg</option>
+                            <option value="false">Non-Veg</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Image URL (optional)</label>
+                    <input type="text" id="menuImage" placeholder="https://...">
+                </div>
+                <div class="flex gap-8">
+                    <button type="submit" class="btn" id="menuSubmitBtn">Add Item</button>
+                    <button type="button" class="btn btn-outline" id="menuCancelEditBtn" style="display:none">Cancel Edit</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>My Menu</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Photo</th><th>Name</th><th>Category</th><th>Price</th>
+                            <th>Available</th><th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="menuTableBody">
+                        <tr><td colspan="6" class="empty-state">No menu items yet.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ ORDERS ============ -->
+    <div class="tab-panel" id="tab-orders">
+        <div class="card">
+            <div class="flex-between">
+                <h2>Orders</h2>
+                <select id="orderStatusFilter" style="width:auto">
+                    <option value="">All statuses</option>
+                    <option value="PLACED">Placed</option>
+                    <option value="ACCEPTED">Accepted</option>
+                    <option value="PREPARING">Preparing</option>
+                    <option value="READY">Ready</option>
+                    <option value="OUT_FOR_DELIVERY">Out for delivery</option>
+                    <option value="DELIVERED">Delivered</option>
+                    <option value="COMPLETED">Completed</option>
+                    <option value="REJECTED">Rejected</option>
+                </select>
+            </div>
+            <div class="table-wrap mt-20">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Customer</th><th>Items</th><th>Total</th>
+                            <th>Status</th><th>Placed</th><th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <tr><td colspan="6" class="empty-state">No orders yet.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="assets/api.js"></script>
+<script>
+
+const user = requireAuth(["RESTAURANT"]);
+
+if(user){
+
+    document.getElementById("restaurantName").textContent = user.name || user.username;
+
+
+    /* =========================================================
+       TABS
+    ========================================================= */
+
+    document.querySelectorAll(".tab-btn").forEach(function(btn){
+        btn.addEventListener("click", function(){
+            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+            document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+            btn.classList.add("active");
+            document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+        });
+    });
+
+    const messageEl = document.getElementById("message");
+
+
+    /* =========================================================
+       PROFILE
+    ========================================================= */
+
+    async function loadProfile(){
+        try{
+            const data = await apiFetch("/restaurant/profile");
+            document.getElementById("profileName").value = data.restaurant.name || "";
+            document.getElementById("profileOwnerName").value = data.restaurant.ownerName || "";
+            document.getElementById("profileMobile").value = data.restaurant.mobile || "";
+            document.getElementById("profileAddress").value = data.restaurant.address || "";
+            document.getElementById("restaurantName").textContent = data.restaurant.name || data.restaurant.username;
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    document.getElementById("profileForm").addEventListener("submit", async function(e){
+        e.preventDefault();
+        try{
+            await apiFetch("/restaurant/profile", {
+                method: "PUT",
+                body: JSON.stringify({
+                    name: document.getElementById("profileName").value.trim(),
+                    ownerName: document.getElementById("profileOwnerName").value.trim(),
+                    mobile: document.getElementById("profileMobile").value.trim(),
+                    address: document.getElementById("profileAddress").value.trim()
+                })
+            });
+            showMessage(messageEl, "Profile updated successfully!", "success");
+            loadProfile();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    });
+
+
+    /* =========================================================
+       CATEGORIES
+    ========================================================= */
+
+    let categories = [];
+
+    async function loadCategories(){
+        try{
+            const data = await apiFetch("/restaurant/categories");
+            categories = data.categories || [];
+            renderCategories();
+            renderCategoryOptions();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    function renderCategories(){
+        const list = document.getElementById("categoryList");
+        if(categories.length === 0){
+            list.innerHTML = '<div class="empty-state">No categories yet.</div>';
+            return;
+        }
+        list.innerHTML = categories.map(function(c){
+            return '<div class="flex-between mt-12" style="border-bottom:1px solid rgba(212,175,55,.15);padding-bottom:10px">'
+                + '<span>' + escapeHtml(c.name) + '</span>'
+                + '<button class="btn btn-sm btn-danger" onclick="deleteCategory(\'' + c._id + '\')">Delete</button>'
+                + '</div>';
+        }).join("");
+    }
+
+    function renderCategoryOptions(){
+        const select = document.getElementById("menuCategory");
+        const current = select.value;
+        select.innerHTML = categories.map(function(c){
+            return '<option value="' + escapeHtml(c.name) + '">' + escapeHtml(c.name) + '</option>';
+        }).join("");
+        if(current) select.value = current;
+    }
+
+    document.getElementById("categoryForm").addEventListener("submit", async function(e){
+        e.preventDefault();
+        const input = document.getElementById("categoryName");
+        try{
+            await apiFetch("/restaurant/categories", {
+                method: "POST",
+                body: JSON.stringify({ name: input.value.trim() })
+            });
+            input.value = "";
+            showMessage(messageEl, "Category added!", "success");
+            loadCategories();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    });
+
+    window.deleteCategory = async function deleteCategory(id){
+        try{
+            await apiFetch("/restaurant/categories/" + id, { method: "DELETE" });
+            loadCategories();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+
+    /* =========================================================
+       MENU
+    ========================================================= */
+
+    let editingMenuId = null;
+
+    async function loadMenu(){
+        try{
+            const data = await apiFetch("/restaurant/menu");
+            const body = document.getElementById("menuTableBody");
+            if(!data.menu || data.menu.length === 0){
+                body.innerHTML = '<tr><td colspan="6" class="empty-state">No menu items yet.</td></tr>';
+                return;
+            }
+            body.innerHTML = data.menu.map(function(item){
+                return "<tr>"
+                    + "<td><img class='thumb' src='" + escapeHtml(item.image || "images/food-placeholder.svg") + "' onerror=\"this.src='images/food-placeholder.svg'\" alt=''></td>"
+                    + "<td>" + escapeHtml(item.name) + "</td>"
+                    + "<td>" + escapeHtml(item.category) + "</td>"
+                    + "<td>" + formatMoney(item.discountPrice) + "</td>"
+                    + "<td><span class='badge " + (item.isAvailable ? "success" : "danger") + "'>"
+                        + (item.isAvailable ? "Available" : "Hidden") + "</span></td>"
+                    + "<td class='flex gap-8'>"
+                        + "<button class='btn btn-sm btn-outline' onclick=\"editMenuItem('" + item._id + "')\">Edit</button>"
+                        + "<button class='btn btn-sm btn-outline' onclick=\"toggleMenuAvailability('" + item._id + "'," + !item.isAvailable + ")\">"
+                            + (item.isAvailable ? "Hide" : "Show") + "</button>"
+                        + "<button class='btn btn-sm btn-danger' onclick=\"deleteMenuItem('" + item._id + "')\">Delete</button>"
+                    + "</td>"
+                    + "</tr>";
+            }).join("");
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    window.menuItemsCache = {};
+
+    window.editMenuItem = async function editMenuItem(id){
+        try{
+            const data = await apiFetch("/restaurant/menu");
+            const item = (data.menu || []).find(m => m._id === id);
+            if(!item) return;
+
+            editingMenuId = id;
+            document.getElementById("menuName").value = item.name;
+            document.getElementById("menuDescription").value = item.description;
+            document.getElementById("menuPrice").value = item.price;
+            document.getElementById("menuDiscountPrice").value = item.discountPrice;
+            document.getElementById("menuIsVeg").value = String(item.isVeg);
+            document.getElementById("menuImage").value = item.image || "";
+            document.getElementById("menuCategory").value = item.category;
+
+            document.getElementById("menuFormTitle").textContent = "Edit Menu Item";
+            document.getElementById("menuSubmitBtn").textContent = "Save Changes";
+            document.getElementById("menuCancelEditBtn").style.display = "inline-flex";
+
+            document.querySelector('.tab-btn[data-tab="menu"]').click();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    function resetMenuForm(){
+        editingMenuId = null;
+        document.getElementById("menuForm").reset();
+        document.getElementById("menuFormTitle").textContent = "Add Menu Item";
+        document.getElementById("menuSubmitBtn").textContent = "Add Item";
+        document.getElementById("menuCancelEditBtn").style.display = "none";
+    }
+
+    document.getElementById("menuCancelEditBtn").addEventListener("click", resetMenuForm);
+
+    document.getElementById("menuForm").addEventListener("submit", async function(e){
+        e.preventDefault();
+
+        const payload = {
+            name: document.getElementById("menuName").value.trim(),
+            description: document.getElementById("menuDescription").value.trim(),
+            category: document.getElementById("menuCategory").value,
+            price: Number(document.getElementById("menuPrice").value),
+            discountPrice: Number(document.getElementById("menuDiscountPrice").value),
+            isVeg: document.getElementById("menuIsVeg").value === "true",
+            image: document.getElementById("menuImage").value.trim()
+        };
+
+        if(!payload.category){
+            showMessage(messageEl, "Please add a category first.", "error");
+            return;
+        }
+
+        try{
+            if(editingMenuId){
+                await apiFetch("/restaurant/menu/" + editingMenuId, {
+                    method: "PUT",
+                    body: JSON.stringify(payload)
+                });
+                showMessage(messageEl, "Menu item updated!", "success");
+            }else{
+                await apiFetch("/restaurant/menu", {
+                    method: "POST",
+                    body: JSON.stringify(payload)
+                });
+                showMessage(messageEl, "Menu item added!", "success");
+            }
+            resetMenuForm();
+            loadMenu();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    });
+
+    window.toggleMenuAvailability = async function toggleMenuAvailability(id, isAvailable){
+        try{
+            await apiFetch("/restaurant/menu/" + id, {
+                method: "PUT",
+                body: JSON.stringify({ isAvailable })
+            });
+            loadMenu();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    window.deleteMenuItem = async function deleteMenuItem(id){
+        try{
+            await apiFetch("/restaurant/menu/" + id, { method: "DELETE" });
+            showMessage(messageEl, "Menu item deleted.", "success");
+            loadMenu();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+
+    /* =========================================================
+       ORDERS
+    ========================================================= */
+
+    const ORDER_ACTIONS = {
+        PLACED: [["ACCEPTED","Accept"],["REJECTED","Reject"]],
+        ACCEPTED: [["PREPARING","Start Preparing"]],
+        PREPARING: [["READY","Mark Ready"]],
+        READY: [["OUT_FOR_DELIVERY","Out for Delivery"]],
+        OUT_FOR_DELIVERY: [["DELIVERED","Mark Delivered"]],
+        DELIVERED: [["COMPLETED","Mark Completed"]]
+    };
+
+    async function loadOrders(){
+        const status = document.getElementById("orderStatusFilter").value;
+        try{
+            const query = status ? "?status=" + status : "";
+            const data = await apiFetch("/restaurant/orders" + query);
+            const body = document.getElementById("ordersTableBody");
+
+            if(!data.orders || data.orders.length === 0){
+                body.innerHTML = '<tr><td colspan="6" class="empty-state">No orders yet.</td></tr>';
+                return;
+            }
+
+            body.innerHTML = data.orders.map(function(order){
+                const itemsText = order.items.map(i => i.name + " x" + i.quantity).join(", ");
+                const actions = (ORDER_ACTIONS[order.status] || []).map(function(a){
+                    return "<button class='btn btn-sm btn-outline' onclick=\"updateOrderStatus('" + order._id + "','" + a[0] + "')\">" + a[1] + "</button>";
+                }).join(" ");
+
+                return "<tr>"
+                    + "<td>" + escapeHtml(order.customerId ? (order.customerId.name || order.customerId.username) : "-") + "</td>"
+                    + "<td>" + escapeHtml(itemsText) + "</td>"
+                    + "<td>" + formatMoney(order.totalAmount) + "</td>"
+                    + "<td><span class='badge " + statusBadgeClass(order.status) + "'>" + statusLabel(order.status) + "</span></td>"
+                    + "<td>" + formatDateTime(order.createdAt) + "</td>"
+                    + "<td class='flex gap-8'>" + (actions || "-") + "</td>"
+                    + "</tr>";
+            }).join("");
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    window.updateOrderStatus = async function updateOrderStatus(id, status){
+        try{
+            await apiFetch("/restaurant/orders/" + id + "/status", {
+                method: "PUT",
+                body: JSON.stringify({ status })
+            });
+            loadOrders();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    document.getElementById("orderStatusFilter").addEventListener("change", loadOrders);
+
+
+    /* =========================================================
+       INIT
+    ========================================================= */
+
+    loadProfile();
+    loadCategories();
+    loadMenu();
+    loadOrders();
+
+}
+
+</script>
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+</html>

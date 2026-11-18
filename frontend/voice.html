@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Voice Ordering | Thrifty Bite</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,body{
+    width:100%;
+    min-height:100%;
+}
+
+body{
+    font-family:"DM Sans",sans-serif;
+    color:#fff;
+    background:
+        radial-gradient(circle at 15% 15%,rgba(212,175,55,.16),transparent 25%),
+        radial-gradient(circle at 85% 80%,rgba(143,29,60,.35),transparent 30%),
+        linear-gradient(135deg,#2b0714,#4b0d1d 50%,#260611);
+    overflow-x:hidden;
+}
+
+/* Royal Border */
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:10px;
+    border:1px solid rgba(212,175,55,.45);
+    pointer-events:none;
+    z-index:100;
+}
+
+body::after{
+    content:"";
+    position:fixed;
+    inset:17px;
+    border:1px solid rgba(247,223,122,.14);
+    pointer-events:none;
+    z-index:100;
+}
+
+/* Sparks */
+
+.spark{
+    position:fixed;
+    width:4px;
+    height:4px;
+    background:#f7df7a;
+    border-radius:50%;
+    box-shadow:0 0 12px #d4af37;
+    opacity:.7;
+    animation:floatSpark 6s infinite ease-in-out;
+    pointer-events:none;
+}
+
+.spark:nth-child(1){
+    left:12%;
+    top:20%;
+}
+
+.spark:nth-child(2){
+    left:80%;
+    top:25%;
+    animation-delay:1s;
+}
+
+.spark:nth-child(3){
+    left:20%;
+    top:75%;
+    animation-delay:2s;
+}
+
+.spark:nth-child(4){
+    left:88%;
+    top:70%;
+    animation-delay:3s;
+}
+
+@keyframes floatSpark{
+    0%,100%{
+        transform:translateY(0);
+        opacity:.25;
+    }
+    50%{
+        transform:translateY(-25px);
+        opacity:1;
+    }
+}
+
+/* Header */
+
+.topbar{
+    height:78px;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 7%;
+    background:rgba(24,3,11,.72);
+    backdrop-filter:blur(15px);
+    border-bottom:1px solid rgba(212,175,55,.25);
+    position:relative;
+    z-index:5;
+}
+
+.logo-area{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    cursor:pointer;
+}
+
+.logo{
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid #d4af37;
+    box-shadow:0 0 18px rgba(212,175,55,.35);
+}
+
+.logo-text{
+    font-family:"Cinzel",serif;
+    font-size:21px;
+    color:#f7df7a;
+    letter-spacing:1px;
+}
+
+.nav{
+    display:flex;
+    align-items:center;
+    gap:28px;
+}
+
+.nav a{
+    color:#eee;
+    text-decoration:none;
+    font-size:14px;
+    transition:.3s;
+}
+
+.nav a:hover,
+.nav a.active{
+    color:#f7df7a;
+    text-shadow:0 0 12px rgba(212,175,55,.45);
+}
+
+.actions{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.icon-btn{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    border:1px solid rgba(212,175,55,.5);
+    background:rgba(255,255,255,.05);
+    color:#f7df7a;
+    cursor:pointer;
+    font-size:18px;
+    transition:.3s;
+}
+
+.icon-btn:hover{
+    background:rgba(212,175,55,.15);
+    transform:translateY(-2px);
+    box-shadow:0 0 18px rgba(212,175,55,.2);
+}
+
+/* Main */
+
+main{
+    width:100%;
+    min-height:calc(100vh - 78px);
+    padding:55px 8% 70px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+/* Heading */
+
+.heading{
+    text-align:center;
+    max-width:850px;
+    margin-bottom:40px;
+}
+
+.heading .eyebrow{
+    color:#d4af37;
+    text-transform:uppercase;
+    letter-spacing:4px;
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:12px;
+}
+
+.heading h1{
+    font-family:"Cinzel",serif;
+    font-size:clamp(35px,5vw,62px);
+    line-height:1.1;
+    color:#f7df7a;
+    margin-bottom:15px;
+}
+
+.heading p{
+    color:#d9cfd2;
+    font-size:16px;
+    line-height:1.7;
+}
+
+/* Voice Card */
+
+.voice-card{
+    width:min(900px,100%);
+    background:rgba(38,6,17,.78);
+    border:1px solid rgba(212,175,55,.35);
+    border-radius:28px;
+    padding:40px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.35),
+        inset 0 0 50px rgba(212,175,55,.035);
+}
+
+.voice-card::before{
+    content:"";
+    position:absolute;
+    width:300px;
+    height:300px;
+    border-radius:50%;
+    background:rgba(212,175,55,.07);
+    filter:blur(50px);
+    top:-170px;
+    right:-120px;
+}
+
+.voice-card::after{
+    content:"";
+    position:absolute;
+    width:250px;
+    height:250px;
+    border-radius:50%;
+    background:rgba(143,29,60,.16);
+    filter:blur(55px);
+    bottom:-150px;
+    left:-100px;
+}
+
+.voice-content{
+    position:relative;
+    z-index:2;
+}
+
+/* Language */
+
+.language-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    margin-bottom:35px;
+}
+
+.language-row label{
+    color:#d8c9ce;
+    font-size:14px;
+}
+
+.language-row select{
+    min-width:190px;
+    padding:12px 15px;
+    border-radius:12px;
+    border:1px solid rgba(212,175,55,.4);
+    background:#2b0714;
+    color:#fff;
+    outline:none;
+    font-family:inherit;
+}
+
+.language-row select:focus{
+    border-color:#f7df7a;
+    box-shadow:0 0 12px rgba(212,175,55,.15);
+}
+
+/* Mic */
+
+.mic-wrapper{
+    display:flex;
+    justify-content:center;
+    margin:10px 0 25px;
+}
+
+.mic-button{
+    width:125px;
+    height:125px;
+    border-radius:50%;
+    border:2px solid #d4af37;
+    background:
+        radial-gradient(circle,#64162d,#3b0818);
+    color:#f7df7a;
+    font-size:45px;
+    cursor:pointer;
+    position:relative;
+    transition:.35s;
+    box-shadow:
+        0 0 0 10px rgba(212,175,55,.05),
+        0 0 40px rgba(212,175,55,.18);
+}
+
+.mic-button:hover{
+    transform:scale(1.05);
+    box-shadow:
+        0 0 0 15px rgba(212,175,55,.06),
+        0 0 55px rgba(212,175,55,.3);
+}
+
+.mic-button.listening{
+    animation:pulseMic 1.3s infinite;
+}
+
+@keyframes pulseMic{
+    0%{
+        box-shadow:
+            0 0 0 0 rgba(212,175,55,.45),
+            0 0 35px rgba(212,175,55,.25);
+    }
+
+    70%{
+        box-shadow:
+            0 0 0 28px rgba(212,175,55,0),
+            0 0 60px rgba(212,175,55,.35);
+    }
+
+    100%{
+        box-shadow:
+            0 0 0 0 rgba(212,175,55,0),
+            0 0 35px rgba(212,175,55,.2);
+    }
+}
+
+.status{
+    text-align:center;
+    color:#d8c9ce;
+    min-height:24px;
+    margin-bottom:25px;
+    font-size:14px;
+}
+
+.status.active{
+    color:#f7df7a;
+}
+
+/* Transcript */
+
+.transcript-box{
+    min-height:150px;
+    border:1px solid rgba(212,175,55,.25);
+    background:rgba(0,0,0,.16);
+    border-radius:18px;
+    padding:22px;
+    margin-bottom:22px;
+}
+
+.transcript-label{
+    font-size:12px;
+    color:#d4af37;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    margin-bottom:12px;
+}
+
+#transcript{
+    color:#fff;
+    font-size:17px;
+    line-height:1.7;
+    min-height:65px;
+}
+
+.placeholder{
+    color:#8e7f85;
+}
+
+/* Buttons */
+
+.button-row{
+    display:flex;
+    gap:14px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.btn{
+    border:none;
+    padding:14px 26px;
+    border-radius:13px;
+    font-family:inherit;
+    font-weight:700;
+    cursor:pointer;
+    transition:.3s;
+    min-width:170px;
+}
+
+.btn-primary{
+    color:#260611;
+    background:linear-gradient(135deg,#d4af37,#f7df7a);
+    box-shadow:0 8px 25px rgba(212,175,55,.15);
+}
+
+.btn-primary:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 30px rgba(212,175,55,.28);
+}
+
+.btn-secondary{
+    color:#f7df7a;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(212,175,55,.4);
+}
+
+.btn-secondary:hover{
+    background:rgba(212,175,55,.1);
+    transform:translateY(-2px);
+}
+
+.btn:disabled{
+    opacity:.4;
+    cursor:not-allowed;
+    transform:none;
+}
+
+/* Match Results */
+
+.match-results{
+    margin-top:8px;
+}
+
+.match-results:empty{
+    display:none;
+}
+
+.match-item{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:14px 16px;
+    border:1px solid rgba(212,175,55,.22);
+    border-radius:14px;
+    background:rgba(0,0,0,.14);
+    margin-bottom:10px;
+}
+
+.match-item img{
+    width:52px;
+    height:40px;
+    object-fit:cover;
+    border-radius:8px;
+    border:1px solid rgba(212,175,55,.3);
+    flex-shrink:0;
+}
+
+.match-item-info{
+    flex:1;
+    min-width:0;
+}
+
+.match-item-info .name{
+    color:#fff;
+    font-size:15px;
+    font-weight:600;
+}
+
+.match-item-info .heard{
+    color:#a99ba0;
+    font-size:12px;
+    margin-top:2px;
+}
+
+.match-item-price{
+    color:#f7df7a;
+    font-size:14px;
+    white-space:nowrap;
+}
+
+.match-item-qty{
+    width:56px;
+    padding:8px;
+    text-align:center;
+    border-radius:8px;
+    border:1px solid rgba(212,175,55,.4);
+    background:#2b0714;
+    color:#fff;
+    font-family:inherit;
+}
+
+.match-item-remove{
+    background:none;
+    border:none;
+    color:#e2555a;
+    font-size:18px;
+    cursor:pointer;
+    line-height:1;
+}
+
+.match-item-fav{
+    width:32px;
+    height:32px;
+    flex-shrink:0;
+    border-radius:50%;
+    border:1px solid rgba(212,175,55,.5);
+    background:rgba(38,6,17,.72);
+    color:#eadfca;
+    font-size:16px;
+    line-height:1;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.match-item-fav:hover{
+    background:rgba(212,175,55,.2);
+    transform:scale(1.08);
+}
+
+.match-item-fav.active{
+    color:#ff5a7a;
+    border-color:#ff5a7a;
+}
+
+.unmatched-note{
+    color:#e0a531;
+    font-size:13px;
+    margin:14px 0;
+    text-align:center;
+}
+
+.match-actions{
+    display:flex;
+    gap:14px;
+    justify-content:center;
+    margin-top:18px;
+}
+
+/* Manual */
+
+.manual-card{
+    width:min(900px,100%);
+    margin-top:25px;
+    padding:24px 28px;
+    border:1px solid rgba(212,175,55,.18);
+    background:rgba(255,255,255,.025);
+    border-radius:18px;
+    text-align:center;
+}
+
+.manual-card h3{
+    font-family:"Cinzel",serif;
+    color:#f7df7a;
+    margin-bottom:7px;
+}
+
+.manual-card p{
+    color:#a99ba0;
+    font-size:14px;
+    margin-bottom:18px;
+}
+
+.manual-button{
+    display:inline-block;
+    text-decoration:none;
+}
+
+/* Message */
+
+.message{
+    position:fixed;
+    right:30px;
+    bottom:30px;
+    max-width:350px;
+    padding:16px 20px;
+    border-radius:14px;
+    background:#260611;
+    border:1px solid rgba(212,175,55,.5);
+    color:#fff;
+    box-shadow:0 15px 35px rgba(0,0,0,.4);
+    transform:translateY(130px);
+    opacity:0;
+    transition:.4s;
+    z-index:200;
+}
+
+.message.show{
+    transform:translateY(0);
+    opacity:1;
+}
+
+.message.success{
+    border-color:#d4af37;
+}
+
+.message.error{
+    border-color:#8f1d3c;
+}
+
+@media(max-width:900px){
+
+    .nav{
+        display:none;
+    }
+
+    .topbar{
+        padding:0 5%;
+    }
+
+    main{
+        padding:40px 5% 60px;
+    }
+
+    .voice-card{
+        padding:28px 20px;
+    }
+}
+
+@media(max-width:600px){
+
+    .logo-text{
+        font-size:17px;
+    }
+
+    .actions{
+        gap:6px;
+    }
+
+    .icon-btn{
+        width:38px;
+        height:38px;
+    }
+
+    .language-row{
+        flex-direction:column;
+    }
+
+    .mic-button{
+        width:105px;
+        height:105px;
+    }
+
+    .btn{
+        width:100%;
+    }
+}
+</style>
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+
+<body>
+
+<!-- Decorative sparks -->
+
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+
+<!-- Header -->
+
+<header class="topbar">
+
+    <div class="logo-area" onclick="goHome()">
+
+        <img
+            src="logo.jpeg"
+            class="logo"
+            alt="Thrifty Bite Logo"
+            onerror="this.style.display='none'"
+        >
+
+        <span class="logo-text">THRIFTY BITE</span>
+
+    </div>
+
+    <nav class="nav">
+
+        <a href="home.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="my-orders.html">Track Order</a>
+        <a href="blog.html">Blog</a>
+        <a href="help.html">Help</a>
+
+    </nav>
+
+    <div class="actions">
+
+        <button
+            class="icon-btn"
+            title="Profile"
+            onclick="openProfile()"
+        >
+            ♙
+        </button>
+
+        <button
+            class="icon-btn"
+            title="Cart"
+            onclick="openCart()"
+        >
+            🛒
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- Main -->
+
+<main>
+
+    <section class="heading">
+
+        <div class="eyebrow">
+            Smart Ordering
+        </div>
+
+        <h1>
+            Speak Your Craving
+        </h1>
+
+        <p>
+            Tell Thrifty Bite what you want.
+            We'll capture your order and send it to your order page.
+            No typing required.
+        </p>
+
+    </section>
+
+
+    <section class="voice-card">
+
+        <div class="voice-content">
+
+            <!-- Language -->
+
+            <div class="language-row">
+
+                <label for="language">
+                    Choose Language
+                </label>
+
+                <select id="language">
+
+                    <option value="en-IN">
+                        English
+                    </option>
+
+                    <option value="ta-IN">
+                        தமிழ்
+                    </option>
+
+                    <option value="hi-IN">
+                        हिन्दी
+                    </option>
+
+                    <option value="kn-IN">
+                        ಕನ್ನಡ
+                    </option>
+
+                    <option value="te-IN">
+                        తెలుగు
+                    </option>
+
+                    <option value="ml-IN">
+                        മലയാളം
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Microphone -->
+
+            <div class="mic-wrapper">
+
+                <button
+                    id="micButton"
+                    class="mic-button"
+                    onclick="toggleListening()"
+                    title="Start Voice Ordering"
+                >
+                    🎙️
+                </button>
+
+            </div>
+
+
+            <div
+                id="status"
+                class="status"
+            >
+                Tap the microphone and speak your order
+            </div>
+
+
+            <!-- Transcript -->
+
+            <div class="transcript-box">
+
+                <div class="transcript-label">
+                    Your Order
+                </div>
+
+                <div id="transcript">
+
+                    <span class="placeholder">
+                        Example: "2 chicken biryani and 1 coke"
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Buttons -->
+
+            <div class="button-row">
+
+                <button
+                    id="confirmButton"
+                    class="btn btn-primary"
+                    onclick="confirmVoiceOrder()"
+                    disabled
+                >
+                    ✓ Match to Menu
+                </button>
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="clearOrder()"
+                >
+                    Clear
+                </button>
+
+            </div>
+
+
+            <!-- Matched Items -->
+
+            <div id="matchResults" class="match-results"></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Manual Ordering -->
+
+    <section class="manual-card">
+
+        <h3>
+            Prefer to choose manually?
+        </h3>
+
+        <p>
+            Browse our menu, select your dishes and add them to your cart.
+        </p>
+
+        <a
+            href="menu.html"
+            class="btn btn-secondary manual-button"
+        >
+            🍽️ Order Manually
+        </a>
+
+    </section>
+
+</main>
+
+
+<!-- Message -->
+
+<div
+    id="message"
+    class="message"
+></div>
+
+
+<script>
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const micButton = document.getElementById("micButton");
+const transcript = document.getElementById("transcript");
+const statusText = document.getElementById("status");
+const confirmButton = document.getElementById("confirmButton");
+const language = document.getElementById("language");
+const messageBox = document.getElementById("message");
+
+
+/* =========================================
+   VOICE RECOGNITION
+========================================= */
+
+const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+let recognition = null;
+
+let isListening = false;
+
+let finalTranscript = "";
+
+let interimTranscript = "";
+
+
+if(SpeechRecognition){
+
+    recognition = new SpeechRecognition();
+
+    recognition.continuous = false;
+
+    recognition.interimResults = true;
+
+    recognition.lang = language.value;
+
+
+    recognition.onstart = function(){
+
+        isListening = true;
+
+        micButton.classList.add("listening");
+
+        micButton.innerHTML = "⏹️";
+
+        statusText.textContent =
+            "Listening... Speak your order now.";
+
+        statusText.classList.add("active");
+
+    };
+
+
+    recognition.onresult = function(event){
+
+        interimTranscript = "";
+
+        for(
+            let i = event.resultIndex;
+            i < event.results.length;
+            i++
+        ){
+
+            const text =
+                event.results[i][0].transcript;
+
+            if(event.results[i].isFinal){
+
+                finalTranscript += text + " ";
+                // A final speech result means the spoken dish phrase is complete.
+                // Stop the microphone immediately instead of leaving it listening.
+                if(recognition && isListening){
+                    try { recognition.stop(); } catch(stopError) {}
+                }
+
+            }else{
+
+                interimTranscript += text;
+
+            }
+
+        }
+
+
+        const combined =
+            (finalTranscript + interimTranscript).trim();
+
+
+        if(combined){
+
+            transcript.textContent = combined;
+
+            confirmButton.disabled = false;
+
+        }
+
+    };
+
+
+    recognition.onerror = function(event){
+
+        console.error(
+            "Speech recognition error:",
+            event.error
+        );
+
+        isListening = false;
+
+        micButton.classList.remove("listening");
+
+        micButton.innerHTML = "🎙️";
+
+        statusText.classList.remove("active");
+
+
+        if(event.error === "not-allowed"){
+
+            showMessage(
+                "Microphone permission was denied. Please allow microphone access.",
+                "error"
+            );
+
+        }else if(event.error === "no-speech"){
+
+            statusText.textContent =
+                "No speech detected. Try again.";
+
+        }else{
+
+            statusText.textContent =
+                "Voice recognition stopped. Please try again.";
+
+        }
+
+    };
+
+
+    recognition.onend = function(){
+
+        isListening = false;
+
+        micButton.classList.remove("listening");
+
+        micButton.innerHTML = "🎙️";
+
+        statusText.classList.remove("active");
+
+
+        if(finalTranscript.trim()){
+            statusText.textContent = "Order captured. Matching dishes from the menu…";
+            confirmVoiceOrder().then(function(){
+                if(currentMatches.length > 0){
+                    statusText.textContent = "Matched menu items. Adding them to your cart…";
+                    addMatchesToCart();
+                }
+            });
+        }else{
+
+            statusText.textContent =
+                "Tap the microphone and speak your order.";
+
+        }
+
+    };
+
+}else{
+
+    statusText.textContent =
+        "Voice ordering is not supported in this browser.";
+
+    micButton.disabled = true;
+
+}
+
+
+/* =========================================
+   LANGUAGE CHANGE
+========================================= */
+
+language.addEventListener("change", function(){
+
+    if(recognition){
+
+        recognition.lang = language.value;
+
+    }
+
+});
+
+
+/* =========================================
+   START / STOP MICROPHONE
+========================================= */
+
+function toggleListening(){
+
+    if(!recognition){
+
+        showMessage(
+            "Please use Google Chrome or another browser that supports speech recognition.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if(isListening){
+
+        recognition.stop();
+
+        return;
+
+    }
+
+
+    finalTranscript = "";
+
+    interimTranscript = "";
+
+    transcript.innerHTML =
+        '<span class="placeholder">Listening...</span>';
+
+    confirmButton.disabled = true;
+
+
+    recognition.lang = language.value;
+
+
+    try{
+
+        recognition.start();
+
+    }catch(error){
+
+        console.error(error);
+
+    }
+
+}
+
+
+/* =========================================
+   CLEAR ORDER
+========================================= */
+
+function clearOrder(){
+
+    if(isListening && recognition){
+
+        recognition.stop();
+
+    }
+
+    finalTranscript = "";
+
+    interimTranscript = "";
+
+    transcript.innerHTML =
+        '<span class="placeholder">Example: "2 chicken biryani and 1 coke"</span>';
+
+    confirmButton.disabled = true;
+
+    statusText.textContent =
+        "Tap the microphone and speak your order";
+
+}
+
+
+/* =========================================
+   API BASE
+========================================= */
+
+const API_BASE = window.location.origin + "/api";
+const CART_KEY = "thriftyBiteCart";
+
+let currentMatches = [];
+let isAddingMatches = false;
+
+
+/* =========================================
+   MATCH VOICE ORDER AGAINST THE MENU
+========================================= */
+
+async function confirmVoiceOrder(){
+
+    const orderTextValue =
+        finalTranscript.trim();
+
+
+    if(!orderTextValue){
+
+        showMessage(
+            "Please speak your order first.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    confirmButton.disabled = true;
+
+    confirmButton.textContent =
+        "Matching to menu...";
+
+    const resultsBox =
+        document.getElementById("matchResults");
+
+    resultsBox.innerHTML = "";
+
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/menu/voice-match",
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify({
+                    text:orderTextValue,
+                    language:language.value
+                })
+            }
+        );
+
+
+        const data =
+            await response.json();
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Unable to understand your order."
+            );
+
+        }
+
+
+        currentMatches =
+            data.matches || [];
+
+
+        renderMatchResults(
+            currentMatches,
+            data.unmatched || []
+        );
+
+
+        if(currentMatches.length === 0){
+
+            statusText.textContent =
+                "Couldn't match anything on the menu. Try again.";
+
+        }else{
+
+            statusText.textContent =
+                "Matched the available menu items. Saving them to your cart…";
+
+        }
+
+
+    }catch(error){
+
+        console.error(
+            "Voice match error:",
+            error
+        );
+
+
+        showMessage(
+            error.message ||
+            "Unable to understand your order.",
+            "error"
+        );
+
+    }finally{
+
+        confirmButton.disabled = false;
+
+        confirmButton.textContent =
+            "✓ Match to Menu";
+
+    }
+
+}
+
+
+/* =========================================
+   RENDER MATCHED ITEMS
+========================================= */
+
+function renderMatchResults(matches, unmatched){
+
+    const resultsBox =
+        document.getElementById("matchResults");
+
+
+    if(matches.length === 0 && unmatched.length === 0){
+
+        resultsBox.innerHTML = "";
+
+        return;
+
+    }
+
+
+    let html = "";
+
+
+    matches.forEach(function(item, index){
+
+        html +=
+            "<div class='match-item'>" +
+                "<img src='" + escapeHtml(item.image || "images/food-placeholder.svg") +
+                    "' onerror=\"this.src='images/food-placeholder.svg'\" alt=''>" +
+                "<div class='match-item-info'>" +
+                    "<div class='name'>" + escapeHtml(item.name) + "</div>" +
+                    "<div class='heard'>Heard: \"" + escapeHtml(item.heardAs) + "\"</div>" +
+                "</div>" +
+                "<div class='match-item-price'>₹" + item.discountPrice + "</div>" +
+                "<input type='number' min='1' class='match-item-qty' value='" + item.quantity +
+                    "' onchange='updateMatchQuantity(" + index + ", this.value)'>" +
+                "<button class='match-item-fav' type='button' data-fav-id='" + escapeHtml(item.menuItemId) + "' title='Save to favourites' onclick='voiceToggleFavourite(this)'>♡</button>" +
+                "<button class='match-item-remove' title='Remove' onclick='removeMatch(" + index + ")'>✕</button>" +
+            "</div>";
+
+    });
+
+
+    if(unmatched.length > 0){
+
+        html +=
+            "<div class='unmatched-note'>" +
+                "Couldn't find on the menu: " +
+                unmatched.map(escapeHtml).join(", ") +
+            "</div>";
+
+    }
+
+
+    if(matches.length > 0){
+
+        html +=
+            "<div class='match-actions'>" +
+                "<button class='btn btn-primary' onclick='addMatchesToCart()'>🛒 Add to Cart</button>" +
+            "</div>";
+
+    }
+
+
+    resultsBox.innerHTML = html;
+
+    voiceMarkFavourites();
+
+}
+
+
+function updateMatchQuantity(index, value){
+
+    const qty =
+        Math.max(1, parseInt(value, 10) || 1);
+
+    currentMatches[index].quantity = qty;
+
+}
+
+
+function removeMatch(index){
+
+    currentMatches.splice(index, 1);
+
+    renderMatchResults(currentMatches, []);
+
+}
+
+
+/* =========================================================
+   FAVOURITES (heart on each matched dish)
+========================================================= */
+
+let voiceFavouriteIds = null;
+
+async function voiceLoadFavourites(){
+    if(voiceFavouriteIds) return voiceFavouriteIds;
+
+    voiceFavouriteIds = new Set();
+    const token = localStorage.getItem("thriftyBiteToken");
+    if(!token) return voiceFavouriteIds;
+
+    try{
+        const response = await fetch(window.location.origin + "/api/favourites", {
+            headers: { "Authorization": "Bearer " + token }
+        });
+        const data = await response.json();
+        (data.favourites || []).forEach(f => voiceFavouriteIds.add(String(f._id)));
+    }catch(error){
+        console.error("Load favourites error:", error);
+    }
+    return voiceFavouriteIds;
+}
+
+async function voiceMarkFavourites(){
+    const ids = await voiceLoadFavourites();
+
+    document.querySelectorAll(".match-item-fav[data-fav-id]").forEach(function(btn){
+        const active = ids.has(btn.getAttribute("data-fav-id"));
+        btn.classList.toggle("active", active);
+        btn.textContent = active ? "♥" : "♡";
+        btn.title = active ? "Remove from favourites" : "Save to favourites";
+    });
+}
+
+async function voiceToggleFavourite(btn){
+    const token = localStorage.getItem("thriftyBiteToken");
+
+    if(!token){
+        window.location.href = "login.html";
+        return;
+    }
+
+    const id = btn.getAttribute("data-fav-id");
+    const ids = await voiceLoadFavourites();
+    const isActive = ids.has(id);
+
+    btn.disabled = true;
+
+    try{
+        const response = await fetch(
+            window.location.origin + "/api/favourites" + (isActive ? "/" + encodeURIComponent(id) : ""),
+            {
+                method: isActive ? "DELETE" : "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: isActive ? undefined : JSON.stringify({ menuItemId: id })
+            }
+        );
+
+        if(!response.ok) throw new Error("Unable to update favourites.");
+
+        if(isActive) ids.delete(id); else ids.add(id);
+        voiceMarkFavourites();
+    }catch(error){
+        console.error("Toggle favourite error:", error);
+    }finally{
+        btn.disabled = false;
+    }
+}
+
+function escapeHtml(value){
+
+    const div =
+        document.createElement("div");
+
+    div.textContent = value ?? "";
+
+    return div.innerHTML;
+
+}
+
+
+/* =========================================
+   ADD MATCHED ITEMS TO CART
+========================================= */
+
+function getLocalCart(){
+
+    try{
+
+        const raw =
+            localStorage.getItem(CART_KEY);
+
+        const cart =
+            raw ? JSON.parse(raw) : [];
+
+        return Array.isArray(cart) ? cart : [];
+
+    }catch(error){
+
+        return [];
+
+    }
+
+}
+
+
+function saveLocalCart(cart){
+
+    localStorage.setItem(
+        CART_KEY,
+        JSON.stringify(cart)
+    );
+
+}
+
+
+async function addMatchesToCart(){
+    if(isAddingMatches) return;
+    if(currentMatches.length === 0){
+        showMessage("Nothing to add yet.","error");
+        return;
+    }
+    const token = localStorage.getItem("thriftyBiteToken");
+    if(!token){
+        showMessage("Please sign in first so your voice order can be saved to your MongoDB cart.","error");
+        setTimeout(()=>window.location.href="login.html",1000);
+        return;
+    }
+    const button = document.getElementById("addToCartButton");
+    isAddingMatches = true;
+    if(button) button.disabled = true;
+    document.querySelectorAll(".match-actions button").forEach(btn => btn.disabled = true);
+    try{
+        // Persist each item through the authenticated API. Do not claim success
+        // unless MongoDB accepted the cart updates.
+        for(const item of currentMatches){
+            const response = await fetch(API_BASE + "/cart", {
+                method:"POST",
+                headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},
+                body:JSON.stringify({menuItemId:item.menuItemId,quantity:item.quantity})
+            });
+            const data = await response.json().catch(()=>({}));
+            if(!response.ok) throw new Error(data.message || ("Could not save "+item.name+" to your account cart."));
+        }
+        // Keep the legacy cart display in sync for existing pages that still read localStorage.
+        const cart = getLocalCart();
+        currentMatches.forEach(item=>{
+            const existing=cart.find(c=>String(c.menuId)===String(item.menuItemId));
+            if(existing) existing.quantity=Number(existing.quantity||1)+item.quantity;
+            else cart.push({menuId:item.menuItemId,name:item.name,description:"",price:Number(item.discountPrice??item.price??0),originalPrice:Number(item.price??item.discountPrice??0),image:item.image||"",quantity:item.quantity,category:item.category||"",isVeg:Boolean(item.isVeg)});
+        });
+        saveLocalCart(cart);
+        showMessage("✓ Voice order saved to your account cart.","success");
+        setTimeout(()=>window.location.href="cart.html",700);
+    }catch(error){
+        console.error("Voice cart persistence error:",error);
+        showMessage(error.message || "Could not save your voice order. Please sign in and try again.","error");
+    }finally{
+        isAddingMatches = false;
+        if(button) button.disabled = false;
+        document.querySelectorAll(".match-actions button").forEach(btn => btn.disabled = false);
+    }
+}
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+function showMessage(text,type){
+
+    messageBox.textContent = text;
+
+    messageBox.className =
+        "message " + type + " show";
+
+
+    setTimeout(function(){
+
+        messageBox.classList.remove("show");
+
+    },4000);
+
+}
+
+
+/* =========================================
+   NAVIGATION
+========================================= */
+
+function goHome(){
+
+    window.location.href =
+        "home.html";
+
+}
+
+
+function openProfile(){
+
+    window.location.href =
+        "profile.html";
+
+}
+
+
+function openCart(){
+
+    window.location.href =
+        "cart.html";
+
+}
+
+</script>
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+</html>

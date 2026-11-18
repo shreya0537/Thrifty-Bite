@@ -1,0 +1,2817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Thrifty Bite | My Profile</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,
+body{
+    width:100%;
+    min-height:100%;
+}
+
+body{
+
+    min-height:100vh;
+
+    font-family:"DM Sans",sans-serif;
+
+    color:#fff8e8;
+
+    overflow-x:auto;
+
+    background:
+        radial-gradient(
+            circle at 12% 15%,
+            rgba(212,175,55,.16),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 88% 20%,
+            rgba(143,29,60,.35),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 50% 90%,
+            rgba(212,175,55,.08),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #2b0714 0%,
+            #4b0d1d 48%,
+            #260611 100%
+        );
+}
+
+
+/* =========================================================
+   ROYAL DOUBLE BORDER
+========================================================= */
+
+body::before{
+
+    content:"";
+
+    position:fixed;
+
+    inset:10px;
+
+    border:1px solid rgba(212,175,55,.65);
+
+    pointer-events:none;
+
+    z-index:100;
+}
+
+
+body::after{
+
+    content:"";
+
+    position:fixed;
+
+    inset:17px;
+
+    border:1px solid rgba(247,223,122,.28);
+
+    pointer-events:none;
+
+    z-index:100;
+}
+
+
+/* =========================================================
+   BACKGROUND GLOW
+========================================================= */
+
+.glow{
+
+    position:fixed;
+
+    border-radius:50%;
+
+    filter:blur(80px);
+
+    pointer-events:none;
+
+    opacity:.35;
+
+    z-index:0;
+}
+
+
+.glow.one{
+
+    width:300px;
+    height:300px;
+
+    background:#d4af37;
+
+    top:-100px;
+    left:-80px;
+
+    animation:floatGlow 8s ease-in-out infinite;
+}
+
+
+.glow.two{
+
+    width:370px;
+    height:370px;
+
+    background:#8f1d3c;
+
+    right:-130px;
+    top:25%;
+
+    animation:floatGlow 10s ease-in-out infinite reverse;
+}
+
+
+.glow.three{
+
+    width:280px;
+    height:280px;
+
+    background:#d4af37;
+
+    left:38%;
+    bottom:-150px;
+
+    opacity:.14;
+
+    animation:floatGlow 9s ease-in-out infinite;
+}
+
+
+@keyframes floatGlow{
+
+    0%,100%{
+        transform:translate(0,0) scale(1);
+    }
+
+    50%{
+        transform:translate(25px,-20px) scale(1.08);
+    }
+}
+
+
+/* =========================================================
+   GOLD PARTICLES
+========================================================= */
+
+.spark{
+
+    position:fixed;
+
+    width:4px;
+    height:4px;
+
+    background:#f7df7a;
+
+    border-radius:50%;
+
+    box-shadow:
+        0 0 7px #d4af37,
+        0 0 14px rgba(212,175,55,.8);
+
+    pointer-events:none;
+
+    z-index:1;
+
+    animation:sparkFloat linear infinite;
+}
+
+
+.spark:nth-child(1){
+    left:6%;
+    bottom:-20px;
+    animation-duration:8s;
+}
+
+.spark:nth-child(2){
+    left:17%;
+    bottom:-30px;
+    animation-duration:11s;
+    animation-delay:2s;
+}
+
+.spark:nth-child(3){
+    left:31%;
+    bottom:-20px;
+    animation-duration:9s;
+    animation-delay:1s;
+}
+
+.spark:nth-child(4){
+    left:47%;
+    bottom:-30px;
+    animation-duration:12s;
+    animation-delay:3s;
+}
+
+.spark:nth-child(5){
+    left:64%;
+    bottom:-20px;
+    animation-duration:10s;
+    animation-delay:2s;
+}
+
+.spark:nth-child(6){
+    left:79%;
+    bottom:-30px;
+    animation-duration:9s;
+    animation-delay:4s;
+}
+
+.spark:nth-child(7){
+    left:93%;
+    bottom:-20px;
+    animation-duration:13s;
+    animation-delay:1s;
+}
+
+
+@keyframes sparkFloat{
+
+    0%{
+        transform:translateY(0) scale(.5);
+        opacity:0;
+    }
+
+    15%{
+        opacity:1;
+    }
+
+    80%{
+        opacity:.8;
+    }
+
+    100%{
+        transform:translateY(-110vh) scale(1.2);
+        opacity:0;
+    }
+}
+
+
+/* =========================================================
+   MAIN PAGE
+========================================================= */
+
+.page{
+
+    position:relative;
+
+    z-index:5;
+
+    width:100%;
+
+    min-height:100vh;
+
+    padding:42px 70px 55px;
+}
+
+
+/* =========================================================
+   TOP NAVIGATION
+========================================================= */
+
+.topbar{
+
+    width:100%;
+
+    max-width:1500px;
+
+    margin:0 auto 35px;
+
+    padding:17px 25px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    border:1px solid rgba(212,175,55,.35);
+
+    border-radius:18px;
+
+    background:rgba(28,4,13,.58);
+
+    backdrop-filter:blur(16px);
+
+    -webkit-backdrop-filter:blur(16px);
+
+    box-shadow:
+        0 15px 45px rgba(0,0,0,.25),
+        inset 0 0 25px rgba(212,175,55,.025);
+
+    animation:topbarEnter .8s ease;
+}
+
+
+@keyframes topbarEnter{
+
+    from{
+        opacity:0;
+        transform:translateY(-18px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+
+/* =========================================================
+   BRAND
+========================================================= */
+
+.brand{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+}
+
+
+.brand-logo{
+
+    width:48px;
+    height:48px;
+
+    border-radius:50%;
+
+    border:2px solid #d4af37;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    overflow:hidden;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(247,223,122,.16),
+            rgba(91,11,32,.75)
+        );
+
+    box-shadow:
+        0 0 15px rgba(212,175,55,.3),
+        inset 0 0 15px rgba(212,175,55,.08);
+}
+
+
+.brand-logo img{
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+}
+
+
+.brand-crown{
+
+    color:#f7df7a;
+
+    font-size:24px;
+}
+
+
+.brand-name{
+
+    font-family:"Cinzel",serif;
+
+    font-size:21px;
+
+    font-weight:700;
+
+    letter-spacing:2px;
+
+    color:#f7df7a;
+}
+
+
+.brand-sub{
+
+    margin-top:2px;
+
+    font-size:10px;
+
+    letter-spacing:2.5px;
+
+    color:rgba(255,248,232,.58);
+}
+
+
+/* =========================================================
+   NAVIGATION BUTTONS
+========================================================= */
+
+.nav-actions{
+
+    display:flex;
+
+    gap:10px;
+}
+
+
+.nav-btn{
+
+    padding:11px 19px;
+
+    border-radius:10px;
+
+    border:1px solid rgba(212,175,55,.45);
+
+    background:rgba(255,255,255,.035);
+
+    color:#fff8e8;
+
+    font-family:"DM Sans",sans-serif;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s ease;
+}
+
+
+.nav-btn:hover{
+
+    background:rgba(212,175,55,.12);
+
+    border-color:#d4af37;
+
+    color:#f7df7a;
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 8px 20px rgba(212,175,55,.12);
+}
+
+
+.nav-btn.logout:hover{
+
+    border-color:#c94b70;
+
+    color:#ffb4c8;
+
+    background:rgba(143,29,60,.2);
+}
+
+
+/* =========================================================
+   PROFILE HEADER
+========================================================= */
+
+.profile-heading{
+
+    text-align:center;
+
+    margin:15px auto 32px;
+}
+
+
+.crown{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    font-size:32px;
+
+    color:#f7df7a;
+
+    text-shadow:
+        0 0 12px rgba(212,175,55,.65),
+        0 0 30px rgba(212,175,55,.25);
+
+    animation:crownPulse 3s ease-in-out infinite;
+}
+
+
+@keyframes crownPulse{
+
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-5px);
+    }
+}
+
+
+.profile-heading h1{
+
+    font-family:"Cinzel",serif;
+
+    font-size:37px;
+
+    letter-spacing:5px;
+
+    color:#f7df7a;
+}
+
+
+.profile-heading p{
+
+    margin-top:8px;
+
+    font-size:13px;
+
+    letter-spacing:2px;
+
+    color:rgba(255,248,232,.55);
+}
+
+
+/* =========================================================
+   ROYAL DIVIDER
+========================================================= */
+
+.royal-divider{
+
+    position:relative;
+
+    width:230px;
+
+    height:1px;
+
+    margin:18px auto 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #d4af37,
+            #f7df7a,
+            #d4af37,
+            transparent
+        );
+}
+
+
+.royal-divider::after{
+
+    content:"◆";
+
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    transform:translate(-50%,-50%);
+
+    padding:0 9px;
+
+    background:#3a091a;
+
+    color:#f7df7a;
+
+    font-size:10px;
+}
+
+
+/* =========================================================
+   PROFILE HERO
+========================================================= */
+
+.profile-hero{
+
+    width:100%;
+
+    max-width:1050px;
+
+    margin:0 auto 32px;
+
+    padding:28px 35px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:34px;
+
+    border-top:1px solid rgba(212,175,55,.22);
+
+    border-bottom:1px solid rgba(212,175,55,.22);
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(212,175,55,.08),
+            transparent 55%
+        );
+
+    animation:heroEnter .9s ease;
+}
+
+
+@keyframes heroEnter{
+
+    from{
+        opacity:0;
+        transform:translateY(15px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+
+/* =========================================================
+   AVATAR
+========================================================= */
+
+.avatar-wrapper{
+
+    position:relative;
+
+    width:145px;
+    height:145px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+}
+
+
+.avatar-ring{
+
+    position:absolute;
+
+    inset:0;
+
+    border-radius:50%;
+
+    border:1px solid rgba(212,175,55,.48);
+
+    animation:rotateRing 12s linear infinite;
+}
+
+
+.avatar-ring::before,
+.avatar-ring::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:10px;
+    height:10px;
+
+    border-radius:50%;
+
+    background:#f7df7a;
+
+    box-shadow:
+        0 0 12px #d4af37,
+        0 0 25px rgba(212,175,55,.7);
+}
+
+
+.avatar-ring::before{
+
+    top:-5px;
+
+    left:50%;
+}
+
+
+.avatar-ring::after{
+
+    bottom:-5px;
+
+    right:50%;
+}
+
+
+@keyframes rotateRing{
+
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+
+.avatar{
+
+    width:112px;
+    height:112px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:50%;
+
+    border:3px solid #d4af37;
+
+    background:
+        radial-gradient(
+            circle at 35% 25%,
+            #7a1735,
+            #310716
+        );
+
+    color:#f7df7a;
+
+    font-family:"Cinzel",serif;
+
+    font-size:42px;
+
+    overflow:hidden;
+
+    position:relative;
+
+    box-shadow:
+        0 0 25px rgba(212,175,55,.22),
+        inset 0 0 25px rgba(0,0,0,.35);
+}
+
+
+.avatar-image{
+
+    display:none;
+
+    position:absolute;
+
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+}
+
+
+.avatar-camera-btn{
+
+    position:absolute;
+
+    right:2px;
+    bottom:2px;
+
+    width:36px;
+    height:36px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:50%;
+
+    border:2px solid #260611;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d4af37,
+            #f7df7a
+        );
+
+    color:#2b0714;
+
+    font-size:15px;
+
+    cursor:pointer;
+
+    box-shadow:0 4px 14px rgba(0,0,0,.4);
+
+    transition:.25s;
+}
+
+
+.avatar-camera-btn:hover{
+    transform:scale(1.08);
+}
+
+
+.avatar-remove-link{
+
+    display:none;
+
+    margin-top:10px;
+
+    font-size:11px;
+
+    letter-spacing:1px;
+
+    color:rgba(255,180,200,.75);
+
+    cursor:pointer;
+
+    text-decoration:underline;
+    text-underline-offset:2px;
+}
+
+
+.avatar-remove-link:hover{
+    color:#ffb4c8;
+}
+
+
+.hero-info{
+
+    text-align:left;
+
+    min-width:300px;
+}
+
+
+.welcome-label{
+
+    margin-bottom:7px;
+
+    font-size:11px;
+
+    text-transform:uppercase;
+
+    letter-spacing:3px;
+
+    color:#d4af37;
+}
+
+
+.hero-info h2{
+
+    margin-bottom:6px;
+
+    font-family:"Cinzel",serif;
+
+    font-size:30px;
+
+    color:#fff8e8;
+}
+
+
+.hero-email{
+
+    font-size:14px;
+
+    color:rgba(255,248,232,.62);
+}
+
+
+.member-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    margin-top:14px;
+
+    padding:7px 13px;
+
+    border-radius:30px;
+
+    border:1px solid rgba(212,175,55,.3);
+
+    background:rgba(212,175,55,.07);
+
+    color:#f7df7a;
+
+    font-size:11px;
+
+    letter-spacing:1px;
+}
+
+
+/* =========================================================
+   ERROR MESSAGE
+========================================================= */
+
+.error-message{
+
+    display:none;
+
+    width:100%;
+
+    max-width:600px;
+
+    margin:0 auto 25px;
+
+    padding:13px 18px;
+
+    text-align:center;
+
+    border-radius:10px;
+
+    border:1px solid rgba(255,90,130,.35);
+
+    background:rgba(143,29,60,.18);
+
+    color:#ffb4c8;
+
+    font-size:13px;
+}
+
+
+/* =========================================================
+   INFORMATION
+========================================================= */
+
+.info-grid{
+
+    width:100%;
+
+    max-width:1200px;
+
+    margin:0 auto 40px;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:16px;
+}
+
+
+.info-card{
+
+    padding:21px;
+
+    border:1px solid rgba(212,175,55,.22);
+
+    border-radius:17px;
+
+    background:rgba(255,255,255,.025);
+
+    transition:.35s ease;
+}
+
+
+.info-card:hover{
+
+    transform:translateY(-5px);
+
+    border-color:rgba(212,175,55,.6);
+
+    background:rgba(212,175,55,.045);
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.22),
+        0 0 20px rgba(212,175,55,.07);
+}
+
+
+.info-icon{
+
+    width:38px;
+    height:38px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin-bottom:14px;
+
+    border-radius:10px;
+
+    border:1px solid rgba(212,175,55,.25);
+
+    background:rgba(212,175,55,.08);
+
+    font-size:17px;
+}
+
+
+.info-label{
+
+    margin-bottom:5px;
+
+    font-size:11px;
+
+    text-transform:uppercase;
+
+    letter-spacing:1.5px;
+
+    color:rgba(255,248,232,.48);
+}
+
+
+.info-value{
+
+    font-size:14px;
+
+    font-weight:600;
+
+    color:#fff8e8;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+}
+
+
+/* =========================================================
+   ACCOUNT SERVICES HEADER
+========================================================= */
+
+.services-heading{
+
+    width:100%;
+
+    max-width:1200px;
+
+    margin:0 auto 20px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+}
+
+
+.services-heading h3{
+
+    font-family:"Cinzel",serif;
+
+    font-size:21px;
+
+    letter-spacing:2px;
+
+    color:#f7df7a;
+}
+
+
+.services-heading span{
+
+    font-size:11px;
+
+    letter-spacing:1px;
+
+    color:rgba(255,248,232,.42);
+}
+
+
+/* =========================================================
+   SERVICES GRID
+========================================================= */
+
+.services-grid{
+
+    width:100%;
+
+    max-width:1200px;
+
+    margin:0 auto;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:17px;
+}
+
+
+/* =========================================================
+   SERVICE CARD
+========================================================= */
+
+.service-card{
+
+    position:relative;
+
+    min-height:145px;
+
+    padding:24px;
+
+    overflow:hidden;
+
+    text-decoration:none;
+
+    color:#fff8e8;
+
+    border:1px solid rgba(212,175,55,.22);
+
+    border-radius:19px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.035),
+            rgba(255,255,255,.012)
+        );
+
+    transition:
+        transform .35s ease,
+        border-color .35s ease,
+        box-shadow .35s ease,
+        background .35s ease;
+}
+
+
+.service-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:100px;
+    height:100px;
+
+    right:-45px;
+    top:-45px;
+
+    border-radius:50%;
+
+    background:rgba(212,175,55,.08);
+
+    transition:.4s ease;
+}
+
+
+.service-card::after{
+
+    content:"→";
+
+    position:absolute;
+
+    right:21px;
+
+    bottom:18px;
+
+    font-size:20px;
+
+    color:#d4af37;
+
+    transition:.3s ease;
+}
+
+
+.service-card:hover{
+
+    transform:translateY(-7px);
+
+    border-color:#d4af37;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(143,29,60,.38),
+            rgba(212,175,55,.045)
+        );
+
+    box-shadow:
+        0 18px 38px rgba(0,0,0,.3),
+        0 0 25px rgba(212,175,55,.09);
+}
+
+
+.service-card:hover::before{
+
+    transform:scale(2);
+
+    background:rgba(212,175,55,.055);
+}
+
+
+.service-card:hover::after{
+
+    transform:translateX(5px);
+
+    color:#f7df7a;
+}
+
+
+/* =========================================================
+   SERVICE ICON
+========================================================= */
+
+.service-icon{
+
+    width:48px;
+    height:48px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin-bottom:15px;
+
+    border-radius:14px;
+
+    border:1px solid rgba(212,175,55,.3);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(212,175,55,.12),
+            rgba(143,29,60,.12)
+        );
+
+    color:#f7df7a;
+
+    font-size:21px;
+}
+
+
+.service-card h4{
+
+    margin-bottom:5px;
+
+    font-family:"Cinzel",serif;
+
+    font-size:15px;
+
+    letter-spacing:.8px;
+
+    color:#fff8e8;
+}
+
+
+.service-card p{
+
+    max-width:260px;
+
+    font-size:12px;
+
+    line-height:1.5;
+
+    color:rgba(255,248,232,.5);
+}
+
+
+/* =========================================================
+   BOTTOM BUTTONS
+========================================================= */
+
+.bottom-actions{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:14px;
+
+    margin-top:35px;
+
+    padding-top:27px;
+
+    border-top:1px solid rgba(212,175,55,.16);
+}
+
+
+.action-btn{
+
+    min-width:155px;
+
+    padding:13px 22px;
+
+    border-radius:11px;
+
+    font-family:"DM Sans",sans-serif;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.3s ease;
+}
+
+
+.edit-btn{
+
+    border:1px solid #d4af37;
+
+    color:#2b0714;
+
+    background:
+        linear-gradient(
+            135deg,
+            #c99d27,
+            #f7df7a,
+            #d4af37
+        );
+
+    box-shadow:
+        0 8px 25px rgba(212,175,55,.15);
+}
+
+
+.edit-btn:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 13px 30px rgba(212,175,55,.25);
+}
+
+
+.home-btn{
+
+    border:1px solid rgba(212,175,55,.35);
+
+    color:#fff8e8;
+
+    background:rgba(255,255,255,.035);
+}
+
+
+.home-btn:hover{
+
+    border-color:#d4af37;
+
+    color:#f7df7a;
+
+    background:rgba(212,175,55,.07);
+
+    transform:translateY(-3px);
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer{
+
+    margin-top:23px;
+
+    text-align:center;
+
+    font-size:10px;
+
+    letter-spacing:1.5px;
+
+    color:rgba(255,248,232,.32);
+}
+
+
+.footer span{
+
+    color:#d4af37;
+}
+
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media(max-width:1100px){
+
+    .page{
+        padding:35px 35px 50px;
+    }
+
+    .info-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .services-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+
+/* =========================================================
+   KEEP PROFILE AS DESKTOP PAGE
+========================================================= */
+
+@media(max-width:700px){
+
+    body{
+        min-width:1100px;
+    }
+
+    .page{
+        width:1100px;
+    }
+
+}
+
+
+/* =========================================================
+   EDIT PROFILE MODAL
+========================================================= */
+
+.modal-overlay{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(10,2,6,.72);
+
+    backdrop-filter:blur(6px);
+
+    z-index:500;
+
+    align-items:center;
+
+    justify-content:center;
+}
+
+
+.modal-overlay.show{
+    display:flex;
+}
+
+
+.modal-card{
+
+    width:min(480px,92vw);
+
+    padding:34px;
+
+    border-radius:22px;
+
+    border:1px solid rgba(212,175,55,.45);
+
+    background:
+        linear-gradient(
+            155deg,
+            #3a091a,
+            #260611
+        );
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.5),
+        0 0 40px rgba(212,175,55,.08);
+
+    animation:heroEnter .35s ease;
+}
+
+
+.modal-card h3{
+
+    font-family:"Cinzel",serif;
+
+    color:#f7df7a;
+
+    font-size:22px;
+
+    margin-bottom:22px;
+
+    text-align:center;
+}
+
+
+.modal-field{
+    margin-bottom:16px;
+}
+
+
+.modal-field label{
+
+    display:block;
+
+    margin-bottom:6px;
+
+    font-size:12px;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+
+    color:rgba(255,248,232,.6);
+}
+
+
+.modal-field input,
+.modal-field textarea{
+
+    width:100%;
+
+    padding:11px 14px;
+
+    border-radius:10px;
+
+    border:1px solid rgba(212,175,55,.35);
+
+    background:rgba(0,0,0,.25);
+
+    color:#fff8e8;
+
+    font-family:"DM Sans",sans-serif;
+
+    font-size:14px;
+
+    outline:none;
+}
+
+
+.modal-field input:focus,
+.modal-field textarea:focus{
+    border-color:#d4af37;
+}
+
+
+.modal-field textarea{
+    min-height:70px;
+    resize:vertical;
+}
+
+
+.modal-message{
+
+    display:none;
+
+    margin-bottom:16px;
+
+    padding:10px 14px;
+
+    border-radius:10px;
+
+    font-size:13px;
+}
+
+
+.modal-message.show{
+    display:block;
+}
+
+
+.modal-message.success{
+    background:rgba(76,175,107,.15);
+    border:1px solid rgba(76,175,107,.4);
+    color:#a4e9b8;
+}
+
+
+.modal-message.error{
+    background:rgba(226,85,90,.15);
+    border:1px solid rgba(226,85,90,.4);
+    color:#f6b0b3;
+}
+
+
+.modal-actions{
+
+    display:flex;
+
+    gap:12px;
+
+    margin-top:22px;
+}
+
+
+.modal-actions .action-btn{
+    flex:1;
+}
+
+</style>
+
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+
+
+<body>
+
+
+<!-- ======================================================
+     BACKGROUND
+====================================================== -->
+
+<div class="glow one"></div>
+<div class="glow two"></div>
+<div class="glow three"></div>
+
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+
+
+<!-- ======================================================
+     PAGE
+====================================================== -->
+
+<div class="page">
+
+
+    <!-- ==================================================
+         TOP BAR
+    ================================================== -->
+
+    <header class="topbar">
+
+
+        <div class="brand">
+
+            <div class="brand-logo">
+
+                <img
+                    src="logo.jpeg"
+                    alt="Thrifty Bite"
+                    onerror="
+                        this.style.display='none';
+                        this.nextElementSibling.style.display='block';
+                    "
+                >
+
+                <span
+                    class="brand-crown"
+                    style="display:none;"
+                >
+                    ♛
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <div class="brand-name">
+                    THRIFTY BITE
+                </div>
+
+                <div class="brand-sub">
+                    ROYAL TASTE • SMART CHOICE
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="nav-actions">
+
+            <button
+                class="nav-btn"
+                onclick="goHome()"
+            >
+                Home
+            </button>
+
+
+            <button
+                class="nav-btn logout"
+                onclick="logout()"
+            >
+                Logout
+            </button>
+
+        </div>
+
+
+    </header>
+
+
+    <!-- ==================================================
+         PROFILE TITLE
+    ================================================== -->
+
+    <section class="profile-heading">
+
+        <span class="crown">
+            ♛
+        </span>
+
+        <h1>
+            MY ROYAL PROFILE
+        </h1>
+
+        <p>
+            YOUR THRIFTY BITE ACCOUNT
+        </p>
+
+        <div class="royal-divider"></div>
+
+    </section>
+
+
+    <!-- ==================================================
+         PROFILE HERO
+    ================================================== -->
+
+    <section class="profile-hero">
+
+
+        <div style="display:flex; flex-direction:column; align-items:center">
+
+            <div class="avatar-wrapper">
+
+                <div class="avatar-ring"></div>
+
+                <div
+                    class="avatar"
+                    id="avatar"
+                >
+                    <span id="avatarInitials">TB</span>
+
+                    <img
+                        class="avatar-image"
+                        id="avatarImage"
+                        alt="Profile picture"
+                    >
+
+                </div>
+
+                <button
+                    type="button"
+                    class="avatar-camera-btn"
+                    title="Change profile picture"
+                    onclick="document.getElementById('avatarFileInput').click()"
+                >
+                    📷
+                </button>
+
+                <input
+                    type="file"
+                    id="avatarFileInput"
+                    accept="image/jpeg,image/png,image/webp"
+                    style="display:none"
+                    onchange="uploadAvatar(this.files[0])"
+                >
+
+            </div>
+
+            <span
+                class="avatar-remove-link"
+                id="avatarRemoveLink"
+                onclick="removeAvatar()"
+            >
+                Remove photo
+            </span>
+
+        </div>
+
+
+        <div class="hero-info">
+
+            <div class="welcome-label">
+                WELCOME BACK
+            </div>
+
+            <h2 id="heroUsername">
+                Loading...
+            </h2>
+
+            <div
+                class="hero-email"
+                id="heroEmail"
+            >
+                Loading...
+            </div>
+
+            <div class="member-badge">
+                ♛ ROYAL MEMBER
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ==================================================
+         ERROR
+    ================================================== -->
+
+    <div
+        class="error-message"
+        id="errorMessage"
+    ></div>
+
+
+    <!-- ==================================================
+         ACCOUNT INFORMATION
+    ================================================== -->
+
+    <section class="info-grid">
+
+
+        <div class="info-card">
+
+            <div class="info-icon">
+                👤
+            </div>
+
+            <div class="info-label">
+                Username
+            </div>
+
+            <div
+                class="info-value"
+                id="username"
+            >
+                Loading...
+            </div>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <div class="info-icon">
+                ✉
+            </div>
+
+            <div class="info-label">
+                Email Address
+            </div>
+
+            <div
+                class="info-value"
+                id="email"
+            >
+                Loading...
+            </div>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <div class="info-icon">
+                ☎
+            </div>
+
+            <div class="info-label">
+                Phone Number
+            </div>
+
+            <div
+                class="info-value"
+                id="phone"
+            >
+                Not added yet
+            </div>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <div class="info-icon">
+                ♛
+            </div>
+
+            <div class="info-label">
+                Member Since
+            </div>
+
+            <div
+                class="info-value"
+                id="memberSince"
+            >
+                Loading...
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ==================================================
+         ACCOUNT SERVICES
+    ================================================== -->
+
+    <section class="services-heading">
+
+        <h3>
+            ACCOUNT SERVICES
+        </h3>
+
+        <span>
+            MANAGE YOUR ROYAL ACCOUNT
+        </span>
+
+    </section>
+
+
+    <section class="services-grid">
+
+
+        <!-- ==============================================
+             ADDRESSES
+        =============================================== -->
+
+        <a
+            href="addresses.html"
+            class="service-card"
+        >
+
+            <div class="service-icon">
+                📍
+            </div>
+
+            <h4>
+                My Addresses
+            </h4>
+
+            <p>
+                Manage your saved delivery addresses.
+            </p>
+
+        </a>
+
+
+        <!-- ==============================================
+             ORDERS
+        =============================================== -->
+
+        <a
+            href="my-orders.html"
+            class="service-card"
+        >
+
+            <div class="service-icon">
+                🛍
+            </div>
+
+            <h4>
+                My Orders
+            </h4>
+
+            <p>
+                View your previous and current orders.
+            </p>
+
+        </a>
+
+
+        <!-- ==============================================
+             FAVOURITES
+        =============================================== -->
+
+        <a
+            href="favourites.html"
+            class="service-card"
+        >
+
+            <div class="service-icon">
+                ♥
+            </div>
+
+            <h4>
+                Favourites
+            </h4>
+
+            <p>
+                Access dishes you have saved as favourites.
+            </p>
+
+        </a>
+
+
+        <!-- ==============================================
+             REWARDS
+        =============================================== -->
+
+        <a
+            href="rewards.html"
+            class="service-card"
+        >
+
+            <div class="service-icon">
+                ♛
+            </div>
+
+            <h4>
+                Royal Rewards
+            </h4>
+
+            <p>
+                Check your points, rewards and benefits.
+            </p>
+
+        </a>
+
+
+        <!-- ==============================================
+             PAYMENT
+        =============================================== -->
+
+        <a
+            href="payment.html"
+            class="service-card"
+        >
+
+            <div class="service-icon">
+                💳
+            </div>
+
+            <h4>
+                Payment Methods
+            </h4>
+
+            <p>
+                Manage your available payment options.
+            </p>
+
+        </a>
+
+
+        <!-- ==============================================
+             SETTINGS
+        =============================================== -->
+
+        <a
+            href="settings.html"
+            class="service-card"
+        >
+
+            <div class="service-icon">
+                ⚙
+            </div>
+
+            <h4>
+                Account Settings
+            </h4>
+
+            <p>
+                Manage your account preferences and security.
+            </p>
+
+        </a>
+
+
+    </section>
+
+
+    <!-- ==================================================
+         ACTION BUTTONS
+    ================================================== -->
+
+    <div class="bottom-actions">
+
+
+        <button
+            class="action-btn edit-btn"
+            onclick="editProfile()"
+        >
+            ✦ Edit Profile
+        </button>
+
+
+        <button
+            class="action-btn home-btn"
+            onclick="goHome()"
+        >
+            ← Back to Home
+        </button>
+
+
+    </div>
+
+
+    <!-- ==================================================
+         FOOTER
+    ================================================== -->
+
+    <div class="footer">
+
+        THRIFTY BITE
+
+        <span>◆</span>
+
+        ROYAL TASTE • SMART CHOICE
+
+    </div>
+
+
+</div>
+
+
+<!-- ======================================================
+     EDIT PROFILE MODAL
+====================================================== -->
+
+<div class="modal-overlay" id="editModalOverlay">
+
+    <div class="modal-card">
+
+        <h3>✦ Edit Profile</h3>
+
+        <div class="modal-message" id="editModalMessage"></div>
+
+        <form id="editProfileForm">
+
+            <div class="modal-field">
+                <label>Full Name</label>
+                <input type="text" id="editName" required>
+            </div>
+
+            <div class="modal-field">
+                <label>Mobile Number</label>
+                <input type="tel" id="editMobile">
+            </div>
+
+            <div class="modal-field">
+                <label>Address</label>
+                <textarea id="editAddress"></textarea>
+            </div>
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="action-btn home-btn"
+                    onclick="closeEditModal()"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="action-btn edit-btn"
+                >
+                    Save Changes
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   BACKEND URL
+========================================================= */
+
+const API_BASE = window.location.origin;
+
+let currentUser = null;
+
+
+/* =========================================================
+   LOAD PROFILE
+========================================================= */
+
+async function loadProfile(){
+
+    const token =
+        localStorage.getItem("thriftyBiteToken");
+
+
+    /* =====================================================
+       CHECK LOGIN
+    ===================================================== */
+
+    if(!token){
+
+        window.location.href =
+            "login.html";
+
+        return;
+    }
+
+
+    try{
+
+        /* =================================================
+           REQUEST PROFILE
+        ================================================= */
+
+        const response =
+            await fetch(
+                `${API_BASE}/api/profile`,
+                {
+                    method:"GET",
+
+                    headers:{
+                        "Authorization":
+                            `Bearer ${token}`
+                    }
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        /* =================================================
+           INVALID TOKEN
+        ================================================= */
+
+        if(response.status === 401){
+
+            localStorage.removeItem(
+                "thriftyBiteToken"
+            );
+
+            localStorage.removeItem(
+                "thriftyBiteUser"
+            );
+
+            window.location.href =
+                "login.html";
+
+            return;
+        }
+
+
+        /* =================================================
+           SERVER ERROR
+        ================================================= */
+
+        if(
+            !response.ok ||
+            !data.success
+        ){
+
+            throw new Error(
+                data.message ||
+                "Unable to load profile."
+            );
+
+        }
+
+
+        const user =
+            data.user;
+
+        currentUser = user;
+
+
+        /* =================================================
+           USERNAME
+        ================================================= */
+
+        const username =
+            user.username ||
+            "Royal Member";
+
+
+        document.getElementById(
+            "username"
+        ).textContent =
+            username;
+
+
+        document.getElementById(
+            "heroUsername"
+        ).textContent =
+            username;
+
+
+        /* =================================================
+           EMAIL
+        ================================================= */
+
+        const email =
+            user.email ||
+            "No email available";
+
+
+        document.getElementById(
+            "email"
+        ).textContent =
+            email;
+
+
+        document.getElementById(
+            "heroEmail"
+        ).textContent =
+            email;
+
+
+        /* =================================================
+           PHONE
+        ================================================= */
+
+        document.getElementById(
+            "phone"
+        ).textContent =
+            user.mobile ||
+            "Not added yet";
+
+
+        /* =================================================
+           MEMBER SINCE
+        ================================================= */
+
+        if(user.createdAt){
+
+            const date =
+                new Date(
+                    user.createdAt
+                );
+
+
+            document.getElementById(
+                "memberSince"
+            ).textContent =
+                date.toLocaleDateString(
+                    "en-IN",
+                    {
+                        day:"2-digit",
+                        month:"short",
+                        year:"numeric"
+                    }
+                );
+
+        }
+        else{
+
+            document.getElementById(
+                "memberSince"
+            ).textContent =
+                "Not available";
+
+        }
+
+
+        /* =================================================
+           AVATAR INITIALS
+        ================================================= */
+
+        const initials =
+            username
+                .trim()
+                .split(/\s+/)
+                .slice(0,2)
+                .map(
+                    word =>
+                        word
+                            .charAt(0)
+                            .toUpperCase()
+                )
+                .join("");
+
+
+        document.getElementById(
+            "avatarInitials"
+        ).textContent =
+            initials ||
+            "TB";
+
+
+        /* =================================================
+           AVATAR IMAGE
+        ================================================= */
+
+        renderAvatarImage(user.avatar);
+
+
+    }
+    catch(error){
+
+        console.error(
+            "Profile loading error:",
+            error
+        );
+
+
+        const errorBox =
+            document.getElementById(
+                "errorMessage"
+            );
+
+
+        errorBox.textContent =
+            error.message ||
+            "Cannot connect to the server. Please start the backend.";
+
+
+        errorBox.style.display =
+            "block";
+
+    }
+
+}
+
+
+/* =========================================================
+   PROFILE PICTURE
+========================================================= */
+
+function renderAvatarImage(avatarPath){
+
+    const img =
+        document.getElementById("avatarImage");
+
+    const initials =
+        document.getElementById("avatarInitials");
+
+    const removeLink =
+        document.getElementById("avatarRemoveLink");
+
+    if(avatarPath){
+
+        img.src =
+            API_BASE + avatarPath + "?t=" + Date.now();
+
+        img.style.display = "block";
+
+        initials.style.display = "none";
+
+        removeLink.style.display = "inline-block";
+
+    }else{
+
+        img.style.display = "none";
+
+        initials.style.display = "block";
+
+        removeLink.style.display = "none";
+
+    }
+
+}
+
+
+async function uploadAvatar(file){
+
+    if(!file){
+        return;
+    }
+
+    if(!["image/jpeg","image/png","image/webp"].includes(file.type)){
+
+        alert("Please choose a JPG, PNG or WEBP image.");
+
+        return;
+
+    }
+
+    if(file.size > 2 * 1024 * 1024){
+
+        alert("Image must be smaller than 2MB.");
+
+        return;
+
+    }
+
+    const token =
+        localStorage.getItem("thriftyBiteToken");
+
+    const formData =
+        new FormData();
+
+    formData.append("avatar", file);
+
+    try{
+
+        const response =
+            await fetch(
+                `${API_BASE}/api/profile/avatar`,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Authorization":`Bearer ${token}`
+                    },
+
+                    body:formData
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if(!response.ok || !data.success){
+
+            throw new Error(
+                data.message ||
+                "Unable to upload profile picture."
+            );
+
+        }
+
+        renderAvatarImage(data.avatar);
+
+        currentUser.avatar = data.avatar;
+
+    }catch(error){
+
+        alert(
+            error.message ||
+            "Unable to upload profile picture."
+        );
+
+    }finally{
+
+        document.getElementById("avatarFileInput").value = "";
+
+    }
+
+}
+
+
+async function removeAvatar(){
+
+    const token =
+        localStorage.getItem("thriftyBiteToken");
+
+    try{
+
+        const response =
+            await fetch(
+                `${API_BASE}/api/profile/avatar`,
+                {
+                    method:"DELETE",
+
+                    headers:{
+                        "Authorization":`Bearer ${token}`
+                    }
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if(!response.ok || !data.success){
+
+            throw new Error(
+                data.message ||
+                "Unable to remove profile picture."
+            );
+
+        }
+
+        renderAvatarImage("");
+
+        currentUser.avatar = "";
+
+    }catch(error){
+
+        alert(
+            error.message ||
+            "Unable to remove profile picture."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   EDIT PROFILE
+========================================================= */
+
+function editProfile(){
+
+    if(!currentUser){
+        return;
+    }
+
+    document.getElementById("editName").value =
+        currentUser.name || "";
+
+    document.getElementById("editMobile").value =
+        currentUser.mobile || "";
+
+    document.getElementById("editAddress").value =
+        currentUser.address || "";
+
+    const modalMessage =
+        document.getElementById("editModalMessage");
+
+    modalMessage.className = "modal-message";
+
+    document.getElementById("editModalOverlay")
+        .classList.add("show");
+
+}
+
+
+function closeEditModal(){
+
+    document.getElementById("editModalOverlay")
+        .classList.remove("show");
+
+}
+
+
+document
+.getElementById("editProfileForm")
+.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    const token =
+        localStorage.getItem("thriftyBiteToken");
+
+    const modalMessage =
+        document.getElementById("editModalMessage");
+
+    const name =
+        document.getElementById("editName").value.trim();
+
+    const mobile =
+        document.getElementById("editMobile").value.trim();
+
+    const address =
+        document.getElementById("editAddress").value.trim();
+
+    if(!name){
+
+        modalMessage.textContent =
+            "Name is required.";
+
+        modalMessage.className =
+            "modal-message error show";
+
+        return;
+
+    }
+
+    try{
+
+        const response =
+            await fetch(
+                `${API_BASE}/api/profile`,
+                {
+                    method:"PUT",
+
+                    headers:{
+                        "Content-Type":"application/json",
+                        "Authorization":`Bearer ${token}`
+                    },
+
+                    body:JSON.stringify({
+                        name,
+                        mobile,
+                        address
+                    })
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if(!response.ok || !data.success){
+
+            throw new Error(
+                data.message ||
+                "Unable to update profile."
+            );
+
+        }
+
+        modalMessage.textContent =
+            "Profile updated successfully!";
+
+        modalMessage.className =
+            "modal-message success show";
+
+        /* refresh the stored user + saved localStorage copy */
+
+        currentUser = Object.assign(
+            currentUser,
+            { name, mobile, address }
+        );
+
+        const storedUser =
+            JSON.parse(
+                localStorage.getItem("thriftyBiteUser") || "{}"
+            );
+
+        localStorage.setItem(
+            "thriftyBiteUser",
+            JSON.stringify(
+                Object.assign(storedUser, { name })
+            )
+        );
+
+        setTimeout(function(){
+
+            closeEditModal();
+
+            loadProfile();
+
+        },900);
+
+    }catch(error){
+
+        modalMessage.textContent =
+            error.message ||
+            "Unable to update profile.";
+
+        modalMessage.className =
+            "modal-message error show";
+
+    }
+
+});
+
+
+/* =========================================================
+   GO HOME
+========================================================= */
+
+function goHome(){
+
+    window.location.href =
+        "home.html";
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+function logout(){
+
+    localStorage.removeItem(
+        "thriftyBiteToken"
+    );
+
+    localStorage.removeItem(
+        "thriftyBiteUser"
+    );
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =========================================================
+   START PROFILE
+========================================================= */
+
+loadProfile();
+
+</script>
+
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thrifty Bite | Confirm UPI Payment</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/theme.css">
+
+<style>
+.phone-card{
+    max-width:380px;
+    margin:30px auto;
+    padding:28px 22px;
+    border-radius:20px;
+    text-align:center;
+    background:var(--maroon-dark, #1c050d);
+    color:var(--cream, #fff8e8);
+    border:1px solid rgba(212,175,55,.45);
+}
+.pay-tag{
+    display:inline-block; font-size:11px; padding:3px 10px; border-radius:20px;
+    background:rgba(212,175,55,.15); color:var(--gold-light); letter-spacing:1px;
+}
+.to-line{ margin-top:18px; color:var(--muted); font-size:14px; }
+.merchant{ font-family:"Cinzel",serif; font-size:1.3em; color:var(--gold-light); margin-top:4px; }
+.amount{ font-size:2.4em; font-weight:700; color:var(--cream); margin:16px 0 4px; }
+.from-line{ font-size:13px; color:var(--muted); }
+.actions{ display:flex; flex-direction:column; gap:10px; margin-top:24px; }
+.actions .btn{ width:100%; padding:14px; }
+.done-icon{
+    width:76px; height:76px; border-radius:50%; margin:10px auto 16px;
+    display:flex; align-items:center; justify-content:center; font-size:38px;
+}
+.done-icon.ok{ background:rgba(76,175,107,.15); color:var(--success); border:2px solid var(--success); }
+.done-icon.fail{ background:rgba(226,85,90,.15); color:var(--danger); border:2px solid var(--danger); }
+
+html[data-tb-theme="light"] .phone-card{
+    background:rgba(255,255,255,.97)!important;
+    color:#35101b!important;
+    border-color:#d9b95b!important;
+    box-shadow:0 18px 48px rgba(70,20,35,.12);
+}
+html[data-tb-theme="light"] .phone-card .merchant,
+html[data-tb-theme="light"] .phone-card .amount,
+html[data-tb-theme="light"] .phone-card h2{color:#6f102b!important}
+html[data-tb-theme="light"] .phone-card .to-line,
+html[data-tb-theme="light"] .phone-card .from-line,
+html[data-tb-theme="light"] .phone-card .muted{color:#725a60!important}
+html[data-tb-theme="light"] .phone-card .pay-tag{background:#fff4d5;color:#6f102b}
+html[data-tb-theme="light"] .phone-card .done-icon.ok{background:#e7f7eb;color:#218838;border-color:#218838}
+html[data-tb-theme="light"] .phone-card .done-icon.fail{background:#fff0f0;color:#c62838;border-color:#c62838}
+</style>
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="phone-card" id="card">
+        <div class="muted">Loading payment…</div>
+    </div>
+</div>
+
+<script>
+/* Opened on the phone by scanning the demo UPI QR code.
+   No login needed — the long random session id in the link
+   identifies the payment. */
+
+const API = window.location.origin + "/api/payment/demo";
+const sessionId = new URLSearchParams(window.location.search).get("s");
+const card = document.getElementById("card");
+
+function money(n){
+    return "₹" + Number(n || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 });
+}
+
+function esc(str){
+    const div = document.createElement("div");
+    div.textContent = str == null ? "" : String(str);
+    return div.innerHTML;
+}
+
+function showDone(ok, text){
+    card.innerHTML = "<div class='done-icon " + (ok ? "ok" : "fail") + "'>" + (ok ? "✓" : "✕") + "</div>"
+        + "<h2>" + (ok ? "Payment successful" : "Payment not completed") + "</h2>"
+        + "<p class='muted mt-12'>" + esc(text) + "</p>";
+}
+
+async function respond(outcome){
+    card.querySelectorAll("button").forEach(b => b.disabled = true);
+
+    try{
+        const res = await fetch(API + "/confirm", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ sessionId, outcome })
+        });
+        const data = await res.json();
+
+        if(!res.ok) throw new Error(data.message || "Payment could not be completed.");
+
+        if(data.status === "PAID"){
+            showDone(true, "Your order has been placed. You can go back to your computer.");
+        }else{
+            showDone(false, "You declined the payment. No money was deducted.");
+        }
+    }catch(err){
+        showDone(false, err.message);
+    }
+}
+
+async function load(){
+    if(!sessionId){
+        showDone(false, "Invalid payment link.");
+        return;
+    }
+
+    try{
+        const res = await fetch(API + "/session/" + encodeURIComponent(sessionId));
+        const data = await res.json();
+
+        if(!res.ok) throw new Error(data.message || "Payment not found.");
+
+        const s = data.session;
+
+        if(s.status === "PAID") return showDone(true, "This payment is already complete.");
+        if(s.status === "FAILED") return showDone(false, "This payment was declined.");
+        if(s.status === "EXPIRED") return showDone(false, "This QR code has expired. Start the payment again on your computer.");
+
+        card.innerHTML = "<span class='pay-tag'>DEMO UPI · NO REAL MONEY</span>"
+            + "<div class='to-line'>Paying to</div>"
+            + "<div class='merchant'>Thrifty Bite</div>"
+            + "<div class='from-line'>" + esc(s.restaurantName ? "Order from " + s.restaurantName : "Food order") + "</div>"
+            + "<div class='amount'>" + money(s.amount) + "</div>"
+            + "<div class='from-line'>UPI ID: success@razorpay</div>"
+            + "<div class='actions'>"
+                + "<button class='btn' id='payBtn'>Pay " + money(s.amount) + "</button>"
+                + "<button class='btn btn-outline' id='declineBtn'>Decline</button>"
+            + "</div>";
+
+        document.getElementById("payBtn").addEventListener("click", () => respond("success"));
+        document.getElementById("declineBtn").addEventListener("click", () => respond("failure"));
+
+    }catch(err){
+        showDone(false, err.message);
+    }
+}
+
+load();
+</script>
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+</html>

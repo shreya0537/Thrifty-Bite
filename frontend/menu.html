@@ -1,0 +1,3992 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Thrifty Bite | Menu</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap"
+rel="stylesheet">
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    min-height:100vh;
+    font-family:"DM Sans",sans-serif;
+    color:#fff8e8;
+    overflow-x:hidden;
+
+    background:
+        radial-gradient(
+            circle at 12% 18%,
+            rgba(212,175,55,.12),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 88% 30%,
+            rgba(132,28,48,.30),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #2b0714,
+            #4b0d1d 48%,
+            #260611
+        );
+}
+
+
+/* =========================================================
+   ROYAL BORDER
+========================================================= */
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:9px;
+    border:1px solid rgba(212,175,55,.45);
+    pointer-events:none;
+    z-index:999;
+}
+
+body::after{
+    content:"";
+    position:fixed;
+    inset:16px;
+    border:1px solid rgba(212,175,55,.18);
+    pointer-events:none;
+    z-index:999;
+}
+
+
+/* =========================================================
+   AMBIENT GLOW
+========================================================= */
+
+.glow{
+    position:fixed;
+    width:420px;
+    height:420px;
+    border-radius:50%;
+    filter:blur(90px);
+    opacity:.22;
+    pointer-events:none;
+    z-index:-1;
+    will-change:transform;
+}
+
+.glow.one{
+    background:#d4af37;
+    top:-180px;
+    left:-100px;
+    animation:moveGlow 9s infinite alternate ease-in-out;
+}
+
+.glow.two{
+    background:#8f1d3c;
+    right:-160px;
+    top:25%;
+    animation:moveGlow 12s infinite alternate-reverse ease-in-out;
+}
+
+.glow.three{
+    background:#d4af37;
+    bottom:-220px;
+    left:35%;
+    animation:moveGlow 10s infinite alternate ease-in-out;
+}
+
+@keyframes moveGlow{
+
+    from{
+        transform:translate(0,0) scale(1);
+    }
+
+    to{
+        transform:translate(80px,50px) scale(1.25);
+    }
+}
+
+
+/* =========================================================
+   GOLD SPARKS
+========================================================= */
+
+.spark{
+    position:fixed;
+    width:3px;
+    height:3px;
+    border-radius:50%;
+    background:#f7df7a;
+
+    box-shadow:
+        0 0 12px #d4af37;
+
+    pointer-events:none;
+    z-index:0;
+    animation:sparkFloat linear infinite;
+    will-change:transform,opacity;
+}
+
+.spark:nth-of-type(4){
+    left:7%;
+    top:35%;
+    animation-duration:7s;
+}
+
+.spark:nth-of-type(5){
+    left:14%;
+    top:72%;
+    animation-duration:9s;
+}
+
+.spark:nth-of-type(6){
+    left:24%;
+    top:18%;
+    animation-duration:6s;
+}
+
+.spark:nth-of-type(7){
+    left:37%;
+    top:82%;
+    animation-duration:8s;
+}
+
+.spark:nth-of-type(8){
+    left:48%;
+    top:24%;
+    animation-duration:10s;
+}
+
+.spark:nth-of-type(9){
+    left:57%;
+    top:66%;
+    animation-duration:7s;
+}
+
+.spark:nth-of-type(10){
+    left:68%;
+    top:14%;
+    animation-duration:9s;
+}
+
+.spark:nth-of-type(11){
+    left:76%;
+    top:78%;
+    animation-duration:8s;
+}
+
+.spark:nth-of-type(12){
+    left:87%;
+    top:40%;
+    animation-duration:6s;
+}
+
+.spark:nth-of-type(13){
+    left:94%;
+    top:68%;
+    animation-duration:10s;
+}
+
+.spark:nth-of-type(14){
+    left:31%;
+    top:45%;
+    animation-duration:7s;
+}
+
+.spark:nth-of-type(15){
+    left:82%;
+    top:23%;
+    animation-duration:9s;
+}
+
+@keyframes sparkFloat{
+
+    0%{
+        transform:translateY(20px) scale(.5);
+        opacity:0;
+    }
+
+    20%{
+        opacity:1;
+    }
+
+    50%{
+        transform:translateY(-40px) scale(1);
+        opacity:.9;
+    }
+
+    100%{
+        transform:translateY(-100px) scale(.2);
+        opacity:0;
+    }
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.navbar{
+    height:82px;
+    width:100%;
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:100;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 55px;
+
+    background:rgba(38,6,17,.90);
+
+    backdrop-filter:blur(18px);
+
+    border-bottom:
+        1px solid
+        rgba(212,175,55,.28);
+}
+
+
+/* BRAND */
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    text-decoration:none;
+    color:#fff8e8;
+}
+
+.brand-logo{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    object-fit:cover;
+
+    border:
+        2px solid
+        #d4af37;
+
+    box-shadow:
+        0 0 15px rgba(212,175,55,.35),
+        inset 0 0 10px rgba(212,175,55,.2);
+}
+
+.brand-name{
+    font-family:"Cinzel",serif;
+    font-size:21px;
+    font-weight:700;
+    letter-spacing:1px;
+}
+
+.brand-name span{
+    color:#d4af37;
+}
+
+
+/* NAV LINKS */
+
+.nav-links{
+    display:flex;
+    align-items:center;
+    gap:5px;
+}
+
+.nav-links a{
+    position:relative;
+    color:#eadfca;
+    text-decoration:none;
+    padding:11px 14px;
+    font-size:14px;
+    font-weight:600;
+    border-radius:8px;
+    transition:.3s;
+}
+
+.nav-links a::after{
+    content:"";
+    position:absolute;
+    width:0;
+    height:2px;
+    background:#d4af37;
+    bottom:4px;
+    left:50%;
+    transform:translateX(-50%);
+    transition:.3s;
+}
+
+.nav-links a:hover,
+.nav-links a.active{
+    color:#f7df7a;
+    background:rgba(212,175,55,.08);
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after{
+    width:55%;
+}
+
+
+/* NAV RIGHT */
+
+.nav-right{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+
+/* PROFILE */
+
+.profile-btn{
+    width:43px;
+    height:43px;
+    border-radius:50%;
+
+    border:
+        1px solid
+        rgba(212,175,55,.6);
+
+    background:
+        radial-gradient(
+            circle at 35% 30%,
+            rgba(247,223,122,.16),
+            rgba(255,255,255,.035) 55%,
+            rgba(0,0,0,.12)
+        );
+
+    color:#f7df7a;
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    position:relative;
+    transition:.35s ease;
+}
+
+.profile-btn svg{
+    width:20px;
+    height:20px;
+    fill:none;
+    stroke:currentColor;
+    stroke-width:1.8;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+.profile-btn:hover{
+    background:
+        linear-gradient(
+            135deg,
+            #d4af37,
+            #f7df7a
+        );
+
+    color:#2b0714;
+
+    transform:
+        translateY(-2px)
+        scale(1.04);
+
+    box-shadow:
+        0 8px 24px
+        rgba(212,175,55,.25);
+}
+
+
+/* HAMBURGER */
+
+.menu-btn{
+    width:43px;
+    height:43px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.5);
+
+    background:
+        rgba(255,255,255,.04);
+
+    border-radius:9px;
+    cursor:pointer;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+
+    transition:.3s;
+}
+
+.menu-btn span{
+    width:20px;
+    height:2px;
+    background:#f7df7a;
+    transition:.3s;
+}
+
+.menu-btn:hover{
+    background:
+        rgba(212,175,55,.12);
+
+    box-shadow:
+        0 0 18px
+        rgba(212,175,55,.2);
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.overlay{
+    position:fixed;
+    inset:0;
+
+    background:
+        rgba(0,0,0,.60);
+
+    backdrop-filter:blur(4px);
+
+    opacity:0;
+    visibility:hidden;
+
+    transition:.35s;
+    z-index:150;
+}
+
+.overlay.show{
+    opacity:1;
+    visibility:visible;
+}
+
+.sidebar{
+    position:fixed;
+    top:0;
+    right:-380px;
+
+    width:350px;
+    max-width:90%;
+    height:100vh;
+
+    background:
+        linear-gradient(
+            180deg,
+            #390817,
+            #250610
+        );
+
+    border-left:
+        1px solid
+        rgba(212,175,55,.4);
+
+    box-shadow:
+        -15px 0 50px
+        rgba(0,0,0,.45);
+
+    z-index:200;
+
+    transition:.4s ease;
+
+    padding:25px 22px;
+
+    overflow-y:auto;
+}
+
+.sidebar.open{
+    right:0;
+}
+
+.sidebar-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding-bottom:22px;
+
+    border-bottom:
+        1px solid
+        rgba(212,175,55,.2);
+}
+
+.sidebar-title{
+    font-family:"Cinzel",serif;
+    color:#f7df7a;
+    font-size:21px;
+}
+
+.close-btn{
+    width:36px;
+    height:36px;
+    border-radius:8px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.4);
+
+    background:transparent;
+    color:#f7df7a;
+    font-size:22px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.close-btn:hover{
+    background:
+        rgba(212,175,55,.12);
+
+    transform:rotate(90deg);
+}
+
+.sidebar-user{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:22px 5px;
+}
+
+.sidebar-avatar{
+    width:55px;
+    height:55px;
+    border-radius:50%;
+
+    border:
+        2px solid
+        #d4af37;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        rgba(212,175,55,.1);
+
+    color:#f7df7a;
+    font-size:22px;
+}
+
+.sidebar-user h3{
+    font-size:14px;
+    color:#fff8e8;
+
+    max-width:220px;
+
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+.sidebar-user p{
+    font-size:12px;
+    color:#cdbfa9;
+    margin-top:4px;
+}
+
+.side-links{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.side-links a{
+    text-decoration:none;
+    color:#eadfca;
+
+    padding:14px 15px;
+
+    border-radius:10px;
+
+    display:flex;
+    align-items:center;
+    gap:13px;
+
+    font-size:14px;
+
+    transition:.3s;
+}
+
+.side-links a span{
+    width:25px;
+    text-align:center;
+    color:#d4af37;
+    font-size:17px;
+}
+
+.side-links a:hover{
+    background:
+        rgba(212,175,55,.1);
+
+    color:#f7df7a;
+
+    transform:
+        translateX(5px);
+}
+
+.premium-card{
+    margin-top:25px;
+    padding:20px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.45);
+
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(212,175,55,.13),
+            rgba(255,255,255,.025)
+        );
+}
+
+.premium-label{
+    font-size:10px;
+    color:#d4af37;
+    letter-spacing:2px;
+    text-transform:uppercase;
+}
+
+.premium-card h3{
+    font-family:"Cinzel",serif;
+    margin:7px 0;
+    color:#fff8e8;
+    font-size:16px;
+}
+
+.premium-card p{
+    color:#cdbfa9;
+    font-size:12px;
+    line-height:1.6;
+}
+
+.premium-btn{
+    display:inline-block;
+    margin-top:14px;
+
+    text-decoration:none;
+
+    color:#2b0714;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d4af37,
+            #f7df7a
+        );
+
+    padding:9px 14px;
+    border-radius:7px;
+
+    font-size:12px;
+    font-weight:700;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+main{
+    padding-top:82px;
+    position:relative;
+    z-index:1;
+}
+
+
+/* =========================================================
+   MENU HERO
+========================================================= */
+
+.menu-hero{
+    max-width:1250px;
+    margin:auto;
+
+    padding:75px 45px 45px;
+
+    text-align:center;
+}
+
+.menu-tag{
+    color:#d4af37;
+    font-size:11px;
+    letter-spacing:4px;
+    text-transform:uppercase;
+    font-weight:700;
+    margin-bottom:13px;
+}
+
+.menu-hero h1{
+    font-family:"Cinzel",serif;
+    font-size:clamp(38px,5vw,62px);
+    color:#fff8e8;
+    line-height:1.1;
+}
+
+.menu-hero h1 span{
+    color:#d4af37;
+}
+
+.menu-hero p{
+    max-width:700px;
+    margin:18px auto 0;
+
+    color:#cdbfa9;
+
+    font-size:14px;
+    line-height:1.8;
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.menu-controls{
+    max-width:1250px;
+    margin:auto;
+
+    padding:0 45px 30px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.search-box{
+    width:100%;
+    max-width:650px;
+    position:relative;
+}
+
+.search-box input{
+    width:100%;
+    height:52px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.35);
+
+    border-radius:13px;
+
+    outline:none;
+
+    background:
+        rgba(255,255,255,.045);
+
+    color:#fff8e8;
+
+    padding:0 50px 0 20px;
+
+    font-family:"DM Sans",sans-serif;
+    font-size:14px;
+
+    transition:.3s;
+}
+
+.search-box input::placeholder{
+    color:#9f8f7b;
+}
+
+.search-box input:focus{
+    border-color:#d4af37;
+
+    background:
+        rgba(212,175,55,.06);
+
+    box-shadow:
+        0 0 25px
+        rgba(212,175,55,.10);
+}
+
+.search-icon{
+    position:absolute;
+    right:18px;
+    top:50%;
+
+    transform:translateY(-50%);
+
+    color:#d4af37;
+    font-size:20px;
+    pointer-events:none;
+}
+
+
+/* =========================================================
+   CATEGORIES
+========================================================= */
+
+.categories-wrapper{
+    max-width:1250px;
+    margin:auto;
+
+    padding:0 45px 35px;
+}
+
+.categories{
+    display:flex;
+    justify-content:center;
+    gap:9px;
+    flex-wrap:wrap;
+}
+
+.category-btn{
+    border:
+        1px solid
+        rgba(212,175,55,.25);
+
+    background:
+        rgba(255,255,255,.035);
+
+    color:#cdbfa9;
+
+    padding:10px 16px;
+
+    border-radius:30px;
+
+    cursor:pointer;
+
+    font-family:"DM Sans",sans-serif;
+
+    font-size:12px;
+    font-weight:600;
+
+    transition:
+        color .25s ease,
+        border-color .25s ease,
+        background .25s ease,
+        transform .25s ease;
+}
+
+.category-btn:hover{
+    color:#f7df7a;
+
+    border-color:
+        rgba(212,175,55,.6);
+
+    background:
+        rgba(212,175,55,.08);
+
+    transform:translateY(-2px);
+}
+
+.category-btn.active{
+    color:#2b0714;
+    border-color:#d4af37;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d4af37,
+            #f7df7a
+        );
+
+    box-shadow:
+        0 5px 20px
+        rgba(212,175,55,.15);
+}
+
+
+/* =========================================================
+   MENU AREA
+========================================================= */
+
+.menu-section{
+    max-width:1250px;
+    margin:auto;
+
+    padding:0 45px 100px;
+}
+
+.menu-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:25px;
+}
+
+.menu-top h2{
+    font-family:"Cinzel",serif;
+    font-size:23px;
+    color:#fff8e8;
+}
+
+.menu-top span{
+    color:#a99b88;
+    font-size:12px;
+}
+
+
+/* =========================================================
+   MENU GRID
+========================================================= */
+
+.menu-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:20px;
+
+    /* Prevent layout jumping while content loads */
+    min-height:120px;
+
+    contain:layout;
+}
+
+
+/* =========================================================
+   FOOD CARD
+========================================================= */
+
+.food-card{
+    position:relative;
+    overflow:hidden;
+
+    border:
+        1px solid
+        rgba(212,175,55,.22);
+
+    border-radius:16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.045),
+            rgba(212,175,55,.025)
+        );
+
+    /* Important: no entrance animation */
+    opacity:1;
+
+    transform:translateZ(0);
+
+    transition:
+        transform .35s ease,
+        border-color .35s ease,
+        box-shadow .35s ease;
+
+    backface-visibility:hidden;
+}
+
+.food-card:hover{
+    transform:translate3d(0,-8px,0);
+
+    border-color:
+        rgba(212,175,55,.65);
+
+    box-shadow:
+        0 18px 40px
+        rgba(0,0,0,.28);
+}
+
+
+/* FOOD IMAGE */
+
+.food-image{
+    width:100%;
+    height:190px;
+
+    overflow:hidden;
+    position:relative;
+
+    background:#3b0a19;
+}
+
+.food-image img{
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    display:block;
+
+    transition:
+        transform .5s ease;
+
+    backface-visibility:hidden;
+}
+
+.food-card:hover .food-image img{
+    transform:scale(1.08);
+}
+
+.fav-btn{
+    position:absolute;
+    bottom:10px;
+    right:10px;
+    z-index:4;
+
+    width:34px;
+    height:34px;
+
+    border-radius:50%;
+    border:1px solid rgba(212,175,55,.5);
+    background:rgba(38,6,17,.72);
+    backdrop-filter:blur(4px);
+
+    color:#eadfca;
+    font-size:16px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    cursor:pointer;
+    transition:.25s;
+}
+
+.fav-btn:hover{
+    background:rgba(212,175,55,.2);
+    border-color:#d4af37;
+    transform:scale(1.08);
+}
+
+.fav-btn.active{
+    color:#ff5a7a;
+    border-color:#ff5a7a;
+}
+
+.food-image::after{
+    content:"";
+
+    position:absolute;
+    inset:0;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(43,7,20,.72),
+            transparent 55%
+        );
+
+    pointer-events:none;
+}
+
+
+/* VEG BADGE */
+
+.veg-badge{
+    position:absolute;
+
+    left:12px;
+    top:12px;
+
+    z-index:3;
+
+    padding:5px 8px;
+
+    border-radius:6px;
+
+    font-size:9px;
+    font-weight:800;
+
+    background:
+        rgba(20,80,45,.88);
+
+    color:#d7ffdf;
+
+    border:
+        1px solid
+        rgba(150,255,180,.3);
+}
+
+.nonveg-badge{
+    background:
+        rgba(120,25,30,.9);
+
+    color:#ffdada;
+
+    border-color:
+        rgba(255,150,150,.3);
+}
+
+
+/* DISCOUNT */
+
+.discount-badge{
+    position:absolute;
+
+    right:12px;
+    top:12px;
+
+    z-index:3;
+
+    padding:5px 8px;
+
+    border-radius:6px;
+
+    font-size:9px;
+    font-weight:800;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d4af37,
+            #f7df7a
+        );
+
+    color:#2b0714;
+
+    box-shadow:
+        0 4px 12px
+        rgba(212,175,55,.25);
+}
+
+
+/* FOOD CONTENT */
+
+.food-content{
+    padding:17px;
+}
+
+.food-category{
+    color:#d4af37;
+
+    text-transform:uppercase;
+
+    letter-spacing:1.5px;
+
+    font-size:8px;
+    font-weight:800;
+
+    margin-bottom:7px;
+}
+
+.food-name{
+    font-family:"Cinzel",serif;
+
+    color:#fff8e8;
+
+    font-size:15px;
+    line-height:1.3;
+
+    margin-bottom:7px;
+}
+
+.food-description{
+    color:#bcae9a;
+
+    font-size:11px;
+
+    line-height:1.55;
+
+    min-height:34px;
+
+    margin-bottom:12px;
+}
+
+
+/* RATING */
+
+.food-rating{
+    display:flex;
+    align-items:center;
+
+    gap:5px;
+
+    margin-bottom:13px;
+}
+
+.stars{
+    color:#f7df7a;
+    font-size:11px;
+    letter-spacing:1px;
+}
+
+.rating-number{
+    color:#d8ccb9;
+    font-size:10px;
+}
+
+.review-count{
+    color:#8f8170;
+    font-size:9px;
+}
+
+
+/* PRICE */
+
+.food-bottom{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:10px;
+}
+
+.price-area{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+}
+
+.old-price{
+    color:#806f60;
+    font-size:10px;
+    text-decoration:line-through;
+}
+
+.current-price{
+    color:#f7df7a;
+
+    font-family:"Cinzel",serif;
+
+    font-size:18px;
+    font-weight:700;
+}
+
+
+/* ADD BUTTON */
+
+.add-btn{
+    border:none;
+    cursor:pointer;
+
+    padding:10px 13px;
+
+    border-radius:8px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #c99d27,
+            #f7df7a
+        );
+
+    color:#2b0714;
+
+    font-family:"DM Sans",sans-serif;
+
+    font-size:11px;
+    font-weight:800;
+
+    transition:.3s;
+
+    box-shadow:
+        0 5px 15px
+        rgba(212,175,55,.12);
+}
+
+.add-btn:hover{
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 8px 22px
+        rgba(212,175,55,.25);
+}
+
+.add-btn.added{
+    background:
+        linear-gradient(
+            135deg,
+            #e2bd50,
+            #fff0a8
+        );
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading{
+    grid-column:1 / -1;
+
+    text-align:center;
+
+    padding:70px 20px;
+
+    color:#cdbfa9;
+}
+
+.loading-icon{
+    font-size:34px;
+
+    color:#d4af37;
+
+    animation:
+        spin 2s linear infinite;
+
+    margin-bottom:15px;
+}
+
+@keyframes spin{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty-state{
+    grid-column:1 / -1;
+
+    text-align:center;
+
+    padding:70px 20px;
+}
+
+.empty-state .icon{
+    font-size:40px;
+    color:#d4af37;
+    margin-bottom:15px;
+}
+
+.empty-state h3{
+    font-family:"Cinzel",serif;
+    font-size:22px;
+    color:#fff8e8;
+    margin-bottom:8px;
+}
+
+.empty-state p{
+    color:#a99b88;
+    font-size:13px;
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+    position:fixed;
+
+    left:50%;
+    bottom:32px;
+
+    transform:
+        translate3d(-50%,30px,0);
+
+    opacity:0;
+
+    pointer-events:none;
+
+    z-index:500;
+
+    min-width:280px;
+    max-width:90%;
+
+    padding:13px 18px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.55);
+
+    border-radius:10px;
+
+    background:
+        rgba(43,7,20,.96);
+
+    color:#fff8e8;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.4),
+        0 0 25px rgba(212,175,55,.12);
+
+    text-align:center;
+
+    font-size:12px;
+
+    transition:.35s ease;
+}
+
+.toast.show{
+    opacity:1;
+
+    transform:
+        translate3d(-50%,0,0);
+}
+
+.toast strong{
+    color:#f7df7a;
+}
+
+
+/* =========================================================
+   EXACT ROYAL CART FROM HOME PAGE
+========================================================= */
+
+.royal-cart{
+    position:fixed;
+
+    right:28px;
+    bottom:28px;
+
+    width:76px;
+    height:76px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    gap:12px;
+    padding:8px;
+
+    text-decoration:none;
+
+    color:#fff8e8;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(83,16,35,.96),
+            rgba(38,6,17,.98)
+        );
+
+    border:
+        1px solid
+        rgba(212,175,55,.72);
+
+    border-radius:
+        24px 24px 10px 24px;
+
+    box-shadow:
+        0 16px 40px rgba(0,0,0,.42),
+        0 0 24px rgba(212,175,55,.13),
+        inset 0 0 0 1px rgba(247,223,122,.06),
+        inset 0 0 20px rgba(212,175,55,.06);
+
+    backdrop-filter:blur(16px);
+
+    z-index:80;
+
+    overflow:visible;
+
+    transition:
+        width .45s cubic-bezier(.2,.8,.2,1),
+        border-radius .35s ease,
+        transform .35s ease,
+        box-shadow .35s ease,
+        background .35s ease;
+
+    isolation:isolate;
+}
+
+.royal-cart::before{
+    content:"";
+
+    position:absolute;
+
+    left:-1px;
+
+    top:12px;
+    bottom:12px;
+
+    width:3px;
+
+    border-radius:
+        0 4px 4px 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f7df7a,
+            #d4af37,
+            #8d6a14
+        );
+
+    box-shadow:
+        0 0 12px
+        rgba(247,223,122,.32);
+
+    transition:.35s ease;
+
+    pointer-events:none;
+}
+
+.royal-cart::after{
+    content:"";
+
+    position:absolute;
+
+    inset:1px;
+
+    border-radius:
+        23px 23px 9px 23px;
+
+    background:
+        linear-gradient(
+            115deg,
+            transparent 20%,
+            rgba(247,223,122,.15) 42%,
+            rgba(255,255,255,.05) 49%,
+            transparent 62%
+        );
+
+    background-size:250% 250%;
+
+    opacity:0;
+
+    transition:opacity .35s ease;
+
+    animation:
+        royalCartShine 4s ease-in-out infinite;
+
+    pointer-events:none;
+
+    z-index:-1;
+}
+
+@keyframes royalCartShine{
+
+    0%,55%,100%{
+        background-position:140% 0;
+    }
+
+    75%{
+        background-position:-40% 100%;
+    }
+}
+
+.royal-cart:hover{
+    width:252px;
+
+    border-radius:22px;
+
+    transform:
+        translateY(-7px);
+
+    background:
+        linear-gradient(
+            120deg,
+            rgba(90,17,39,.98),
+            rgba(43,7,20,.99)
+        );
+
+    box-shadow:
+        0 22px 48px rgba(0,0,0,.48),
+        0 0 35px rgba(212,175,55,.20),
+        inset 0 0 24px rgba(212,175,55,.07);
+}
+
+.royal-cart:hover::before{
+    top:9px;
+    bottom:9px;
+
+    box-shadow:
+        0 0 18px
+        rgba(247,223,122,.48);
+}
+
+.royal-cart:hover::after{
+    opacity:1;
+}
+
+.royal-cart:focus-visible{
+    outline:
+        2px solid
+        #f7df7a;
+
+    outline-offset:4px;
+}
+
+.royal-cart:active{
+    transform:
+        translateY(-3px)
+        scale(.98);
+}
+
+
+/* CART ICON PANEL */
+
+.cart-image{
+    width:56px;
+    height:56px;
+
+    flex:0 0 56px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    position:relative;
+
+    border-radius:18px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.62);
+
+    background:
+        radial-gradient(
+            circle at 28% 22%,
+            rgba(247,223,122,.20),
+            transparent 42%
+        ),
+
+        linear-gradient(
+            145deg,
+            rgba(212,175,55,.10),
+            rgba(255,255,255,.025)
+        );
+
+    box-shadow:
+        inset 0 0 18px rgba(212,175,55,.08),
+        0 0 20px rgba(212,175,55,.10);
+
+    transition:
+        .4s cubic-bezier(.2,.8,.2,1);
+
+    z-index:2;
+}
+
+.cart-icon{
+    width:31px;
+    height:31px;
+
+    fill:none;
+
+    stroke:#f7df7a;
+
+    stroke-width:1.7;
+
+    stroke-linecap:round;
+    stroke-linejoin:round;
+
+    filter:
+        drop-shadow(
+            0 0 6px
+            rgba(247,223,122,.25)
+        );
+
+    transition:.4s ease;
+}
+
+.cart-icon .cart-basket{
+    fill:
+        rgba(212,175,55,.10);
+}
+
+.cart-icon .cart-crown{
+    fill:#f7df7a;
+    stroke:#f7df7a;
+    stroke-width:1.1;
+}
+
+.cart-icon .wheel{
+    fill:#f7df7a;
+    stroke:none;
+}
+
+.royal-cart:hover .cart-image{
+    border-color:#f7df7a;
+
+    background:
+        linear-gradient(
+            145deg,
+            #d4af37,
+            #f7df7a
+        );
+
+    box-shadow:
+        0 0 28px rgba(212,175,55,.34),
+        inset 0 0 16px rgba(255,255,255,.28);
+
+    transform:
+        rotate(-2deg)
+        scale(1.05);
+}
+
+.royal-cart:hover .cart-icon{
+    stroke:#2b0714;
+    filter:none;
+    transform:scale(1.08);
+}
+
+.royal-cart:hover
+.cart-icon .cart-basket{
+    fill:
+        rgba(43,7,20,.10);
+}
+
+.royal-cart:hover
+.cart-icon .cart-crown,
+.royal-cart:hover
+.cart-icon .wheel{
+    fill:#2b0714;
+    stroke:#2b0714;
+}
+
+
+/* CART TEXT */
+
+.cart-text{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+
+    min-width:0;
+    max-width:0;
+
+    opacity:0;
+    overflow:hidden;
+
+    transform:
+        translateX(-10px);
+
+    transition:
+        max-width .40s ease,
+        opacity .22s ease,
+        transform .35s ease;
+}
+
+.royal-cart:hover .cart-text{
+    max-width:138px;
+    opacity:1;
+
+    transform:
+        translateX(0);
+}
+
+.cart-label{
+    font-size:8px;
+    letter-spacing:2px;
+    color:#d4af37;
+    font-weight:800;
+    white-space:nowrap;
+}
+
+.cart-text strong{
+    font-family:"Cinzel",serif;
+    font-size:13px;
+    margin-top:5px;
+    color:#fff8e8;
+    white-space:nowrap;
+}
+
+.cart-subtext{
+    margin-top:3px;
+    color:#bcae9a;
+    font-size:9px;
+    white-space:nowrap;
+}
+
+
+/* ARROW */
+
+.cart-arrow{
+    width:30px;
+    height:30px;
+
+    flex:0 0 30px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        rgba(212,175,55,.09);
+
+    border:
+        1px solid
+        rgba(212,175,55,.34);
+
+    color:#f7df7a;
+
+    font-size:16px;
+
+    opacity:0;
+
+    transform:
+        translateX(-8px);
+
+    transition:.35s ease;
+
+    z-index:2;
+}
+
+.royal-cart:hover .cart-arrow{
+    opacity:1;
+
+    transform:
+        translateX(0);
+
+    background:#d4af37;
+
+    color:#2b0714;
+
+    box-shadow:
+        0 0 14px
+        rgba(212,175,55,.25);
+}
+
+
+/* CART COUNT */
+
+.cart-count{
+    position:absolute;
+
+    top:-7px;
+    right:-7px;
+
+    min-width:25px;
+    height:25px;
+
+    padding:0 7px;
+
+    border-radius:20px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff0a8,
+            #d4af37
+        );
+
+    color:#3a0919;
+
+    border:
+        2px solid
+        #3f0a18;
+
+    font-size:10px;
+    font-weight:900;
+
+    box-shadow:
+        0 0 0 2px rgba(212,175,55,.12),
+        0 0 14px rgba(212,175,55,.42);
+
+    z-index:5;
+
+    transition:.25s ease;
+}
+
+.royal-cart.has-items .cart-count{
+    animation:
+        countPulse 1.7s ease-in-out infinite;
+}
+
+@keyframes countPulse{
+
+    0%,100%{
+        transform:scale(1);
+
+        box-shadow:
+            0 0 10px
+            rgba(212,175,55,.35);
+    }
+
+    50%{
+        transform:scale(1.16);
+
+        box-shadow:
+            0 0 22px
+            rgba(212,175,55,.62);
+    }
+}
+
+.royal-cart.has-items .cart-image{
+    animation:
+        cartBreathe 2.2s ease-in-out infinite;
+}
+
+@keyframes cartBreathe{
+
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-2px);
+    }
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+    border-top:
+        1px solid
+        rgba(212,175,55,.2);
+
+    padding:
+        35px 45px 45px;
+
+    text-align:center;
+}
+
+.footer-brand{
+    font-family:"Cinzel",serif;
+    color:#d4af37;
+    font-size:20px;
+}
+
+footer p{
+    color:#a99b88;
+    font-size:11px;
+    margin-top:9px;
+}
+
+.footer-links{
+    margin-top:17px;
+
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.footer-links a{
+    color:#cdbfa9;
+    text-decoration:none;
+    font-size:11px;
+    transition:.3s;
+}
+
+.footer-links a:hover{
+    color:#f7df7a;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1100px){
+
+    .navbar{
+        padding:0 35px;
+    }
+
+    .nav-links{
+        display:none;
+    }
+
+    .menu-grid{
+        grid-template-columns:
+            repeat(3,1fr);
+    }
+}
+
+@media(max-width:800px){
+
+    .menu-grid{
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .menu-hero{
+        padding-top:60px;
+    }
+}
+
+@media(max-width:560px){
+
+    body::before{
+        inset:5px;
+    }
+
+    body::after{
+        inset:10px;
+    }
+
+    .navbar{
+        height:72px;
+        padding:0 20px;
+    }
+
+    main{
+        padding-top:72px;
+    }
+
+    .brand-name{
+        font-size:16px;
+    }
+
+    .brand-logo{
+        width:40px;
+        height:40px;
+    }
+
+    .profile-btn{
+        display:none;
+    }
+
+    .menu-hero{
+        padding:
+            55px 25px 35px;
+    }
+
+    .menu-hero h1{
+        font-size:40px;
+    }
+
+    .menu-hero p{
+        font-size:13px;
+    }
+
+    .menu-controls,
+    .categories-wrapper,
+    .menu-section{
+        padding-left:25px;
+        padding-right:25px;
+    }
+
+    .menu-grid{
+        grid-template-columns:1fr;
+    }
+
+    .food-image{
+        height:210px;
+    }
+
+    .royal-cart{
+        right:16px;
+        bottom:16px;
+
+        width:62px;
+        height:62px;
+
+        border-radius:
+            20px 20px 8px 20px;
+    }
+
+    .royal-cart:hover{
+        width:62px;
+
+        border-radius:
+            20px 20px 8px 20px;
+
+        transform:
+            translateY(-5px);
+    }
+
+    .cart-image{
+        width:48px;
+        height:48px;
+        flex-basis:48px;
+        border-radius:15px;
+    }
+
+    .cart-text,
+    .cart-arrow{
+        display:none;
+    }
+
+    .cart-count{
+        top:-4px;
+        right:-4px;
+    }
+}
+
+
+/* =========================================================
+   REDUCE MOTION
+========================================================= */
+
+@media(prefers-reduced-motion:reduce){
+
+    *,
+    *::before,
+    *::after{
+        animation-duration:.01ms !important;
+        animation-iteration-count:1 !important;
+        transition-duration:.01ms !important;
+        scroll-behavior:auto !important;
+    }
+}
+
+</style>
+
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     AMBIENT GLOW
+========================================================= -->
+
+<div class="glow one"></div>
+<div class="glow two"></div>
+<div class="glow three"></div>
+
+
+<!-- =========================================================
+     GOLD SPARKS
+========================================================= -->
+
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+
+
+<!-- =========================================================
+     NAVBAR
+========================================================= -->
+
+<header class="navbar">
+
+    <a href="home.html" class="brand">
+
+        <img
+            src="logo.jpeg"
+            alt="Thrifty Bite Logo"
+            class="brand-logo"
+        >
+
+        <div class="brand-name">
+            Thrifty <span>Bite</span>
+        </div>
+
+    </a>
+
+
+    <nav class="nav-links">
+
+        <a href="home.html">
+            Home
+        </a>
+
+        <a href="menu.html" class="active">
+            Menu
+        </a>
+
+        <a href="my-orders.html">
+            Track Order
+        </a>
+
+        <a href="rewards.html">
+            Rewards
+        </a>
+
+        <a href="blog.html">
+            Blog
+        </a>
+
+        <a href="help.html">
+            Help
+        </a>
+
+    </nav>
+
+
+    <div class="nav-right">
+
+        <button
+            class="profile-btn"
+            onclick="window.location.href='profile.html'"
+            title="Open Profile"
+            aria-label="Open Profile"
+        >
+
+            <svg viewBox="0 0 24 24">
+
+                <circle
+                    cx="12"
+                    cy="8"
+                    r="3.2">
+                </circle>
+
+                <path
+                    d="M5.5 20c.7-3.2 2.8-5 6.5-5s5.8 1.8 6.5 5">
+                </path>
+
+            </svg>
+
+        </button>
+
+
+        <button
+            class="menu-btn"
+            onclick="openSidebar()"
+            aria-label="Open Menu"
+        >
+
+            <span></span>
+            <span></span>
+            <span></span>
+
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     SIDEBAR OVERLAY
+========================================================= -->
+
+<div
+    class="overlay"
+    id="overlay"
+    onclick="closeSidebar()"
+></div>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside
+    class="sidebar"
+    id="sidebar"
+>
+
+    <div class="sidebar-header">
+
+        <div class="sidebar-title">
+            Thrifty Bite
+        </div>
+
+        <button
+            class="close-btn"
+            onclick="closeSidebar()"
+            aria-label="Close Menu"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <div class="sidebar-user">
+
+        <div class="sidebar-avatar">
+            ♙
+        </div>
+
+        <div>
+
+            <h3 id="userEmail">
+                Welcome, Royal Guest
+            </h3>
+
+            <p>
+                Smart dining starts here
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="side-links">
+
+        <a href="offers.html">
+            <span>✦</span>
+            Offers
+        </a>
+
+        <a href="rewards.html">
+            <span>♛</span>
+            Royal Rewards
+        </a>
+
+        <a href="about.html">
+            <span>◇</span>
+            About Thrifty Bite
+        </a>
+
+        <a href="my-orders.html">
+            <span>▣</span>
+            My Orders
+        </a>
+
+        <a href="favourites.html">
+            <span>♡</span>
+            Favourites
+        </a>
+
+        <a href="help.html">
+            <span>?</span>
+            Help Centre
+        </a>
+
+    </div>
+
+
+    <div class="premium-card">
+
+        <div class="premium-label">
+            Royal Membership
+        </div>
+
+        <h3>
+            Become a Royal Member
+        </h3>
+
+        <p>
+            Unlock exclusive offers, extra savings,
+            bonus Royal Points and premium benefits.
+        </p>
+
+        <a
+            href="premium.html"
+            class="premium-btn"
+        >
+            View Benefits
+        </a>
+
+    </div>
+
+</aside>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main>
+
+
+    <!-- MENU HERO -->
+
+    <section class="menu-hero">
+
+        <div class="menu-tag">
+            The Royal Menu
+        </div>
+
+        <h1>
+            Choose Your <span>Craving</span>
+        </h1>
+
+        <p>
+            Explore delicious dishes, discover smarter prices,
+            and build your perfect meal without spending more
+            than you need to.
+        </p>
+
+    </section>
+
+
+    <!-- SEARCH -->
+
+    <section class="menu-controls">
+
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search for biryani, pizza, burger..."
+                autocomplete="off"
+            >
+
+            <span class="search-icon">
+                ⌕
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- CATEGORIES -->
+
+    <section class="categories-wrapper">
+
+        <div class="categories">
+
+            <button
+                class="category-btn active"
+                data-category="All"
+            >
+                All
+            </button>
+
+            <button
+                class="category-btn"
+                data-category="Biryani"
+            >
+                Biryani
+            </button>
+
+            <button
+                class="category-btn"
+                data-category="Pizza"
+            >
+                Pizza
+            </button>
+
+            <button
+                class="category-btn"
+                data-category="Burgers"
+            >
+                Burgers
+            </button>
+
+            <button
+                class="category-btn"
+                data-category="Chinese"
+            >
+                Chinese
+            </button>
+
+            <button
+                class="category-btn"
+                data-category="Pasta"
+            >
+                Pasta
+            </button>
+
+            <button
+                class="category-btn"
+                data-category="North Indian"
+            >
+                North Indian
+            </button>
+
+            <button
+                class="category-btn"
+                data-category="South Indian"
+            >
+                South Indian
+            </button>
+
+            <button
+                class="category-btn"
+                data-category="Rolls & Wraps"
+            >
+                Rolls & Wraps
+            </button>
+
+            <button
+                class="category-btn"
+                data-category="Desserts"
+            >
+                Desserts
+            </button>
+
+            <button
+                class="category-btn"
+                data-category="Beverages"
+            >
+                Beverages
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- MENU -->
+
+    <section class="menu-section">
+
+        <div class="menu-top">
+
+            <h2>
+                Royal Selection
+            </h2>
+
+            <span id="dishCount">
+                Loading dishes...
+            </span>
+
+        </div>
+
+
+        <div
+            class="menu-grid"
+            id="menuGrid"
+        >
+
+            <div class="loading">
+
+                <div class="loading-icon">
+                    ✦
+                </div>
+
+                Loading your royal menu...
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =========================================================
+     EXACT ROYAL CART
+========================================================= -->
+
+<a
+    href="cart.html"
+    class="royal-cart"
+    id="royalCart"
+    title="Open Your Royal Cart"
+    aria-label="Open Your Royal Cart"
+>
+
+    <div
+        class="cart-image"
+        aria-hidden="true"
+    >
+
+        <svg
+            class="cart-icon"
+            viewBox="0 0 40 40"
+            aria-hidden="true"
+        >
+
+            <path
+                d="M6 8h4l2.2 15.2a2.6 2.6 0 0 0 2.6 2.2h15.1a2.6 2.6 0 0 0 2.5-1.9L35 13H11.2">
+            </path>
+
+            <path
+                class="cart-basket"
+                d="M11.5 13h21.8l-2 9.1a2 2 0 0 1-2 1.5H14.5a2 2 0 0 1-2-1.7L11.5 13z">
+            </path>
+
+            <circle
+                class="wheel"
+                cx="16.2"
+                cy="31.1"
+                r="2">
+            </circle>
+
+            <circle
+                class="wheel"
+                cx="29.1"
+                cy="31.1"
+                r="2">
+            </circle>
+
+            <path
+                class="cart-crown"
+                d="M17 7.8l2.3-2.1 2.5 2.2 2.3-2.2 2.4 2.1v2.7H17V7.8z">
+            </path>
+
+        </svg>
+
+    </div>
+
+
+    <div class="cart-text">
+
+        <span class="cart-label">
+            YOUR ROYAL CART
+        </span>
+
+        <strong>
+            View My Cart
+        </strong>
+
+        <span class="cart-subtext">
+            Ready when you are
+        </span>
+
+    </div>
+
+
+    <div
+        class="cart-arrow"
+        aria-hidden="true"
+    >
+        →
+    </div>
+
+
+    <span
+        class="cart-count"
+        id="cartCount"
+        aria-label="Cart item count"
+    >
+        0
+    </span>
+
+</a>
+
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+    <div class="footer-brand">
+        THRIFTY BITE
+    </div>
+
+    <p>
+        Royal Taste. Smart Choice.
+    </p>
+
+    <div class="footer-links">
+
+        <a href="about.html">
+            About
+        </a>
+
+        <a href="privacy.html">
+            Privacy Policy
+        </a>
+
+        <a href="terms.html">
+            Terms & Conditions
+        </a>
+
+        <a href="help.html">
+            Help Centre
+        </a>
+
+    </div>
+
+    <p style="margin-top:20px;">
+        © 2026 Thrifty Bite. All rights reserved.
+    </p>
+
+</footer>
+
+
+<script>
+
+/* =========================================================
+   API
+========================================================= */
+
+const API_URL =
+    window.location.origin + "/api/menu/all";
+
+
+/* =========================================================
+   GLOBAL VARIABLES
+========================================================= */
+
+let allDishes = [];
+
+let selectedCategory = "All";
+
+let searchTerm = "";
+
+let menuLoaded = false;
+
+let favouriteIds = new Set();
+
+
+/* =========================================================
+   FAVOURITES
+========================================================= */
+
+async function loadFavouriteIds(){
+
+    const token =
+        localStorage.getItem("thriftyBiteToken");
+
+
+    if(!token){
+        return;
+    }
+
+
+    try{
+
+        const response =
+            await fetch(
+                window.location.origin + "/api/favourites",
+                {
+                    headers:{
+                        "Authorization":"Bearer " + token
+                    }
+                }
+            );
+
+        const data =
+            await response.json();
+
+
+        if(response.ok && data.success){
+
+            favouriteIds =
+                new Set(
+                    (data.favourites || []).map(
+                        f => String(f._id)
+                    )
+                );
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "Load favourites error:",
+            error
+        );
+
+    }
+
+}
+
+
+async function toggleFavourite(dish, button){
+
+    const token =
+        localStorage.getItem("thriftyBiteToken");
+
+
+    if(!token){
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    const id =
+        String(dish._id);
+
+    const isActive =
+        favouriteIds.has(id);
+
+
+    try{
+
+        const response =
+            await fetch(
+                window.location.origin + "/api/favourites" +
+                    (isActive ? "/" + id : ""),
+                {
+                    method:isActive ? "DELETE" : "POST",
+
+                    headers:{
+                        "Content-Type":"application/json",
+                        "Authorization":"Bearer " + token
+                    },
+
+                    body:isActive
+                        ? undefined
+                        : JSON.stringify({ menuItemId:id })
+                }
+            );
+
+
+        if(!response.ok){
+            throw new Error("Unable to update favourites.");
+        }
+
+
+        if(isActive){
+
+            favouriteIds.delete(id);
+
+            button.classList.remove("active");
+
+            button.textContent = "♡";
+
+            showToast("Removed from <strong>Favourites</strong>");
+
+        }else{
+
+            favouriteIds.add(id);
+
+            button.classList.add("active");
+
+            button.textContent = "♥";
+
+            showToast("Saved to <strong>Favourites</strong>");
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "Toggle favourite error:",
+            error
+        );
+
+        showToast("Could not update favourites. Please try again.");
+
+    }
+
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+function openSidebar(){
+
+    document
+        .getElementById("sidebar")
+        .classList
+        .add("open");
+
+    document
+        .getElementById("overlay")
+        .classList
+        .add("show");
+}
+
+function closeSidebar(){
+
+    document
+        .getElementById("sidebar")
+        .classList
+        .remove("open");
+
+    document
+        .getElementById("overlay")
+        .classList
+        .remove("show");
+}
+
+
+/* =========================================================
+   LOAD USER
+========================================================= */
+
+function loadUser(){
+
+    try{
+
+        const savedUser =
+            localStorage.getItem(
+                "thriftyBiteUser"
+            );
+
+        if(!savedUser){
+            return;
+        }
+
+        const user =
+            JSON.parse(savedUser);
+
+        if(
+            user &&
+            user.email
+        ){
+
+            document
+                .getElementById("userEmail")
+                .textContent =
+                user.email;
+        }
+
+    }
+    catch(error){
+
+        console.log(
+            "User information could not be loaded."
+        );
+    }
+}
+
+
+/* =========================================================
+   CART
+========================================================= */
+
+function getCart(){
+
+    try{
+
+        const savedCart =
+            localStorage.getItem(
+                "thriftyBiteCart"
+            );
+
+        if(!savedCart){
+            return [];
+        }
+
+        const cart =
+            JSON.parse(savedCart);
+
+        return Array.isArray(cart)
+            ? cart
+            : [];
+
+    }
+    catch(error){
+
+        return [];
+    }
+}
+
+
+function saveCart(cart){
+
+    localStorage.setItem(
+        "thriftyBiteCart",
+        JSON.stringify(cart)
+    );
+
+    updateCartCount();
+}
+
+
+function updateCartCount(){
+
+    const cart =
+        getCart();
+
+    let totalItems = 0;
+
+    cart.forEach(item => {
+
+        totalItems +=
+            Number(item.quantity) || 1;
+
+    });
+
+
+    const cartCount =
+        document.getElementById(
+            "cartCount"
+        );
+
+    const royalCart =
+        document.getElementById(
+            "royalCart"
+        );
+
+
+    if(cartCount){
+
+        cartCount.textContent =
+            totalItems;
+
+    }
+
+
+    if(royalCart){
+
+        royalCart.classList.toggle(
+            "has-items",
+            totalItems > 0
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ADD TO CART
+========================================================= */
+
+function addToCart(
+    dish,
+    button
+){
+
+    const cart =
+        getCart();
+
+
+    const existingItem =
+        cart.find(
+            item =>
+                String(item.menuId) ===
+                String(dish._id)
+        );
+
+
+    if(existingItem){
+
+        existingItem.quantity =
+            Number(
+                existingItem.quantity || 1
+            ) + 1;
+
+    }
+    else{
+
+        cart.push({
+
+            menuId:
+                dish._id,
+
+            name:
+                dish.name,
+
+            description:
+                dish.description || "",
+
+            price:
+                Number(
+                    dish.discountPrice ??
+                    dish.price ??
+                    0
+                ),
+
+            originalPrice:
+                Number(
+                    dish.price ??
+                    dish.discountPrice ??
+                    0
+                ),
+
+            image:
+                dish.image || "",
+
+            quantity:
+                1,
+
+            category:
+                dish.category || "",
+
+            isVeg:
+                Boolean(dish.isVeg)
+
+        });
+
+    }
+
+
+    saveCart(cart);
+
+
+    /* BUTTON FEEDBACK */
+
+    const originalText =
+        button.textContent;
+
+    button.textContent =
+        "✓ Added";
+
+    button.classList.add(
+        "added"
+    );
+
+
+    showToast(
+        `<strong>${escapeHTML(dish.name)}</strong> added to your Royal Cart`
+    );
+
+
+    clearTimeout(
+        button._resetTimer
+    );
+
+
+    button._resetTimer =
+        setTimeout(() => {
+
+            button.textContent =
+                originalText;
+
+            button.classList.remove(
+                "added"
+            );
+
+        }, 1000);
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function showToast(message){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+    if(!toast){
+        return;
+    }
+
+
+    toast.innerHTML =
+        message;
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        window.toastTimer
+    );
+
+
+    window.toastTimer =
+        setTimeout(() => {
+
+            toast.classList.remove(
+                "show"
+            );
+
+        }, 2200);
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value){
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+    div.textContent =
+        value ?? "";
+
+    return div.innerHTML;
+}
+
+
+/* =========================================================
+   SAFE IMAGE URL
+========================================================= */
+
+function getImageURL(image){
+
+    if(
+        typeof image !== "string" ||
+        !image.trim()
+    ){
+
+        return "images/food-placeholder.svg";
+
+    }
+
+    return image.trim();
+}
+
+
+/* =========================================================
+   FOOD CARD
+========================================================= */
+
+function createFoodCard(
+    dish,
+    index
+){
+
+    const card =
+        document.createElement(
+            "article"
+        );
+
+
+    card.className =
+        "food-card";
+
+
+    const image =
+        getImageURL(
+            dish.image
+        );
+
+
+    const currentPrice =
+        Number(
+            dish.discountPrice ??
+            dish.price ??
+            0
+        );
+
+
+    const originalPrice =
+        Number(
+            dish.price ??
+            currentPrice
+        );
+
+
+    let discount =
+        0;
+
+
+    if(
+        originalPrice > currentPrice &&
+        originalPrice > 0
+    ){
+
+        discount =
+            Math.round(
+                (
+                    (
+                        originalPrice -
+                        currentPrice
+                    )
+                    /
+                    originalPrice
+                ) * 100
+            );
+
+    }
+
+
+    const rating =
+        Number(
+            dish.rating ?? 4.5
+        );
+
+
+    const reviewCount =
+        Number(
+            dish.reviewCount ?? 0
+        );
+
+
+    const roundedRating =
+        Math.max(
+            1,
+            Math.min(
+                5,
+                Math.round(rating)
+            )
+        );
+
+
+    const stars =
+        "★".repeat(
+            roundedRating
+        );
+
+
+    const vegBadge =
+        dish.isVeg
+            ?
+            `<span class="veg-badge">VEG</span>`
+            :
+            `<span class="veg-badge nonveg-badge">NON-VEG</span>`;
+
+
+    const discountBadge =
+        discount > 0
+            ?
+            `<span class="discount-badge">${discount}% OFF</span>`
+            :
+            "";
+
+
+    card.innerHTML = `
+
+        <div class="food-image">
+
+            <img
+                src="${escapeHTML(image)}"
+                alt="${escapeHTML(dish.name || "Food")}"
+                loading="lazy"
+            >
+
+            <button class="fav-btn" type="button" title="Save to favourites">♡</button>
+
+            ${vegBadge}
+
+            ${discountBadge}
+
+        </div>
+
+
+        <div class="food-content">
+
+            <div class="food-category">
+                ${escapeHTML(
+                    dish.category || "Food"
+                )}
+            </div>
+
+
+            <h3 class="food-name">
+                ${escapeHTML(
+                    dish.name ||
+                    "Delicious Dish"
+                )}
+            </h3>
+
+
+            <p class="food-description">
+                ${escapeHTML(
+                    dish.description ||
+                    "A delicious choice from the Thrifty Bite royal menu."
+                )}
+            </p>
+
+
+            <div class="food-rating">
+
+                <span class="stars">
+                    ${stars}
+                </span>
+
+                <span class="rating-number">
+                    ${rating.toFixed(1)}
+                </span>
+
+                <span class="review-count">
+                    (${reviewCount})
+                </span>
+
+            </div>
+
+
+            <div class="food-bottom">
+
+                <div class="price-area">
+
+                    ${
+                        originalPrice > currentPrice
+                        ?
+                        `<span class="old-price">
+                            ₹${originalPrice.toFixed(0)}
+                        </span>`
+                        :
+                        ""
+                    }
+
+                    <span class="current-price">
+                        ₹${currentPrice.toFixed(0)}
+                    </span>
+
+                </div>
+
+
+                <button
+                    class="add-btn"
+                    type="button"
+                >
+                    + Add
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+
+    /* IMAGE FALLBACK */
+
+    const foodImage =
+        card.querySelector(
+            ".food-image img"
+        );
+
+
+    if(foodImage){
+
+        foodImage.addEventListener(
+            "error",
+            function(){
+
+                if(
+                    this.dataset.fallbackApplied
+                ){
+                    return;
+                }
+
+                this.dataset.fallbackApplied =
+                    "true";
+
+                this.src =
+                    "images/food-placeholder.svg";
+
+            },
+            {
+                once:false
+            }
+        );
+
+    }
+
+
+    /* ADD BUTTON */
+
+    const addButton =
+        card.querySelector(
+            ".add-btn"
+        );
+
+
+    if(addButton){
+
+        addButton.addEventListener(
+            "click",
+            () => {
+
+                addToCart(
+                    dish,
+                    addButton
+                );
+
+            }
+        );
+
+    }
+
+
+    /* FAVOURITE BUTTON */
+
+    const favButton =
+        card.querySelector(
+            ".fav-btn"
+        );
+
+
+    if(favButton){
+
+        if(favouriteIds.has(String(dish._id))){
+
+            favButton.classList.add("active");
+
+            favButton.textContent = "♥";
+
+        }
+
+
+        favButton.addEventListener(
+            "click",
+            (event) => {
+
+                event.stopPropagation();
+
+                toggleFavourite(
+                    dish,
+                    favButton
+                );
+
+            }
+        );
+
+    }
+
+
+    return card;
+}
+
+
+/* =========================================================
+   DISPLAY MENU
+========================================================= */
+
+function displayMenu(){
+
+    const grid =
+        document.getElementById(
+            "menuGrid"
+        );
+
+    const count =
+        document.getElementById(
+            "dishCount"
+        );
+
+
+    if(!grid){
+        return;
+    }
+
+
+    const filtered =
+        allDishes.filter(
+            dish => {
+
+                const matchesCategory =
+                    selectedCategory === "All" ||
+                    dish.category ===
+                    selectedCategory;
+
+
+                const searchableText =
+                    (
+                        `${dish.name || ""}
+                        ${dish.description || ""}
+                        ${dish.category || ""}
+                        ${dish.restaurantId ? (dish.restaurantId.name || "") : ""}`
+                    )
+                    .toLowerCase();
+
+
+                const matchesSearch =
+                    !searchTerm ||
+                    searchableText.includes(
+                        searchTerm
+                    );
+
+
+                return (
+                    matchesCategory &&
+                    matchesSearch
+                );
+
+            }
+        );
+
+
+    if(count){
+
+        count.textContent =
+            `${filtered.length} dishes`;
+
+    }
+
+
+    /* =====================================================
+       IMPORTANT FLICKER FIX
+       Build the new content first.
+       Replace the grid only once.
+    ===================================================== */
+
+    const fragment =
+        document.createDocumentFragment();
+
+
+    if(filtered.length === 0){
+
+        const empty =
+            document.createElement(
+                "div"
+            );
+
+        empty.className =
+            "empty-state";
+
+        empty.innerHTML = `
+
+            <div class="icon">
+                ✦
+            </div>
+
+            <h3>
+                No Dish Found
+            </h3>
+
+            <p>
+                Try another craving or category.
+            </p>
+
+        `;
+
+        fragment.appendChild(
+            empty
+        );
+
+    }
+    else{
+
+        filtered.forEach(
+            (dish, index) => {
+
+                fragment.appendChild(
+                    createFoodCard(
+                        dish,
+                        index
+                    )
+                );
+
+            }
+        );
+
+    }
+
+
+    /*
+       One DOM replacement instead of:
+       clear → paint → create → paint → repeat
+    */
+
+    grid.replaceChildren(
+        fragment
+    );
+
+}
+
+
+/* =========================================================
+   LOAD MENU FROM MONGODB API
+========================================================= */
+
+async function loadMenu(){
+
+    const grid =
+        document.getElementById(
+            "menuGrid"
+        );
+
+    const count =
+        document.getElementById(
+            "dishCount"
+        );
+
+
+    if(!grid){
+        return;
+    }
+
+
+    try{
+
+        /*
+           Keep loading screen visible
+           while the API request is running.
+        */
+
+        const response =
+            await fetch(
+                API_URL,
+                {
+                    method:"GET",
+                    cache:"no-store"
+                }
+            );
+
+
+        if(!response.ok){
+
+            throw new Error(
+                `Server returned ${response.status}`
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if(
+            !data.success ||
+            !Array.isArray(data.menu)
+        ){
+
+            throw new Error(
+                "Invalid menu response."
+            );
+
+        }
+
+
+        allDishes =
+            data.menu.filter(
+                dish =>
+                    dish &&
+                    dish.isAvailable !== false
+            );
+
+
+        menuLoaded =
+            true;
+
+
+        displayMenu();
+
+    }
+    catch(error){
+
+        console.error(
+            "Menu loading error:",
+            error
+        );
+
+
+        grid.replaceChildren();
+
+
+        const errorState =
+            document.createElement(
+                "div"
+            );
+
+        errorState.className =
+            "empty-state";
+
+
+        errorState.innerHTML = `
+
+            <div class="icon">
+                ⚠
+            </div>
+
+            <h3>
+                Menu Connection Problem
+            </h3>
+
+            <p>
+                Please make sure the Thrifty Bite
+                backend is running at localhost:5500.
+            </p>
+
+        `;
+
+
+        grid.appendChild(
+            errorState
+        );
+
+
+        if(count){
+
+            count.textContent =
+                "Unable to load menu";
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   CATEGORY BUTTONS
+========================================================= */
+
+document
+    .querySelectorAll(
+        ".category-btn"
+    )
+    .forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                function(){
+
+                    if(
+                        selectedCategory ===
+                        this.dataset.category
+                    ){
+                        return;
+                    }
+
+
+                    document
+                        .querySelectorAll(
+                            ".category-btn"
+                        )
+                        .forEach(
+                            btn => {
+
+                                btn.classList.remove(
+                                    "active"
+                                );
+
+                            }
+                        );
+
+
+                    this.classList.add(
+                        "active"
+                    );
+
+
+                    selectedCategory =
+                        this.dataset.category;
+
+
+                    if(menuLoaded){
+
+                        displayMenu();
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+const searchInput =
+    document.getElementById(
+        "searchInput"
+    );
+
+
+if(searchInput){
+
+    searchInput.addEventListener(
+        "input",
+        function(){
+
+            searchTerm =
+                this.value
+                    .trim()
+                    .toLowerCase();
+
+
+            if(menuLoaded){
+
+                displayMenu();
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   CART COUNT WHEN PAGE LOADS
+========================================================= */
+
+updateCartCount();
+
+
+/* =========================================================
+   LOAD USER
+========================================================= */
+
+loadUser();
+
+
+/* =========================================================
+   UPDATE CART WHEN OTHER TAB CHANGES IT
+========================================================= */
+
+window.addEventListener(
+    "storage",
+    function(event){
+
+        if(
+            event.key ===
+            "thriftyBiteCart"
+        ){
+
+            updateCartCount();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   UPDATE CART WHEN PAGE BECOMES ACTIVE
+========================================================= */
+
+window.addEventListener(
+    "focus",
+    updateCartCount
+);
+
+
+/* =========================================================
+   ESCAPE KEY
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.key ===
+            "Escape"
+        ){
+
+            closeSidebar();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   START MENU
+========================================================= */
+
+loadFavouriteIds().then(loadMenu);
+
+</script>
+
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+
+</html>

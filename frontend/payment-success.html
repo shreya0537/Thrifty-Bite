@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thrifty Bite | Payment Successful</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/theme.css">
+
+<style>
+.success-card{
+    max-width:560px;
+    margin:40px auto;
+    padding:34px 30px;
+    border-radius:20px;
+    text-align:center;
+    background:#1c050d;
+    border:1px solid rgba(212,175,55,.45);
+    box-shadow:0 25px 60px rgba(0,0,0,.45);
+}
+
+/* animated tick */
+.failure-mark{width:96px;height:96px;margin:0 auto 18px;border-radius:50%;background:rgba(239,68,68,.13);border:3px solid #ef4444;color:#ef4444;display:flex;align-items:center;justify-content:center;font-size:76px;font-weight:300;line-height:1;animation:pop .45s ease-out}
+.tick{
+    width:96px; height:96px; margin:0 auto 18px;
+    border-radius:50%;
+    background:rgba(76,175,107,.15);
+    border:3px solid var(--success);
+    display:flex; align-items:center; justify-content:center;
+    animation:pop .45s ease-out;
+}
+.tick svg{ width:50px; height:50px; }
+.tick path{
+    stroke:var(--success); stroke-width:6; fill:none;
+    stroke-linecap:round; stroke-linejoin:round;
+    stroke-dasharray:60; stroke-dashoffset:60;
+    animation:draw .5s .3s ease-out forwards;
+}
+@keyframes pop{ from{ transform:scale(.4); opacity:0; } to{ transform:scale(1); opacity:1; } }
+@keyframes draw{ to{ stroke-dashoffset:0; } }
+
+.paid-amount{ font-size:2.3em; font-weight:700; color:var(--gold-light); margin:8px 0 2px; }
+
+.details{
+    margin-top:24px; text-align:left;
+    border-top:1px solid rgba(212,175,55,.25);
+}
+.detail-row{
+    display:flex; justify-content:space-between; gap:16px;
+    padding:10px 0; border-bottom:1px solid rgba(212,175,55,.12);
+    font-size:14px;
+}
+.detail-row span:first-child{ color:var(--muted); }
+.detail-row span:last-child{ text-align:right; word-break:break-all; }
+.detail-row.discount span:last-child{ color:#9be29f; }
+
+.items{ margin-top:18px; text-align:left; font-size:14px; }
+.items div{ display:flex; justify-content:space-between; padding:4px 0; }
+
+.actions{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:26px; }
+.demo-note{ font-size:12px; color:var(--muted); margin-top:16px; }
+
+/* Centered post-payment feedback modal; colors follow the active site theme */
+#tb-feedback-modal{position:fixed;inset:0;z-index:10020;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(12,4,8,.68);backdrop-filter:blur(5px)}
+#tb-feedback-modal.is-open{display:flex}
+#tb-feedback-modal .tb-feedback-dialog{width:min(100%,520px);max-height:min(90vh,760px);overflow:auto;padding:28px;border-radius:22px;background:var(--maroon,#4b0d1d);color:var(--cream,#fff8e8);border:1px solid var(--gold,#d4af37);box-shadow:0 28px 90px rgba(0,0,0,.4);text-align:left}
+#tb-feedback-modal h2{margin:0 0 8px;color:var(--gold-light,#f7df7a)}
+#tb-feedback-modal p{color:var(--muted,#cdbfa9);margin:0 0 18px}
+#tb-feedback-modal .tb-feedback-stars{display:flex;gap:8px;margin:12px 0 18px}
+#tb-feedback-modal .tb-star{font-size:30px;line-height:1;border:1px solid var(--gold,#d4af37);border-radius:10px;background:transparent;color:var(--muted,#cdbfa9);padding:7px 10px;cursor:pointer}
+#tb-feedback-modal .tb-star[aria-pressed="true"]{background:rgba(212,175,55,.18);color:var(--gold-light,#f7df7a)}
+#tb-feedback-modal label{display:block;color:var(--cream,#fff8e8);font-size:13px;margin:12px 0 6px}
+#tb-feedback-modal select,#tb-feedback-modal textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--gold,#d4af37);background:var(--maroon-dark,#260611);color:var(--cream,#fff8e8);font:inherit}
+#tb-feedback-modal textarea{min-height:100px;resize:vertical}
+#tb-feedback-modal .tb-modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+#tb-feedback-modal .tb-modal-status{font-size:13px;min-height:20px;margin-top:10px}
+html[data-tb-theme="light"] #tb-feedback-modal{background:rgba(53,16,27,.38)}
+html[data-tb-theme="light"] #tb-feedback-modal .tb-feedback-dialog{background:#fff!important;color:#35101b!important;border-color:#d9b95b;box-shadow:0 24px 70px rgba(53,16,27,.22)}
+html[data-tb-theme="light"] #tb-feedback-modal h2{color:#6f102b!important}
+html[data-tb-theme="light"] #tb-feedback-modal p,html[data-tb-theme="light"] #tb-feedback-modal .tb-modal-status{color:#725a60!important}
+html[data-tb-theme="light"] #tb-feedback-modal label{color:#35101b!important}
+html[data-tb-theme="light"] #tb-feedback-modal select,html[data-tb-theme="light"] #tb-feedback-modal textarea{background:#fff!important;color:#35101b!important;border-color:#d9b95b}
+@media(max-width:520px){#tb-feedback-modal .tb-feedback-dialog{padding:22px 18px}}
+
+html[data-tb-theme="light"] .success-card{background:#fff!important;color:#35101b!important;border-color:#d9b95b!important;box-shadow:0 20px 55px rgba(53,16,27,.12)}
+html[data-tb-theme="light"] .success-card h1,html[data-tb-theme="light"] .success-card h2{color:#6f102b!important}
+html[data-tb-theme="light"] .success-card .paid-amount{color:#6f102b!important}
+html[data-tb-theme="light"] .success-card .details{border-color:#eadce0}
+html[data-tb-theme="light"] .success-card .detail-row{border-color:#eee2e5}
+html[data-tb-theme="light"] .success-card .items{color:#35101b!important}
+html[data-tb-theme="light"] .success-card .tick{background:#e7f7eb;border-color:#218838}
+html[data-tb-theme="light"] .success-card .tick path{stroke:#218838}
+html[data-tb-theme="light"] .success-card .failure-mark{background:#fff0f0;border-color:#c62838;color:#c62838}
+</style>
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="brand">
+        THRIFTY BITE
+        <span>PAYMENT</span>
+    </div>
+
+    <nav class="nav-links">
+        <a href="home.html">Storefront</a>
+        <a href="my-orders.html">My Orders</a>
+    </nav>
+
+    <div class="nav-right">
+        <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<div class="container">
+    <div id="message" class="message"></div>
+    <div class="success-card" id="card">
+        <div class="muted">Loading payment details…</div>
+    </div>
+</div>
+
+<div id="tb-feedback-modal" role="dialog" aria-modal="true" aria-labelledby="tb-feedback-title">
+  <section class="tb-feedback-dialog">
+    <h2 id="tb-feedback-title">How was your Thrifty Bite experience?</h2>
+    <p>Your payment was successful. Please rate your experience and share feedback.</p>
+    <form id="tb-post-payment-feedback">
+      <label>Rating *</label>
+      <div class="tb-feedback-stars" role="group" aria-label="Rate from one to five stars">
+        <button class="tb-star" type="button" data-rating="1" aria-label="1 star" aria-pressed="false">★</button>
+        <button class="tb-star" type="button" data-rating="2" aria-label="2 stars" aria-pressed="false">★</button>
+        <button class="tb-star" type="button" data-rating="3" aria-label="3 stars" aria-pressed="false">★</button>
+        <button class="tb-star" type="button" data-rating="4" aria-label="4 stars" aria-pressed="false">★</button>
+        <button class="tb-star" type="button" data-rating="5" aria-label="5 stars" aria-pressed="false">★</button>
+      </div>
+      <label for="tb-feedback-category">Feedback about</label>
+      <select id="tb-feedback-category"><option>Overall experience</option><option>Food and menu</option><option>Website design</option><option>Voice ordering</option><option>Payment experience</option><option>Dine Out</option><option>Other</option></select>
+      <label for="tb-feedback-message">Your feedback *</label>
+      <textarea id="tb-feedback-message" minlength="3" maxlength="2000" required placeholder="Tell us what went well or what we can improve."></textarea>
+      <div class="tb-modal-actions">
+        <button class="btn" type="submit" id="tb-feedback-submit">Submit feedback</button>
+        <button class="btn btn-outline" type="button" id="tb-feedback-later">Maybe later</button>
+      </div>
+      <div id="tb-feedback-status" class="tb-modal-status" role="status" aria-live="polite"></div>
+    </form>
+  </section>
+</div>
+
+<script src="assets/api.js"></script>
+<script>
+
+const user = requireAuth(["CUSTOMER"]);
+
+if(user){
+
+    const messageEl = document.getElementById("message");
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get("order");
+    const CART_KEY = "thriftyBiteCart";
+
+    /* Remove the paid dishes from the local cart */
+    function clearPaidItemsFromCart(order){
+        try{
+            const paidIds = new Set(order.items.map(i => String(i.menuItemId)));
+            const cart = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+            const remaining = (Array.isArray(cart) ? cart : []).filter(item => !paidIds.has(String(item.menuId)));
+            localStorage.setItem(CART_KEY, JSON.stringify(remaining));
+        }catch(e){
+            /* cart is optional here */
+        }
+    }
+
+    function row(label, value, cls){
+        return "<div class='detail-row " + (cls || "") + "'><span>" + label + "</span><span>" + value + "</span></div>";
+    }
+
+
+    let tbFeedbackRating = 0;
+    function openPostPaymentFeedback(){
+        const modal = document.getElementById("tb-feedback-modal");
+        if (!modal || sessionStorage.getItem("tbFeedbackDismissed:" + (orderId || "demo"))) return;
+        modal.classList.add("is-open");
+        const first = modal.querySelector(".tb-star");
+        if (first) first.focus();
+    }
+    function closePostPaymentFeedback(){
+        const modal = document.getElementById("tb-feedback-modal");
+        if (modal) modal.classList.remove("is-open");
+        sessionStorage.setItem("tbFeedbackDismissed:" + (orderId || "demo"), "1");
+    }
+    (function setupPostPaymentFeedback(){
+        const form = document.getElementById("tb-post-payment-feedback");
+        if (!form) return;
+        const modal = document.getElementById("tb-feedback-modal");
+        const stars = Array.from(modal.querySelectorAll(".tb-star"));
+        const status = document.getElementById("tb-feedback-status");
+        stars.forEach(btn => btn.addEventListener("click", () => {
+            tbFeedbackRating = Number(btn.dataset.rating);
+            stars.forEach(star => {
+                const selected = Number(star.dataset.rating) <= tbFeedbackRating;
+                star.setAttribute("aria-pressed", String(Number(star.dataset.rating) === tbFeedbackRating));
+                star.style.color = selected ? "var(--gold-light,#f7df7a)" : "var(--muted,#cdbfa9)";
+            });
+        }));
+        document.getElementById("tb-feedback-later").addEventListener("click", closePostPaymentFeedback);
+        modal.addEventListener("click", e => { if (e.target === modal) closePostPaymentFeedback(); });
+        document.addEventListener("keydown", e => { if (e.key === "Escape" && modal.classList.contains("is-open")) closePostPaymentFeedback(); });
+        form.addEventListener("submit", async e => {
+            e.preventDefault();
+            if (!tbFeedbackRating) { status.textContent = "Please select a star rating."; return; }
+            const submit = document.getElementById("tb-feedback-submit");
+            submit.disabled = true; status.textContent = "Submitting feedback…";
+            try {
+                const token = localStorage.getItem("thriftyBiteToken");
+                let savedUser = localStorage.getItem("thriftyBiteUser"), username = "Guest";
+                try { const u = JSON.parse(savedUser || "null"); username = (u && (u.name || u.username || u.email)) || username; } catch (_) { if (savedUser) username = savedUser; }
+                const response = await fetch("/api/feedback", {
+                    method: "POST",
+                    headers: {"Content-Type":"application/json", ...(token ? {Authorization:"Bearer " + token} : {})},
+                    body: JSON.stringify({
+                        username, rating:tbFeedbackRating,
+                        category:document.getElementById("tb-feedback-category").value,
+                        message:document.getElementById("tb-feedback-message").value.trim(),
+                        page:location.pathname, orderId:orderId || ""
+                    })
+                });
+                const result = await response.json();
+                if (!response.ok || !result.success) throw new Error(result.message || "Could not submit feedback.");
+                status.textContent = "Thank you! Your feedback has been submitted.";
+                sessionStorage.setItem("tbFeedbackDismissed:" + (orderId || "demo"), "1");
+                setTimeout(() => modal.classList.remove("is-open"), 1100);
+            } catch (err) {
+                status.textContent = (err && err.message) || "Could not submit feedback. Please try again.";
+            } finally { submit.disabled = false; }
+        });
+    })();
+
+    function loadLocalDemo(){
+        const outcome = params.get("outcome");
+        const isFailure = outcome === "failure";
+        let demoOrder = null;
+        try {
+            const saved = JSON.parse(localStorage.getItem("thriftyBiteLocalDemoOrders") || "[]");
+            demoOrder = saved.find(o => String(o._id || o.orderId) === String(orderId)) || null;
+        } catch (_) {}
+        let items = (demoOrder && Array.isArray(demoOrder.items)) ? demoOrder.items : [];
+        if (!items.length) {
+            try {
+                items = JSON.parse(localStorage.getItem(CART_KEY) || "[]").map(i => ({
+                    name: i.name || i.itemName || "Menu item",
+                    quantity: Number(i.quantity) || 1,
+                    price: Number(i.price) || 0
+                }));
+            } catch (_) { items = []; }
+        }
+        const total = Number((demoOrder && demoOrder.totalAmount) || items.reduce((sum, i) => sum + (Number(i.price)||0) * (Number(i.quantity)||1), 0));
+        const card = document.getElementById("card");
+        const itemHtml = items.map(i => "<div><span>" + escapeHtml(i.name || "Menu item") + " × " + (Number(i.quantity)||1) + "</span><span>" + formatMoney((Number(i.price)||0) * (Number(i.quantity)||1)) + "</span></div>").join("");
+        if (isFailure) {
+            card.innerHTML = "<div class='failure-mark'>×</div><h1>Payment Failed</h1>"
+              + "<p class='muted mt-12'>Your demo payment was not completed. No successful payment is recorded. Your cart is still saved, so you can try again.</p>"
+              + "<div class='paid-amount'>" + formatMoney(total) + "</div><div class='muted small'>Payment status: Failed</div>"
+              + "<div class='details'>" + row("Reference", escapeHtml(orderId || "Not available")) + row("Status", "Payment failed") + "</div>"
+              + "<div class='items'>" + (itemHtml || "<p class='muted'>No cart items were available for the summary.</p>") + "</div>"
+              + "<div class='actions'><a class='btn' href='checkout.html'>Try Payment Again</a><a class='btn btn-outline' href='cart.html'>Back to Cart</a></div>";
+        } else {
+            card.innerHTML = "<div class='tick'><svg viewBox='0 0 52 52'><path d='M14 27 l8 8 l16 -18'/></svg></div><h1>Payment Successful</h1>"
+              + "<p class='muted mt-12'>Your local demo payment was marked successful. This is a demonstration result, not a real charge.</p>"
+              + "<div class='paid-amount'>" + formatMoney(total) + "</div><div class='muted small'>Paid via " + escapeHtml((demoOrder && demoOrder.paymentMethod) || "UPI (demo)") + "</div>"
+              + "<div class='details'>" + row("Order ID", escapeHtml(orderId || "DEMO")) + row("Status", "Payment successful") + row("Date &amp; time", escapeHtml(demoOrder && demoOrder.createdAt ? formatDateTime(demoOrder.createdAt) : formatDateTime(new Date().toISOString()))) + "</div>"
+              + "<div class='items'>" + (itemHtml || "<p class='muted'>Order summary unavailable.</p>") + "<div style='font-weight:700;border-top:1px solid rgba(212,175,55,.25);margin-top:10px;padding-top:10px'><span>Total</span><span>" + formatMoney(total) + "</span></div></div>"
+              + "<div class='actions'><a class='btn' href='track-order.html'>Track Order</a><a class='btn btn-outline' href='home.html'>Continue Shopping</a></div>";
+            openPostPaymentFeedback();
+        }
+    }
+
+    async function load(){
+        if(params.get("localDemo") === "1") { loadLocalDemo(); return; }
+        if(!orderId){
+            showMessage(messageEl, "No order found.", "error");
+            return;
+        }
+
+        try{
+            const data = await apiFetch("/order/" + encodeURIComponent(orderId));
+            const order = data.order;
+
+            clearPaidItemsFromCart(order);
+
+            const paid = order.paymentStatus === "PAID";
+
+            document.getElementById("card").innerHTML =
+                "<div class='tick'><svg viewBox='0 0 52 52'><path d='M14 27 l8 8 l16 -18'/></svg></div>"
+                + "<h1>" + (paid ? "Payment Successful" : "Order Placed") + "</h1>"
+                + "<p class='muted mt-12'>" + (paid ? "Your payment was received and your order has been sent to the restaurant." : "Your order has been sent to the restaurant.") + "</p>"
+                + "<div class='paid-amount'>" + formatMoney(order.totalAmount) + "</div>"
+                + "<div class='muted small'>" + (paid ? "paid via " + escapeHtml(order.paymentMethod) : "to pay on delivery") + "</div>"
+
+                + "<div class='details'>"
+                    + row("Restaurant", escapeHtml(order.restaurantId ? order.restaurantId.name : "-"))
+                    + (order.razorpayPaymentId ? row("Payment ID", escapeHtml(order.razorpayPaymentId)) : "")
+                    + row("Order ID", "#" + escapeHtml(String(order._id).slice(-8).toUpperCase()))
+                    + row("Date &amp; time", formatDateTime(order.createdAt))
+                    + (order.couponCode ? row("Coupon " + escapeHtml(order.couponCode), "- " + formatMoney(order.discountAmount), "discount") : "")
+                    + row("Status", statusLabel(order.status))
+                + "</div>"
+
+                + "<div class='items'>"
+                    + order.items.map(i => "<div><span>" + escapeHtml(i.name) + " × " + i.quantity + "</span><span>" + formatMoney(i.price * i.quantity) + "</span></div>").join("")
+                + "</div>"
+
+                + "<div class='actions'>"
+                    + "<a class='btn' href='track-order.html'>Track Order</a>"
+                    + "<a class='btn btn-outline' href='home.html'>Continue Shopping</a>"
+                + "</div>"
+
+                + "";
+            if (paid) openPostPaymentFeedback();
+
+        }catch(err){
+            // If order lookup fails after redirect, show an actionable failure state instead of a blank/loading card.
+            showMessage(messageEl, "We couldn't verify the payment with the server. Please check your orders before retrying.", "error");
+            const card = document.getElementById("card");
+            let cartItems = [];
+            try { cartItems = JSON.parse(localStorage.getItem(CART_KEY) || "[]"); } catch (_) {}
+            const total = cartItems.reduce((sum, i) => sum + (Number(i.price)||0) * (Number(i.quantity)||1), 0);
+            card.innerHTML = "<div class='failure-mark'>×</div><h1>Payment Status Could Not Be Verified</h1>"
+              + "<p class='muted mt-12'>The payment service could not confirm the result. Please check My Orders before trying again, to avoid duplicate payment.</p>"
+              + "<div class='paid-amount'>" + formatMoney(total) + "</div><div class='muted small'>Order reference: " + escapeHtml(orderId || "Unavailable") + "</div>"
+              + "<div class='items'>" + cartItems.map(i => "<div><span>" + escapeHtml(i.name || i.itemName || "Menu item") + " × " + (Number(i.quantity)||1) + "</span><span>" + formatMoney((Number(i.price)||0) * (Number(i.quantity)||1)) + "</span></div>").join("") + "</div>"
+              + "<div class='actions'><a class='btn' href='my-orders.html'>Check My Orders</a><a class='btn btn-outline' href='cart.html'>Back to Cart</a></div>";
+        }
+    }
+
+    load();
+}
+
+</script>
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+</html>

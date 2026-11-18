@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thrifty Bite | Payment Methods</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/theme.css">
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="brand">
+        THRIFTY BITE
+        <span>PAYMENT METHODS</span>
+    </div>
+
+    <nav class="nav-links">
+        <a href="profile.html">Profile</a>
+    </nav>
+
+    <div class="nav-right">
+        <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="page-header">
+        <h1>Payment Methods</h1>
+        <p>Saved for convenience at checkout. This is a mock/demo project — never enter a real card number here; only a label and the last 4 digits are stored.</p>
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <div class="card">
+        <h2>Add Payment Method</h2>
+        <form id="paymentForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Type</label>
+                    <select id="pmType">
+                        <option value="UPI">UPI</option>
+                        <option value="Card">Card</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Label</label>
+                    <input type="text" id="pmLabel" placeholder="e.g. My HDFC Card" required>
+                </div>
+            </div>
+            <div class="form-group" id="upiField">
+                <label>UPI ID</label>
+                <input type="text" id="pmUpi" placeholder="yourname@upi">
+            </div>
+            <div class="form-group" id="cardField" style="display:none">
+                <label>Card — last 4 digits only</label>
+                <input type="text" id="pmCardLast4" maxlength="4" placeholder="4532">
+            </div>
+            <label class="flex gap-8" style="text-transform:none;font-size:14px">
+                <input type="checkbox" id="pmDefault" style="width:auto"> Set as default
+            </label>
+            <button type="submit" class="btn mt-20">Save Payment Method</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Saved Methods</h2>
+        <div id="methodsList" class="mt-20">
+            <div class="empty-state">Loading...</div>
+        </div>
+    </div>
+
+</div>
+
+<script src="assets/api.js"></script>
+<script>
+
+const user = requireAuth(["CUSTOMER"]);
+
+if(user){
+
+    const messageEl = document.getElementById("message");
+
+    document.getElementById("pmType").addEventListener("change", function(){
+        const isCard = this.value === "Card";
+        document.getElementById("upiField").style.display = isCard ? "none" : "block";
+        document.getElementById("cardField").style.display = isCard ? "block" : "none";
+    });
+
+    document.getElementById("paymentForm").addEventListener("submit", async function(e){
+        e.preventDefault();
+
+        const type = document.getElementById("pmType").value;
+        const label = document.getElementById("pmLabel").value.trim();
+        const detail = type === "Card"
+            ? document.getElementById("pmCardLast4").value.trim()
+            : document.getElementById("pmUpi").value.trim();
+        const isDefault = document.getElementById("pmDefault").checked;
+
+        try{
+            await apiFetch("/payment-methods", {
+                method: "POST",
+                body: JSON.stringify({ type, label, detail, isDefault })
+            });
+            showMessage(messageEl, "Payment method saved!", "success");
+            document.getElementById("paymentForm").reset();
+            loadMethods();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    });
+
+    async function loadMethods(){
+        try{
+            const data = await apiFetch("/payment-methods");
+            const list = document.getElementById("methodsList");
+
+            if(!data.paymentMethods || data.paymentMethods.length === 0){
+                list.innerHTML = '<div class="empty-state">No saved payment methods yet.</div>';
+                return;
+            }
+
+            list.innerHTML = data.paymentMethods.map(function(pm){
+                const detail = pm.type === "Card" ? "•••• " + pm.detail : pm.detail;
+
+                return "<div class='flex-between mt-12' style='border-bottom:1px solid rgba(212,175,55,.15);padding-bottom:10px'>"
+                    + "<div>"
+                        + "<div>" + escapeHtml(pm.label) + (pm.isDefault ? " <span class='badge success'>Default</span>" : "") + "</div>"
+                        + "<div class='muted small'>" + escapeHtml(pm.type) + " &middot; " + escapeHtml(detail) + "</div>"
+                    + "</div>"
+                    + "<div class='flex gap-8'>"
+                        + (pm.isDefault ? "" : "<button class='btn btn-sm btn-outline' onclick=\"setDefault('" + pm._id + "')\">Set Default</button>")
+                        + "<button class='btn btn-sm btn-danger' onclick=\"removeMethod('" + pm._id + "')\">Remove</button>"
+                    + "</div>"
+                    + "</div>";
+            }).join("");
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    window.setDefault = async function setDefault(id){
+        try{
+            await apiFetch("/payment-methods/" + id + "/default", { method: "PUT" });
+            loadMethods();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    window.removeMethod = async function removeMethod(id){
+        try{
+            await apiFetch("/payment-methods/" + id, { method: "DELETE" });
+            loadMethods();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    loadMethods();
+
+}
+
+</script>
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+
+<!-- Website rating and feedback entry point -->
+<div class="tb-feedback-entry" style="margin:32px auto 18px;max-width:1200px;padding:18px 20px;text-align:center;border:1px solid rgba(212,175,55,.45);border-radius:14px;background:rgba(38,6,17,.72);color:#fff8e8;font:14px/1.5 Arial,sans-serif;position:relative;z-index:20">
+  <strong style="color:#f7df7a">Enjoying Thrifty Bite?</strong> Tell us what you think. &nbsp; <a href="feedback.html" style="display:inline-block;margin-top:6px;padding:9px 14px;border-radius:9px;background:linear-gradient(120deg,#d4af37,#f7df7a);color:#260611;text-decoration:none;font-weight:700">★ Rate our website &amp; share feedback</a>
+</div>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+</html>

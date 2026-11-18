@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thrifty Bite | Track Order</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/theme.css">
+<style>
+.container{max-width:1080px}
+.page-header{padding:25px 27px;border:1px solid rgba(212,175,55,.32);border-radius:20px;background:radial-gradient(circle at 90% 10%,rgba(212,175,55,.14),transparent 35%),linear-gradient(125deg,rgba(107,20,40,.6),rgba(38,6,17,.7));}
+.page-header h1{font-size:clamp(27px,4vw,38px);color:var(--gold-light)}
+.page-header p{line-height:1.7}
+.order-card{position:relative;overflow:hidden;border-color:rgba(212,175,55,.36);box-shadow:0 14px 35px rgba(0,0,0,.16);transition:transform .22s,border-color .22s,box-shadow .22s}
+.order-card:hover{transform:translateY(-3px);border-color:rgba(247,223,122,.7);box-shadow:0 18px 40px rgba(0,0,0,.22),0 0 22px rgba(212,175,55,.08)}
+.order-card h3{font-family:Cinzel,serif;color:var(--gold-light);font-size:19px}
+.order-card .order-tracker{padding:18px 13px 12px;border:1px solid rgba(212,175,55,.18);border-radius:14px;background:rgba(255,248,232,.025)}
+.order-card .order-tracker div{font-size:clamp(9px,1.3vw,12px)!important;line-height:1.5}
+.order-card .order-tracker div div{box-shadow:0 0 12px rgba(212,175,55,.12)}
+.order-card .badge{white-space:nowrap}
+.order-card .muted{color:var(--muted)}
+.order-card .flex-between{gap:12px;flex-wrap:wrap}
+.order-card .mt-12{margin-top:14px}
+.tracking-intro{color:var(--muted);font-size:13px;line-height:1.6;margin:9px 0 18px}
+@media(max-width:580px){.container{padding:22px 14px 60px}.order-card{padding:17px}.order-card .order-tracker{padding:12px 7px}.order-card .order-tracker div{overflow-wrap:anywhere}}
+@media(prefers-reduced-motion:reduce){.order-card{transition:none}.order-card:hover{transform:none}}
+.arrival-banner{display:flex;align-items:center;gap:15px;margin:18px 0;padding:17px;border:1px solid rgba(212,175,55,.5);border-radius:14px;background:linear-gradient(110deg,rgba(212,175,55,.14),rgba(107,20,40,.18))}.arrival-banner strong{font-size:16px;color:var(--gold-light)}.arrival-banner p{margin:4px 0}.arrival-banner small,.demo-disclaimer{font-size:12px;color:var(--muted)}.rider-pulse{font-size:36px;animation:riderPulse 1.8s ease-in-out infinite}.demo-steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:18px 0}.demo-step{text-align:center;font-size:11px;color:var(--muted)}.demo-step span{display:flex;width:28px;height:28px;border-radius:50%;align-items:center;justify-content:center;margin:0 auto 7px;border:1px solid var(--gold);color:var(--gold-light)}.demo-step.done span{background:#218838;color:white;border-color:#218838}.demo-step.current span{background:#D4AF37;color:#260611;box-shadow:0 0 0 5px rgba(212,175,55,.15)}.rider-details{display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid rgba(212,175,55,.25)}.rider-details p{margin:4px 0;font-size:12px}.rider-avatar{width:48px;height:48px;display:grid;place-items:center;border-radius:50%;background:#D4AF37;color:#260611;font-weight:800}@keyframes riderPulse{50%{transform:translateX(7px) scale(1.04)}}@media(max-width:560px){.demo-steps{gap:3px}.demo-step{font-size:9px}.arrival-banner{align-items:flex-start}}
+</style>
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="brand">
+        THRIFTY BITE
+        <span>LIVE ORDER TRACKING</span>
+    </div>
+
+    <nav class="nav-links">
+        <a href="home.html">Storefront</a>
+        <a href="menu.html">Menu</a>
+        <a href="track-order.html">Track Order</a>
+    </nav>
+
+    <div class="nav-right">
+        <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="page-header">
+        <h1>Track Your Order</h1>
+        <p class="tracking-intro">Follow your food from order confirmation to your doorstep. Milestones update from the order status saved by the restaurant.</p>
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <div id="orderList">
+        <div class="empty-state">Loading...</div>
+    </div>
+
+</div>
+
+<script src="assets/api.js"></script>
+<script>
+
+const user = requireAuth(["CUSTOMER"]);
+
+if(user){
+
+    const messageEl = document.getElementById("message");
+
+    let trackingLoadInProgress = false;
+    async function loadOrders(){
+        if (trackingLoadInProgress) return;
+        trackingLoadInProgress = true;
+        try{
+            const data = await apiFetch("/order/my");
+            const list = document.getElementById("orderList");
+            if (!list) throw new Error("Order tracking list was not found on this page.");
+
+            const localDemos = JSON.parse(localStorage.getItem("thriftyBiteLocalDemoOrders") || "[]");
+            const hiddenTrackingIds = JSON.parse(localStorage.getItem("thriftyBiteHiddenTrackingIds") || "[]");
+            if((!data.orders || data.orders.length === 0) && localDemos.length === 0){
+                list.innerHTML = '<div class="card"><div class="empty-state">No orders yet. <a href="menu.html">Browse the menu</a> to place your first order.</div></div>';
+                return;
+            }
+
+            const serverOrders = (data.orders || []).filter(order => !hiddenTrackingIds.includes(String(order._id))).map(function(order){
+                const safeItems = Array.isArray(order.items) ? order.items : [];
+                const itemsText = safeItems.map(i => (i.name || "Item") + " x" + (i.quantity || 1)).join(", ") || "Order items unavailable";
+
+                const stages = [
+                    {key:"PLACED",label:"Placed"},
+                    {key:"PACKED",label:"Packed"},
+                    {key:"SHIPPED",label:"Shipped"},
+                    {key:"OUT_FOR_DELIVERY",label:"Out for delivery"},
+                    {key:"DELIVERED",label:"Delivered"}
+                ];
+                const status = String(order.status || "PLACED").toUpperCase();
+                const stageIndex = status === "REJECTED" || status === "CANCELLED" ? -1 : status === "DELIVERED" || status === "COMPLETED" ? 4 : status === "OUT_FOR_DELIVERY" ? 3 : status === "SHIPPED" ? 2 : status === "PACKED" || status === "READY" ? 1 : status === "PREPARING" || status === "ACCEPTED" ? 1 : 0;
+                const tracking = status === "REJECTED" || status === "CANCELLED" ? "<p class='muted small'>This order is no longer active. Please contact support if you need help.</p>" : "<div class='order-tracker' style='display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:16px 0 6px'>" + stages.map((stage,i)=>"<div style='text-align:center;font-size:11px;color:"+(i<=stageIndex?"#f7df7a":"#9ca3af")+"'><div style='height:7px;border-radius:99px;background:"+(i<=stageIndex?"#d4af37":"rgba(212,175,55,.18)")+";margin-bottom:7px'></div>"+stage.label+"</div>").join("")+"</div><p class='muted small'>Tracking updates when the restaurant updates your order status.</p>";
+
+                return "<div class='card order-card' data-tracking-id='" + escapeHtml(String(order._id || "")) + "' style='margin-bottom:18px'>"
+                    + "<div class='flex-between'>"
+                        + "<button type='button' class='tb-delete-tracking' data-delete-tracking='" + escapeHtml(String(order._id || "")) + "' style='margin-left:auto;border:1px solid #c62838;border-radius:8px;padding:6px 10px;background:transparent;color:#c62838;cursor:pointer'>Delete from list</button>"
+                        + "<h3>" + escapeHtml(order.restaurantId ? order.restaurantId.name : "Restaurant") + "</h3>"
+                        + "<span class='badge " + statusBadgeClass(order.status) + "'>" + statusLabel(order.status) + "</span>"
+                    + "</div>"
+                    + "<p class='muted small mt-12'>Order #" + escapeHtml(String(order._id || "").slice(-8).toUpperCase()) + "</p>"
+                    + "<p class='muted small mt-12'>" + escapeHtml(itemsText) + "</p>"
+                    + tracking
+                    + "<div class='flex-between mt-12'>"
+                        + "<span>" + formatMoney(order.totalAmount)
+                            + (order.couponCode
+                                ? " <span class='muted small'>(saved " + formatMoney(order.discountAmount) + " with " + escapeHtml(order.couponCode) + ")</span>"
+                                : "")
+                            + " <span class='badge " + (order.paymentStatus === "PAID" ? "success" : "") + "'>"
+                                + (order.paymentStatus === "PAID"
+                                    ? (String(order.razorpayPaymentId || "").startsWith("demo_") ? "Paid (demo " : "Paid online (") + escapeHtml(order.paymentMethod) + ")"
+                                    : "Cash on delivery")
+                            + "</span>"
+                        + "</span>"
+                        + "<span class='muted small'>" + formatDateTime(order.createdAt) + "</span>"
+                    + "</div>"
+                    + "</div>";
+            }).join("");
+            const demoHtml = localDemos.map(function(order){
+                const stages=["Order placed","Restaurant preparing","Packed","Rider picked up","Arriving at your location"];
+                const rider=order.rider||{name:"Arjun Kumar",phone:"90000 10001",vehicle:"Honda Activa",plate:"KA 05 AB 1234"};
+                const itemText=(order.items||[]).map(i=>escapeHtml(i.name||"Item")+" × "+(Number(i.quantity)||1)).join(", ")||"Demo order items";
+                return "<div class='card order-card demo-live-card'><div class='flex-between'><h3>"+escapeHtml(order.restaurantName||"Thrifty Bite Restaurant")+"</h3><span class='badge success'>DEMO · RIDER ON THE WAY</span></div><p class='muted small mt-12'>Demo order #"+escapeHtml(String(order.orderId||order._id).slice(-8).toUpperCase())+" · "+escapeHtml(new Date(order.createdAt||Date.now()).toLocaleString())+"</p><p class='muted small mt-12'>"+itemText+"</p><div class='arrival-banner'><span class='rider-pulse'>🛵</span><div><strong>Your delivery partner is arriving…</strong><p>Arjun is on the way to your delivery address</p><small>Estimated arrival: 8–12 minutes (demo)</small></div></div><div class='demo-steps'>"+stages.map((x,i)=>"<div class='demo-step "+(i<4?"done":"current")+"'><span>"+(i<4?"✓": "•")+"</span><div>"+x+"</div></div>").join("")+"</div><div class='rider-details'><div class='rider-avatar'>AK</div><div><strong>"+escapeHtml(rider.name)+"</strong><p>Thrifty Bite delivery partner</p><p>☎ "+escapeHtml(rider.phone)+" · "+escapeHtml(rider.vehicle)+" · "+escapeHtml(rider.plate)+"</p></div></div><p class='demo-disclaimer'>Demo tracking only. The rider, ETA and route are sample details; no live GPS is connected.</p><div class='flex-between mt-12'><strong>₹"+Number(order.totalAmount||0).toFixed(2)+"</strong><span class='badge success'>Payment Successful · Demo</span></div></div>";
+            }).join("");
+            list.innerHTML = serverOrders + demoHtml;
+        }catch(err){
+            const list = document.getElementById("orderList");
+            let demos=[];try{demos=JSON.parse(localStorage.getItem("thriftyBiteLocalDemoOrders")||"[]")}catch(e){}
+            if(demos.length){
+                const rider={name:"Arjun Kumar",phone:"90000 10001",vehicle:"Honda Activa",plate:"KA 05 AB 1234"};
+                list.innerHTML=demos.map(o=>"<div class='card order-card'><h3>Demo Delivery · Rider on the way</h3><div class='arrival-banner'><span class='rider-pulse'>🛵</span><div><strong>Your delivery partner is arriving…</strong><p>Arjun Kumar · ETA 8–12 minutes (demo)</p></div></div><p>Contact: "+rider.phone+" · "+rider.vehicle+" · "+rider.plate+"</p><p class='demo-disclaimer'>Demo tracking only; backend orders could not be loaded and this is not live GPS tracking.</p></div>").join("");
+            } else showMessage(messageEl, (err && err.message ? err.message : "Unable to load orders right now.") + " Check that the backend is running and you are signed in, then refresh.", "error");
+        } finally {
+            trackingLoadInProgress = false;
+        }
+    }
+
+    document.getElementById("orderList")?.addEventListener("click", function(e){
+        const btn=e.target.closest("[data-delete-tracking]"); if(!btn)return;
+        const id=btn.getAttribute("data-delete-tracking"); if(!id)return;
+        let hidden=[];try{hidden=JSON.parse(localStorage.getItem("thriftyBiteHiddenTrackingIds")||"[]")}catch(_){}
+        if(!hidden.includes(id))hidden.push(id);
+        localStorage.setItem("thriftyBiteHiddenTrackingIds",JSON.stringify(hidden));
+        const card=btn.closest(".order-card"); if(card)card.remove();
+        const list=document.getElementById("orderList");
+        if(list&&!list.querySelector(".order-card"))list.innerHTML='<div class="card"><div class="empty-state">No orders shown. <a href="menu.html">Browse the menu</a></div></div>';
+    });
+    loadOrders();
+    // Keep customer tracking in sync with status updates saved by the admin.
+    setInterval(loadOrders, 20000);
+
+}
+
+</script>
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+</html>

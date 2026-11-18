@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Thrifty Bite | Register</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet">
+
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+
+/* =========================================================
+   BODY
+========================================================= */
+
+body{
+
+    min-height:100vh;
+
+    font-family:"DM Sans",sans-serif;
+
+    color:#fff8e8;
+
+    background:
+
+        radial-gradient(
+            circle at 8% 15%,
+            rgba(212,175,55,.16),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 92% 15%,
+            rgba(143,29,60,.32),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(212,175,55,.08),
+            transparent 35%
+        ),
+
+        linear-gradient(
+            135deg,
+            #2b0714,
+            #4b0d1d 48%,
+            #260611
+        );
+
+    overflow-x:hidden;
+    overflow-y:auto;
+}
+
+
+/* =========================================================
+   ROYAL BORDER
+========================================================= */
+
+body::before{
+
+    content:"";
+
+    position:fixed;
+
+    inset:10px;
+
+    border:1px solid rgba(212,175,55,.48);
+
+    pointer-events:none;
+
+    z-index:50;
+}
+
+
+body::after{
+
+    content:"";
+
+    position:fixed;
+
+    inset:17px;
+
+    border:1px solid rgba(212,175,55,.16);
+
+    pointer-events:none;
+
+    z-index:50;
+}
+
+
+/* =========================================================
+   GLOWS
+========================================================= */
+
+.glow{
+
+    position:fixed;
+
+    width:360px;
+
+    height:360px;
+
+    border-radius:50%;
+
+    filter:blur(90px);
+
+    pointer-events:none;
+
+    opacity:.18;
+}
+
+
+.glow.one{
+
+    background:#d4af37;
+
+    left:-150px;
+
+    top:-150px;
+
+    animation:
+        glowMove
+        9s
+        infinite
+        alternate
+        ease-in-out;
+}
+
+
+.glow.two{
+
+    background:#8f1d3c;
+
+    right:-150px;
+
+    bottom:-130px;
+
+    animation:
+        glowMove
+        11s
+        infinite
+        alternate-reverse
+        ease-in-out;
+}
+
+
+@keyframes glowMove{
+
+    from{
+        transform:translate(0,0) scale(1);
+    }
+
+    to{
+        transform:translate(70px,40px) scale(1.18);
+    }
+
+}
+
+
+/* =========================================================
+   SPARKS
+========================================================= */
+
+.spark{
+
+    position:fixed;
+
+    width:4px;
+
+    height:4px;
+
+    border-radius:50%;
+
+    background:#f7df7a;
+
+    box-shadow:0 0 13px #d4af37;
+
+    opacity:.7;
+
+    animation:
+        sparkMove
+        linear
+        infinite;
+}
+
+
+.spark:nth-child(1){
+    left:8%;
+    top:80%;
+    animation-duration:8s;
+}
+
+.spark:nth-child(2){
+    left:20%;
+    top:30%;
+    animation-duration:10s;
+}
+
+.spark:nth-child(3){
+    left:76%;
+    top:72%;
+    animation-duration:7s;
+}
+
+.spark:nth-child(4){
+    left:88%;
+    top:35%;
+    animation-duration:9s;
+}
+
+.spark:nth-child(5){
+    left:52%;
+    top:12%;
+    animation-duration:8s;
+}
+
+.spark:nth-child(6){
+    left:67%;
+    top:88%;
+    animation-duration:11s;
+}
+
+.spark:nth-child(7){
+    left:35%;
+    top:90%;
+    animation-duration:7s;
+}
+
+
+@keyframes sparkMove{
+
+    0%{
+
+        transform:
+            translateY(30px)
+            scale(.5);
+
+        opacity:0;
+    }
+
+    20%{
+        opacity:.8;
+    }
+
+    80%{
+        opacity:.7;
+    }
+
+    100%{
+
+        transform:
+            translateY(-150px)
+            scale(1);
+
+        opacity:0;
+    }
+
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.page{
+
+    width:100%;
+
+    min-height:100vh;
+
+    display:flex;
+
+    align-items:flex-start;
+
+    justify-content:center;
+
+    padding:48px 20px;
+
+    position:relative;
+
+    z-index:2;
+}
+
+
+/* =========================================================
+   REGISTER CARD
+========================================================= */
+
+.register-card{
+
+    width:900px;
+
+    min-height:560px;
+
+    display:grid;
+
+    grid-template-columns:38% 62%;
+
+    border-radius:28px;
+
+    overflow:hidden;
+
+    background:
+        rgba(38,6,17,.90);
+
+    border:
+        1px solid
+        rgba(212,175,55,.48);
+
+    box-shadow:
+
+        0 35px 90px
+        rgba(0,0,0,.58),
+
+        0 0 35px
+        rgba(212,175,55,.07);
+
+    backdrop-filter:blur(18px);
+
+    animation:
+        cardIn
+        .8s
+        ease;
+}
+
+
+@keyframes cardIn{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            translateY(25px)
+            scale(.97);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+/* =========================================================
+   LEFT PANEL
+========================================================= */
+
+.left{
+
+    padding:50px 35px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    background:
+
+        radial-gradient(
+            circle at 50% 25%,
+            rgba(212,175,55,.12),
+            transparent 35%
+        ),
+
+        linear-gradient(
+            160deg,
+            #4b0d1d,
+            #260611
+        );
+
+    border-right:
+        1px solid
+        rgba(212,175,55,.18);
+}
+
+
+.logo-circle{
+
+    width:105px;
+
+    height:105px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    overflow:hidden;
+
+    border:
+        2px solid
+        #d4af37;
+
+    background:#260611;
+
+    box-shadow:
+
+        0 0 30px
+        rgba(212,175,55,.22),
+
+        inset 0 0 25px
+        rgba(212,175,55,.10);
+}
+
+
+.logo-circle img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+}
+
+
+.crown{
+
+    color:#f7df7a;
+
+    font-size:38px;
+}
+
+
+.left h1{
+
+    margin-top:20px;
+
+    font-family:"Cinzel",serif;
+
+    color:#f7df7a;
+
+    letter-spacing:3px;
+
+    font-size:27px;
+}
+
+
+.tagline{
+
+    margin-top:7px;
+
+    color:#d4af37;
+
+    font-size:11px;
+
+    letter-spacing:2px;
+}
+
+
+.divider{
+
+    width:110px;
+
+    height:1px;
+
+    margin:25px 0;
+
+    background:
+        linear-gradient(
+            to right,
+            transparent,
+            #d4af37,
+            transparent
+        );
+}
+
+
+.left h2{
+
+    font-family:"Cinzel",serif;
+
+    font-size:20px;
+
+    color:#fff8e8;
+
+    margin-bottom:12px;
+}
+
+
+.left p{
+
+    max-width:250px;
+
+    color:#cdbfa9;
+
+    font-size:13px;
+
+    line-height:1.7;
+}
+
+
+/* =========================================================
+   RIGHT PANEL
+========================================================= */
+
+.right{
+
+    padding:42px 48px;
+}
+
+
+.right h2{
+
+    font-family:"Cinzel",serif;
+
+    font-size:25px;
+
+    color:#f7df7a;
+}
+
+
+.subtitle{
+
+    margin-top:6px;
+
+    color:#cdbfa9;
+
+    font-size:13px;
+
+    margin-bottom:25px;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.field{
+
+    margin-bottom:17px;
+}
+
+
+.field label{
+
+    display:block;
+
+    margin-bottom:7px;
+
+    color:#eadfca;
+
+    font-size:13px;
+}
+
+
+.input-box{
+
+    position:relative;
+}
+
+
+.input-box input{
+
+    width:100%;
+
+    height:48px;
+
+    padding:
+        0
+        45px
+        0
+        14px;
+
+    border-radius:11px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.28);
+
+    outline:none;
+
+    background:
+        rgba(18,3,9,.55);
+
+    color:#fff8e8;
+
+    font-family:inherit;
+
+    transition:.3s;
+}
+
+
+.input-box input:focus{
+
+    border-color:#d4af37;
+
+    box-shadow:
+        0 0 18px
+        rgba(212,175,55,.12);
+}
+
+
+.input-box input::placeholder{
+
+    color:#806c69;
+}
+
+
+.input-box select,
+.input-box textarea{
+
+    width:100%;
+
+    padding:12px 14px;
+
+    border-radius:11px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.28);
+
+    outline:none;
+
+    background:
+        rgba(18,3,9,.55);
+
+    color:#fff8e8;
+
+    font-family:inherit;
+
+    transition:.3s;
+}
+
+.input-box select{
+    height:48px;
+}
+
+.input-box textarea{
+    min-height:70px;
+    resize:vertical;
+}
+
+.input-box select:focus,
+.input-box textarea:focus{
+
+    border-color:#d4af37;
+
+    box-shadow:
+        0 0 18px
+        rgba(212,175,55,.12);
+}
+
+.input-box select option{
+    background:#2b0714;
+}
+
+
+/* =========================================================
+   ACCOUNT TYPE SELECTOR
+========================================================= */
+
+.account-type{
+
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+
+    margin-bottom:22px;
+}
+
+.type-btn{
+
+    padding:12px 8px;
+
+    border-radius:11px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.28);
+
+    background:
+        rgba(18,3,9,.4);
+
+    color:#d6c7c0;
+
+    font-family:inherit;
+    font-size:12.5px;
+    letter-spacing:.3px;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.type-btn:hover{
+    border-color:rgba(212,175,55,.55);
+}
+
+.type-btn.active{
+
+    background:
+        linear-gradient(135deg,#d4af37,#8f6d1c);
+
+    color:#2b0714;
+    font-weight:600;
+
+    border-color:#d4af37;
+}
+
+.role-only{
+    display:none;
+}
+
+.role-only.show{
+    display:block;
+}
+
+
+.eye{
+
+    position:absolute;
+
+    right:14px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    color:#d4af37;
+
+    cursor:pointer;
+}
+
+
+/* =========================================================
+   TERMS
+========================================================= */
+
+.terms{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:9px;
+
+    margin:
+        8px
+        0
+        17px;
+
+    color:#cdbfa9;
+
+    font-size:12px;
+
+    line-height:1.5;
+}
+
+
+.terms input{
+
+    margin-top:3px;
+
+    accent-color:#d4af37;
+
+    cursor:pointer;
+}
+
+
+.terms a{
+
+    color:#f7df7a;
+
+    text-decoration:none;
+}
+
+
+.terms a:hover{
+
+    text-decoration:underline;
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.btn{
+
+    width:100%;
+
+    height:49px;
+
+    border:none;
+
+    border-radius:11px;
+
+    cursor:pointer;
+
+    font-family:"Cinzel",serif;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    color:#2b0714;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #c99d27,
+            #f7df7a,
+            #d4af37
+        );
+
+    box-shadow:
+        0 9px 25px
+        rgba(212,175,55,.17);
+
+    transition:.3s;
+}
+
+
+.btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 13px 30px
+        rgba(212,175,55,.30);
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+.message{
+
+    min-height:20px;
+
+    text-align:center;
+
+    margin:9px 0;
+
+    font-size:12px;
+}
+
+
+.success{
+
+    color:#f7df7a;
+}
+
+
+.error{
+
+    color:#ff9b9b;
+}
+
+
+/* =========================================================
+   BOTTOM LOGIN
+========================================================= */
+
+.bottom{
+
+    text-align:center;
+
+    color:#cdbfa9;
+
+    font-size:13px;
+
+    margin-top:18px;
+}
+
+
+.bottom a{
+
+    color:#f7df7a;
+
+    text-decoration:none;
+
+    font-weight:600;
+}
+
+
+.bottom a:hover{
+
+    text-decoration:underline;
+}
+
+
+/* =========================================================
+   DESKTOP REGISTRATION LAYOUT
+========================================================= */
+
+</style>
+
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+
+
+<body>
+
+
+<div class="glow one"></div>
+
+<div class="glow two"></div>
+
+
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+
+
+<div class="page">
+
+    <div class="register-card">
+
+
+        <!-- =================================================
+             LEFT PANEL
+        ================================================== -->
+
+        <section class="left">
+
+
+            <div class="logo-circle">
+
+                <img
+                    src="logo.jpeg"
+                    alt="Thrifty Bite Logo"
+
+                    onerror="
+                        this.style.display='none';
+                        this.parentElement.innerHTML=
+                        '<span class=\'crown\'>♛</span>';
+                    "
+                >
+
+            </div>
+
+
+            <h1>
+                THRIFTY BITE
+            </h1>
+
+
+            <div class="tagline">
+                ROYAL TASTE • SMART CHOICE
+            </div>
+
+
+            <div class="divider"></div>
+
+
+            <h2>
+                Join the Royal Table
+            </h2>
+
+
+            <p>
+
+                Create your Thrifty Bite account and discover
+                premium food, smart savings and royal rewards
+                without paying more than you need to.
+
+            </p>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             RIGHT PANEL
+        ================================================== -->
+
+        <section class="right">
+
+
+            <h2>
+                Create Account
+            </h2>
+
+
+            <p class="subtitle">
+
+                Start your smarter and more affordable food journey.
+
+            </p>
+
+
+
+            <form id="registerForm">
+
+
+                <!-- ACCOUNT TYPE -->
+
+                <div class="field">
+
+                    <label>
+                        Select Account Type
+                    </label>
+
+                    <div class="account-type" id="accountType">
+
+                        <button type="button" class="type-btn active" data-role="CUSTOMER">
+                            Customer
+                        </button>
+
+                        <button type="button" class="type-btn" data-role="RESTAURANT">
+                            Restaurant
+                        </button>
+
+                        <button type="button" class="type-btn" data-role="MASTER_CHEF">
+                            Master Chef
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- NAME -->
+
+                <div class="field">
+
+                    <label id="nameLabel">
+                        Full Name
+                    </label>
+
+                    <div class="input-box">
+
+                        <input
+                            type="text"
+                            id="name"
+                            placeholder="Enter your name"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- OWNER NAME (RESTAURANT ONLY) -->
+
+                <div class="field role-only" id="ownerNameField" data-role="RESTAURANT">
+
+                    <label>
+                        Owner Name
+                    </label>
+
+                    <div class="input-box">
+
+                        <input
+                            type="text"
+                            id="ownerName"
+                            placeholder="Enter the owner's name"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- MOBILE -->
+
+                <div class="field">
+
+                    <label>
+                        Mobile Number
+                    </label>
+
+                    <div class="input-box">
+
+                        <input
+                            type="tel"
+                            id="mobile"
+                            placeholder="10-digit mobile number"
+                            inputmode="numeric"
+                            pattern="[6-9][0-9]{9}"
+                            minlength="10"
+                            maxlength="10"
+                            title="Enter a valid 10-digit Indian mobile number starting with 6, 7, 8 or 9"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- SPECIALIZATION / EXPERIENCE (MASTER CHEF ONLY) -->
+
+                <div class="field role-only" id="specializationField" data-role="MASTER_CHEF">
+
+                    <label>
+                        Specialization
+                    </label>
+
+                    <div class="input-box">
+
+                        <input
+                            type="text"
+                            id="specialization"
+                            placeholder="e.g. Cakes & Desserts, Biryani, Fusion"
+                        >
+
+                    </div>
+
+                </div>
+
+                <div class="field role-only" id="experienceField" data-role="MASTER_CHEF">
+
+                    <label>
+                        Experience
+                    </label>
+
+                    <div class="input-box">
+
+                        <input
+                            type="text"
+                            id="experience"
+                            placeholder="e.g. 5 years"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- ADDRESS -->
+
+                <div class="field">
+
+                    <label>
+                        Address
+                    </label>
+
+                    <div class="input-box">
+
+                        <textarea
+                            id="address"
+                            placeholder="Enter your address"
+                            required
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="field">
+
+                    <label>
+                        Email Address
+                    </label>
+
+
+                    <div class="input-box">
+
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="Enter your email"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="otp-controls" style="display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:10px">
+                        <input id="registrationOtp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter 6-digit email OTP" aria-label="Six-digit email verification code" style="min-width:0;height:44px;padding:0 12px;border-radius:10px;border:1px solid rgba(212,175,55,.35);background:rgba(18,3,9,.55);color:#fff8e8;font:inherit">
+                        <button type="button" id="sendRegistrationOtp" class="btn" style="width:auto;height:44px;padding:0 14px;font:600 11px 'DM Sans',sans-serif;letter-spacing:.3px">SEND OTP</button>
+                    </div>
+                    <button type="button" id="verifyRegistrationOtp" class="btn" style="height:42px;margin-top:9px;background:linear-gradient(135deg,#4b0d1d,#8f1d3c);color:#fff8e8;border:1px solid rgba(212,175,55,.45);box-shadow:none">VERIFY EMAIL OTP</button>
+                    <p id="emailVerificationStatus" class="message" role="status" aria-live="polite" style="margin:8px 0 0;text-align:left;min-height:18px"></p>
+
+                </div>
+
+
+
+                <!-- PASSWORD -->
+
+                <div class="field">
+
+                    <label>
+                        Password
+                    </label>
+
+
+                    <div class="input-box">
+
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Create your password"
+                            required
+                        >
+
+
+                        <span
+                            class="eye"
+                            id="passwordEye"
+                        >
+                            ◉
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="password-quality" aria-live="polite" style="margin:-8px 0 18px;padding:12px 14px;border:1px solid rgba(212,175,55,.25);border-radius:10px;background:rgba(255,255,255,.04)">
+                    <div style="height:6px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden"><div id="passwordStrengthBar" style="height:100%;width:0;background:#ef4444;transition:width .2s,background .2s"></div></div>
+                    <small id="passwordStrengthText" style="display:block;margin-top:8px;color:#cdbfa9">Password strength: not entered</small>
+                    <small id="passwordRules" style="display:block;margin-top:4px;color:#cdbfa9">Use 8+ characters, uppercase and lowercase letters, a number, and a symbol.</small>
+                </div>
+
+
+                <!-- CONFIRM PASSWORD -->
+
+                <div class="field">
+
+                    <label>
+                        Confirm Password
+                    </label>
+
+
+                    <div class="input-box">
+
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            placeholder="Confirm your password"
+                            required
+                        >
+
+
+                        <span
+                            class="eye"
+                            id="confirmEye"
+                        >
+                            ◉
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     TERMS AND PRIVACY
+                ================================================== -->
+
+                <div class="terms">
+
+
+                    <input
+                        type="checkbox"
+                        id="termsCheckbox"
+                    >
+
+
+                    <label for="termsCheckbox">
+
+                        I agree to the
+
+                        <a href="#" data-policy="terms">Terms &amp; Conditions</a>
+
+                        and
+
+                        <a href="#" data-policy="privacy">Privacy Policy</a>.
+
+                    </label>
+
+
+                </div>
+
+
+
+                <div
+                    id="message"
+                    class="message"
+                ></div>
+
+
+
+                <button
+                    type="submit"
+                    class="btn"
+                >
+
+                    CREATE ACCOUNT
+
+                </button>
+
+
+            </form>
+
+
+
+            <div class="bottom">
+
+                Already have an account?
+
+                <a href="login.html">
+                    Login
+                </a>
+
+            </div>
+
+
+        </section>
+
+    </div>
+
+</div>
+
+
+
+
+<style>
+.policy-dialog{width:min(620px,calc(100% - 28px));max-height:82vh;overflow:auto;border:1px solid rgba(212,175,55,.55);border-radius:18px;padding:0;background:#2b0714;color:#fff8e8;box-shadow:0 25px 80px #0009}
+.policy-dialog::backdrop{background:rgba(10,0,4,.76);backdrop-filter:blur(4px)}
+.policy-head{position:sticky;top:0;background:#2b0714;padding:18px 22px;border-bottom:1px solid rgba(212,175,55,.22);display:flex;justify-content:space-between;align-items:center;gap:12px}
+.policy-head h2{font-family:Cinzel,serif;color:#f7df7a;font-size:20px}.policy-body{padding:20px 24px;line-height:1.7;color:#eadfda}.policy-body h3{color:#f7df7a;margin:16px 0 6px}.policy-close{border:1px solid #d4af37;border-radius:9px;background:transparent;color:#f7df7a;padding:8px 12px;cursor:pointer}
+</style>
+<dialog class="policy-dialog" id="policyDialog" aria-labelledby="policyTitle">
+ <div class="policy-head"><h2 id="policyTitle">Thrifty Bite policy</h2><button type="button" class="policy-close" id="closePolicy">Close ✕</button></div>
+ <div class="policy-body" id="policyBody"></div>
+</dialog>
+<script>
+(function(){
+ const dialog=document.getElementById('policyDialog'), title=document.getElementById('policyTitle'), body=document.getElementById('policyBody');
+ const content={
+  terms:{title:'Terms & Conditions',html:'<p>By creating a Thrifty Bite account, you agree to use the service lawfully and provide accurate account and delivery information.</p><h3>Orders and prices</h3><p>Menu availability and prices are provided by the listed restaurants and may change. Review your cart and total before placing an order. Occasion plans are estimates until items are confirmed in the cart.</p><h3>Your account</h3><p>Keep your password private. You are responsible for activity carried out through your account. Do not misuse the site or attempt to disrupt its services.</p><h3>Changes and support</h3><p>Features, menu listings and these terms may be updated as the project evolves. Contact the Help Centre for assistance with an order or account.</p>'},
+  privacy:{title:'Privacy Policy',html:'<p>Thrifty Bite uses the information you submit, such as your name, email, phone number and delivery details, to provide account, ordering and support features.</p><h3>How information is used</h3><p>Account data supports sign-in, order processing, saved plans and your preferences. We do not ask you to enter payment-card details into the registration form.</p><h3>Storage and security</h3><p>Passwords should be stored as secure hashes by the backend. Avoid sharing passwords or one-time codes. Use logout on shared devices.</p><h3>Your choices</h3><p>You may review your profile and settings, and contact support about account information. This project should be configured with appropriate access controls before public deployment.</p>'}
+ };
+ document.querySelectorAll('[data-policy]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const c=content[a.dataset.policy];title.textContent=c.title;body.innerHTML=c.html;if(dialog.showModal)dialog.showModal();else alert(c.title+'\n\n'+body.innerText)}));
+ document.getElementById('closePolicy').addEventListener('click',()=>dialog.close());
+ dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
+})();
+</script>
+
+<script>
+
+/* =========================================================
+   API
+========================================================= */
+
+const API_BASE =
+    window.location.origin + "/api/auth";
+
+
+/* =========================================================
+   ACCOUNT TYPE SELECTOR
+========================================================= */
+
+let selectedRole = "CUSTOMER";
+
+const nameLabel = document.getElementById("nameLabel");
+const nameInput = document.getElementById("name");
+const ownerNameInput = document.getElementById("ownerName");
+const addressInput = document.getElementById("address");
+const mobileInput = document.getElementById("mobile");
+
+const NAME_LABELS = {
+    CUSTOMER: "Full Name",
+    RESTAURANT: "Restaurant Name",
+    MASTER_CHEF: "Chef Name"
+};
+
+function applyAccountType(role){
+
+    selectedRole = role;
+
+    document
+        .querySelectorAll("#accountType .type-btn")
+        .forEach(function(btn){
+            btn.classList.toggle("active", btn.dataset.role === role);
+        });
+
+    document
+        .querySelectorAll(".role-only")
+        .forEach(function(field){
+            const show = field.dataset.role === role;
+            field.classList.toggle("show", show);
+        });
+
+    nameLabel.textContent = NAME_LABELS[role];
+
+    if(ownerNameInput){
+        ownerNameInput.required = (role === "RESTAURANT");
+    }
+
+}
+
+document
+    .querySelectorAll("#accountType .type-btn")
+    .forEach(function(btn){
+        btn.addEventListener("click", function(){
+            applyAccountType(btn.dataset.role);
+        });
+    });
+
+applyAccountType("CUSTOMER");
+
+
+/* Do not persist registration details or credentials in browser storage. */
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const confirmPasswordInput = document.getElementById("confirmPassword");
+const termsCheckbox = document.getElementById("termsCheckbox");
+
+let verifiedRegistrationEmail = "";
+const sendRegistrationOtpButton = document.getElementById("sendRegistrationOtp");
+const verifyRegistrationOtpButton = document.getElementById("verifyRegistrationOtp");
+const registrationOtpInput = document.getElementById("registrationOtp");
+const emailVerificationStatus = document.getElementById("emailVerificationStatus");
+
+function setEmailVerificationStatus(message, kind) {
+    emailVerificationStatus.textContent = message;
+    emailVerificationStatus.className = "message " + (kind || "");
+}
+emailInput.addEventListener("input", () => {
+    if (verifiedRegistrationEmail && emailInput.value.trim().toLowerCase() !== verifiedRegistrationEmail) {
+        verifiedRegistrationEmail = "";
+        setEmailVerificationStatus("Email changed. Please verify the new address.", "warning");
+    }
+});
+sendRegistrationOtpButton.addEventListener("click", async () => {
+    const email = emailInput.value.trim().toLowerCase();
+    const emailPattern = /^[A-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?(?:\.[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?)+$/i;
+    if (!emailPattern.test(email)) {
+        setEmailVerificationStatus("Please enter a valid email address first.", "error");
+        emailInput.focus();
+        return;
+    }
+    sendRegistrationOtpButton.disabled = true;
+    sendRegistrationOtpButton.textContent = "SENDING...";
+    setEmailVerificationStatus("Sending verification code to your email...", "");
+    try {
+        const response = await fetch(`${API_BASE}/send-registration-otp`, {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || "Unable to send OTP.");
+        verifiedRegistrationEmail = "";
+        setEmailVerificationStatus(data.message || "OTP sent. Check your inbox and spam folder.", "success");
+        registrationOtpInput.focus();
+    } catch (error) {
+        setEmailVerificationStatus(error.message.includes("Failed to fetch") ? "Cannot connect to the server. Please start the backend." : error.message, "error");
+    } finally {
+        sendRegistrationOtpButton.disabled = false;
+        sendRegistrationOtpButton.textContent = "RESEND OTP";
+    }
+});
+verifyRegistrationOtpButton.addEventListener("click", async () => {
+    const email = emailInput.value.trim().toLowerCase();
+    const otp = registrationOtpInput.value.trim();
+    if (!/^\d{6}$/.test(otp)) {
+        setEmailVerificationStatus("Enter the six-digit OTP sent to your email.", "error");
+        registrationOtpInput.focus();
+        return;
+    }
+    verifyRegistrationOtpButton.disabled = true;
+    verifyRegistrationOtpButton.textContent = "VERIFYING...";
+    try {
+        const response = await fetch(`${API_BASE}/verify-registration-otp`, {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, otp })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || "OTP verification failed.");
+        verifiedRegistrationEmail = email;
+        setEmailVerificationStatus("Email Verified ✓", "success");
+        verifyRegistrationOtpButton.textContent = "EMAIL VERIFIED ✓";
+    } catch (error) {
+        setEmailVerificationStatus(error.message, "error");
+        verifyRegistrationOtpButton.textContent = "VERIFY EMAIL OTP";
+    } finally {
+        verifyRegistrationOtpButton.disabled = false;
+    }
+});
+
+
+/* =========================================================
+   PASSWORD TOGGLE
+========================================================= */
+
+function updatePasswordQuality(){
+    const p=passwordInput.value;
+    const classes=[/[A-Z]/.test(p),/[a-z]/.test(p),/[0-9]/.test(p),/[^A-Za-z0-9]/.test(p)].filter(Boolean).length;
+    const score=(p.length>=8?1:0)+classes;
+    const bar=document.getElementById('passwordStrengthBar');
+    const label=document.getElementById('passwordStrengthText');
+    const strength=!p?'not entered':(p.length<8||classes<2?'Weak':(p.length>=12&&classes>=3?'Strong':'Medium'));
+    if(bar){bar.style.width=(strength==='Strong'?100:strength==='Medium'?65:strength==='Weak'?30:0)+'%';bar.style.background=strength==='Strong'?'#22c55e':strength==='Medium'?'#f97316':'#ef4444';}
+    if(label)label.textContent='Password strength: '+strength;
+    const match=document.getElementById('passwordMatchText');
+    if(match){match.textContent=!confirmPasswordInput.value?'Confirm your password below.':p===confirmPasswordInput.value?'✓ Passwords match':'✕ Passwords do not match';match.style.color=p===confirmPasswordInput.value?'#22c55e':'#f97316';}
+}
+
+passwordInput.addEventListener('input',updatePasswordQuality);
+confirmPasswordInput.addEventListener('input',updatePasswordQuality);
+const confirmField=confirmPasswordInput.closest('.field');
+if(confirmField&&!document.getElementById('passwordMatchText')){const hint=document.createElement('small');hint.id='passwordMatchText';hint.style.cssText='display:block;margin-top:7px;color:#cdbfa9';hint.textContent='Confirm your password below.';confirmField.appendChild(hint);}
+updatePasswordQuality();
+
+function togglePassword(inputId, eyeId){
+
+    const input =
+        document.getElementById(inputId);
+
+    const eye =
+        document.getElementById(eyeId);
+
+
+    eye.addEventListener("click", function(){
+
+        if(input.type === "password"){
+
+            input.type = "text";
+
+            eye.textContent = "◉";
+
+        }else{
+
+            input.type = "password";
+
+            eye.textContent = "◉";
+
+        }
+
+    });
+
+}
+
+
+togglePassword(
+    "password",
+    "passwordEye"
+);
+
+
+togglePassword(
+    "confirmPassword",
+    "confirmEye"
+);
+
+
+
+/* =========================================================
+   REGISTER
+========================================================= */
+
+const registerForm = document.getElementById("registerForm");
+const registerSubmitButton = registerForm.querySelector('button[type="submit"]');
+const registerSubmitLabel = registerSubmitButton ? registerSubmitButton.textContent.trim() : "CREATE ACCOUNT";
+
+// Gentle browser-generated welcome melody and spoken welcome. No external audio file is required.
+function welcomePreferenceEnabled(key, legacyKey){
+    try {
+        const saved = JSON.parse(localStorage.getItem("thriftyBitePreferences") || "{}");
+        if (typeof saved[key] === "boolean") return saved[key];
+        const legacy = localStorage.getItem(legacyKey);
+        return legacy !== "off";
+    } catch (_) { return localStorage.getItem(legacyKey) !== "off"; }
+}
+function playWelcomeMelody(){
+    if (!welcomePreferenceEnabled("welcomeMusic", "thriftyBiteMusic")) return;
+    try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+        const ctx = new AudioContextClass();
+        const notes = [523.25, 659.25, 783.99, 659.25, 698.46, 783.99, 1046.5];
+        notes.forEach((frequency, index) => {
+            const start = ctx.currentTime + index * 0.19;
+            const oscillator = ctx.createOscillator();
+            const gain = ctx.createGain();
+            oscillator.type = "sine";
+            oscillator.frequency.value = frequency;
+            gain.gain.setValueAtTime(0.0001, start);
+            gain.gain.exponentialRampToValueAtTime(0.055, start + 0.025);
+            gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.17);
+            oscillator.connect(gain); gain.connect(ctx.destination);
+            oscillator.start(start); oscillator.stop(start + 0.18);
+        });
+        setTimeout(() => ctx.close().catch(() => {}), 1800);
+    } catch (err) { console.info("Welcome sound was blocked by browser settings.", err); }
+}
+function speakWelcome(){
+    if (!welcomePreferenceEnabled("welcomeVoice", "thriftyBiteVoice") || !("speechSynthesis" in window)) return;
+    try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance("Welcome to Thrifty Bite!");
+        utterance.rate = 0.92;
+        utterance.pitch = 1.08;
+        utterance.volume = 0.9;
+        window.speechSynthesis.speak(utterance);
+    } catch (err) { console.info("Welcome voice was blocked by browser settings.", err); }
+}
+
+registerForm.addEventListener("submit", async function(e) {
+        e.preventDefault();
+        if (registerSubmitButton && registerSubmitButton.disabled) return;
+
+
+        /* =================================================
+           GET VALUES
+        ================================================== */
+
+        const name =
+            nameInput.value.trim();
+
+
+        const ownerName =
+            ownerNameInput.value.trim();
+
+
+        const mobile =
+            mobileInput.value.trim();
+
+
+        const address =
+            addressInput.value.trim();
+
+
+        const specialization =
+            document.getElementById("specialization").value.trim();
+
+
+        const experience =
+            document.getElementById("experience").value.trim();
+
+
+        const email =
+            emailInput.value.trim();
+
+
+        const password =
+            passwordInput.value;
+
+
+        const confirmPassword =
+            confirmPasswordInput.value;
+
+
+        const terms =
+            termsCheckbox.checked;
+
+
+        const message =
+            document.getElementById("message");
+
+
+        message.className =
+            "message";
+
+
+
+        /* =================================================
+           NAME / CONTACT VALIDATION
+        ================================================== */
+
+        const normalizedEmail = email.toLowerCase();
+
+        if (!name || name.trim().length < 2) {
+            message.className = "message error";
+            message.textContent = "Please enter a name with at least 2 characters.";
+            nameInput.focus();
+            return;
+        }
+
+        if(!/^[6-9][0-9]{9}$/.test(mobile)){
+            message.className = "message error";
+            message.textContent = "Enter a valid 10-digit Indian mobile number starting with 6, 7, 8 or 9.";
+            return;
+        }
+
+        if(!name || !mobile || !address){
+
+            message.className =
+                "message error";
+
+
+            message.textContent =
+                "Please fill in your name, mobile number and address.";
+
+
+            return;
+
+        }
+
+
+        if(selectedRole === "RESTAURANT" && !ownerName){
+
+            message.className =
+                "message error";
+
+
+            message.textContent =
+                "Owner name is required for a restaurant account.";
+
+
+            return;
+
+        }
+
+
+
+        /* =================================================
+           EMAIL VALIDATION
+        ================================================== */
+
+        const emailPattern =
+            /^[A-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?(?:\.[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?)+$/i;
+
+
+        if(!emailPattern.test(normalizedEmail)){
+
+            message.className =
+                "message error";
+
+
+            message.textContent =
+                "Please enter a valid email address.";
+
+
+            return;
+
+        }
+
+
+
+        if (verifiedRegistrationEmail !== normalizedEmail) {
+            message.className = "message error";
+            message.textContent = "Please verify your email using the six-digit OTP before creating your account.";
+            emailVerificationStatus.scrollIntoView({ behavior: "smooth", block: "center" });
+            return;
+        }
+
+        /* =================================================
+           PASSWORD VALIDATION
+        ================================================== */
+
+        if(password.length < 8 || [/[A-Z]/.test(password),/[a-z]/.test(password),/[0-9]/.test(password),/[^A-Za-z0-9]/.test(password)].filter(Boolean).length < 2){
+
+            message.className =
+                "message error";
+
+
+            message.textContent =
+                "Choose at least 8 characters and use at least two character types.";
+
+
+            return;
+
+        }
+
+
+
+        /* =================================================
+           PASSWORD MATCH
+        ================================================== */
+
+        if(password !== confirmPassword){
+
+            message.className =
+                "message error";
+
+
+            message.textContent =
+                "Passwords do not match.";
+
+
+            return;
+
+        }
+
+
+
+        /* =================================================
+           TERMS VALIDATION
+        ================================================== */
+
+        if(!terms){
+
+            message.className =
+                "message error";
+
+
+            message.textContent =
+                "Please agree to the Terms & Conditions and Privacy Policy.";
+
+
+            return;
+
+        }
+
+
+
+        /* =================================================
+           REGISTERING MESSAGE
+        ================================================== */
+
+        message.className = "message";
+        message.textContent = "Creating your account securely...";
+        if (registerSubmitButton) {
+            registerSubmitButton.disabled = true;
+            registerSubmitButton.textContent = "CREATING ACCOUNT...";
+            registerSubmitButton.setAttribute("aria-busy", "true");
+        }
+
+
+
+        /* =================================================
+           SEND TO BACKEND
+        ================================================== */
+
+        try{
+
+
+            const response =
+                await fetch(
+
+                    `${API_BASE}/register`,
+
+                    {
+
+                        method:"POST",
+
+                        headers:{
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                email: normalizedEmail,
+                                password,
+                                name,
+                                mobile,
+                                address,
+                                role: selectedRole,
+                                ownerName,
+                                specialization,
+                                experience
+
+                            })
+
+                    }
+
+                );
+
+
+
+            /* =================================================
+               READ SERVER RESPONSE
+            ================================================== */
+
+            const data =
+                await response.json();
+
+
+
+            /* =================================================
+               SERVER ERROR
+            ================================================= */
+
+            if(!response.ok){
+                if (response.status === 409 && /email/i.test(data.message || "")) {
+                    message.className = "message error";
+                    message.innerHTML = 'This email is already registered. <a href="login.html" style="color:inherit;font-weight:700;text-decoration:underline">Go to login</a>.';
+                    if (registerSubmitButton) {
+                        registerSubmitButton.disabled = false;
+                        registerSubmitButton.textContent = registerSubmitLabel;
+                        registerSubmitButton.removeAttribute("aria-busy");
+                    }
+                    return;
+                }
+                throw new Error(data.message || "Registration failed.");
+            }
+
+
+
+            /* =================================================
+               SUCCESS
+            ================================================= */
+
+            message.className =
+                "message success";
+
+
+            message.textContent =
+                "Email Verified ✓ Account created successfully. Taking you to login...";
+            playWelcomeMelody();
+            // Start voice after the melody begins; speech is optional and controlled in Settings.
+            window.setTimeout(speakWelcome, 250);
+            registerForm.reset();
+
+
+
+            /* =================================================
+               CLEAR TEMPORARY FORM DATA
+               
+               IMPORTANT:
+               The actual password stored in MongoDB
+               must be hashed by the backend.
+            ================================================= */
+
+            sessionStorage.removeItem(
+                "register_email"
+            );
+
+
+            sessionStorage.removeItem(
+                "register_terms"
+            );
+
+
+
+            /* =================================================
+               GO TO LOGIN
+            ================================================= */
+
+            setTimeout(
+                () => {
+
+                    window.location.href =
+                        "login.html";
+
+                },
+                2800
+            );
+
+
+        } catch(error) {
+            if (registerSubmitButton) {
+                registerSubmitButton.disabled = false;
+                registerSubmitButton.textContent = registerSubmitLabel;
+                registerSubmitButton.removeAttribute("aria-busy");
+            }
+
+            /* =================================================
+               ERROR MESSAGE
+            ================================================= */
+
+            message.className =
+                "message error";
+
+
+            if(
+                error.message
+                .includes("Failed to fetch")
+            ){
+
+                message.textContent =
+                    "Cannot connect to the server. Please start the backend.";
+
+            }else{
+
+                message.textContent =
+                    error.message;
+
+            }
+
+        }
+
+    }
+);
+
+</script>
+
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+
+</html>

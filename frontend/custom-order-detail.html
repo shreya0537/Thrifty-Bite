@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thrifty Bite | Order Details</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/theme.css">
+
+<style>
+.timeline{
+    list-style:none;
+    margin-top:16px;
+}
+.timeline li{
+    position:relative;
+    padding:0 0 22px 26px;
+    border-left:2px solid rgba(212,175,55,.3);
+}
+.timeline li:last-child{
+    border-left-color:transparent;
+    padding-bottom:0;
+}
+.timeline li::before{
+    content:"";
+    position:absolute;
+    left:-7px;
+    top:2px;
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:var(--gold);
+    box-shadow:0 0 0 3px rgba(212,175,55,.2);
+}
+</style>
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="brand">
+        THRIFTY BITE
+        <span>ORDER DETAILS</span>
+    </div>
+
+    <nav class="nav-links">
+        <a href="custom-order.html">My Custom Orders</a>
+    </nav>
+
+    <div class="nav-right">
+        <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="page-header">
+        <h1 id="orderTitle">Custom Order</h1>
+        <p id="orderSubtitle" class="muted">Loading...</p>
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <div class="grid cols-2">
+
+        <div>
+            <div class="card">
+                <h2>Request Details</h2>
+                <div id="orderDetails"></div>
+            </div>
+
+            <div class="card" id="proposalCard" style="display:none">
+                <h2>Chef Proposal</h2>
+                <div id="proposalDetails"></div>
+
+                <div id="paymentSection" class="mt-20" style="display:none">
+                    <label>Payment Method</label>
+                    <div class="form-row">
+                        <select id="paymentMethod">
+                            <option value="UPI">UPI</option>
+                            <option value="Card">Card</option>
+                            <option value="Cash">Cash</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-8 mt-12">
+                        <button class="btn" onclick="confirmAndPay()">Confirm &amp; Pay</button>
+                        <button class="btn btn-danger" onclick="rejectProposal()">Reject Proposal</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Status Timeline</h2>
+            <ul class="timeline" id="timelineList"></ul>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="assets/api.js"></script>
+<script>
+
+const user = requireAuth(["CUSTOMER"]);
+
+if(user){
+
+    const messageEl = document.getElementById("message");
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get("id");
+
+    if(!orderId){
+        window.location.href = "custom-order.html";
+    }
+
+    async function loadOrder(){
+        try{
+            const data = await apiFetch("/custom-orders/" + orderId);
+            const order = data.order;
+
+            document.getElementById("orderTitle").textContent = order.foodRequired;
+            document.getElementById("orderSubtitle").innerHTML =
+                "<span class='badge " + statusBadgeClass(order.status) + "'>" + statusLabel(order.status) + "</span>";
+
+            const chefName = order.chefId ? (order.chefId.name || order.chefId.username) : "Not yet assigned";
+
+            document.getElementById("orderDetails").innerHTML =
+                "<p><strong>Description:</strong> " + escapeHtml(order.description) + "</p>"
+                + "<p class='mt-12'><strong>Quantity:</strong> " + order.quantity + "</p>"
+                + "<p class='mt-12'><strong>Preferred:</strong> " + formatDate(order.preferredDate) + " at " + escapeHtml(order.preferredTime) + "</p>"
+                + (order.specialInstructions ? "<p class='mt-12'><strong>Instructions:</strong> " + escapeHtml(order.specialInstructions) + "</p>" : "")
+                + "<p class='mt-12'><strong>Chef:</strong> " + escapeHtml(chefName) + "</p>";
+
+            if(data.proposal){
+                document.getElementById("proposalCard").style.display = "block";
+                document.getElementById("proposalDetails").innerHTML =
+                    "<p><strong>Amount:</strong> " + formatMoney(data.proposal.amount) + "</p>"
+                    + "<p class='mt-12'><strong>Preparation Time:</strong> " + escapeHtml(data.proposal.preparationTime) + "</p>"
+                    + (data.proposal.chefNotes ? "<p class='mt-12'><strong>Chef Notes:</strong> " + escapeHtml(data.proposal.chefNotes) + "</p>" : "");
+
+                document.getElementById("paymentSection").style.display =
+                    (order.status === "CHEF_PROPOSED") ? "block" : "none";
+            }
+
+            if(data.payment){
+                document.getElementById("proposalDetails").innerHTML +=
+                    "<p class='mt-12'><strong>Payment:</strong> " + formatMoney(data.payment.amount)
+                    + " via " + escapeHtml(data.payment.paymentMethod)
+                    + " <span class='badge success'>" + escapeHtml(data.payment.paymentStatus) + "</span></p>";
+            }
+
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    async function loadTimeline(){
+        try{
+            const data = await apiFetch("/custom-orders/" + orderId + "/timeline");
+            const list = document.getElementById("timelineList");
+
+            list.innerHTML = (data.timeline || []).map(function(step){
+                return "<li>"
+                    + "<strong>" + statusLabel(step.status) + "</strong>"
+                    + "<div class='muted small mt-12'>" + formatDateTime(step.updatedAt) + "</div>"
+                    + (step.remarks ? "<div class='small mt-12'>" + escapeHtml(step.remarks) + "</div>" : "")
+                    + "</li>";
+            }).join("");
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    window.confirmAndPay = async function confirmAndPay(){
+        const paymentMethod = document.getElementById("paymentMethod").value;
+        try{
+            await apiFetch("/custom-orders/" + orderId + "/payment", {
+                method: "POST",
+                body: JSON.stringify({ paymentMethod })
+            });
+            showMessage(messageEl, "Payment successful! Order confirmed.", "success");
+            loadOrder();
+            loadTimeline();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    window.rejectProposal = async function rejectProposal(){
+        try{
+            await apiFetch("/custom-orders/" + orderId + "/reject", { method: "POST" });
+            showMessage(messageEl, "Proposal rejected.", "success");
+            loadOrder();
+            loadTimeline();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    loadOrder();
+    loadTimeline();
+
+}
+
+</script>
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+</html>

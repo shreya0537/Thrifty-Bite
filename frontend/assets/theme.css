@@ -1,0 +1,398 @@
+/* =========================================================
+   THRIFTY BITE — SHARED DASHBOARD THEME
+   Used by all Restaurant / Master Chef / Custom Order /
+   Friends / Group Order / Bill Split / Admin pages.
+========================================================= */
+
+:root{
+    --maroon-dark:#260611;
+    --maroon:#4b0d1d;
+    --maroon-light:#6b1428;
+    --gold:#d4af37;
+    --gold-light:#f7df7a;
+    --cream:#fff8e8;
+    --muted:#cdbfa9;
+    --danger:#e2555a;
+    --success:#4caf6b;
+    --warning:#e0a531;
+    --radius:16px;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,body{
+    width:100%;
+    min-height:100%;
+}
+
+body{
+    min-height:100vh;
+    font-family:"DM Sans",sans-serif;
+    color:var(--cream);
+
+    background:
+        radial-gradient(circle at 10% 10%, rgba(212,175,55,.12), transparent 30%),
+        radial-gradient(circle at 90% 0%, rgba(143,29,60,.28), transparent 32%),
+        linear-gradient(135deg, #2b0714, var(--maroon) 48%, var(--maroon-dark));
+}
+
+h1,h2,h3,.brand{
+    font-family:"Cinzel",serif;
+    letter-spacing:.5px;
+}
+
+a{
+    color:var(--gold-light);
+    text-decoration:none;
+}
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.navbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+
+    padding:16px 28px;
+
+    background:rgba(38,6,17,.65);
+    border-bottom:1px solid rgba(212,175,55,.35);
+}
+
+.navbar .brand{
+    font-size:20px;
+    color:var(--gold-light);
+}
+
+.navbar .brand span{
+    color:var(--muted);
+    font-family:"DM Sans",sans-serif;
+    font-size:12px;
+    display:block;
+    letter-spacing:2px;
+}
+
+.nav-links{
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+    font-size:14px;
+}
+
+.nav-links a{
+    color:var(--cream);
+    opacity:.85;
+}
+
+.nav-links a:hover,
+.nav-links a.active{
+    color:var(--gold-light);
+    opacity:1;
+}
+
+.nav-right{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+
+.container{
+    max-width:1100px;
+    margin:0 auto;
+    padding:32px 24px 80px;
+}
+
+.page-header{
+    margin-bottom:24px;
+}
+
+.page-header h1{
+    font-size:28px;
+    color:var(--cream);
+    margin-bottom:6px;
+}
+
+.page-header p{
+    color:var(--muted);
+    font-size:14px;
+}
+
+/* =========================================================
+   CARD / PANEL
+========================================================= */
+
+.card{
+    background:linear-gradient(145deg, rgba(75,13,29,.85), rgba(38,6,17,.85));
+    border:1px solid rgba(212,175,55,.28);
+    border-radius:var(--radius);
+    padding:24px;
+    margin-bottom:20px;
+}
+
+.card h2,.card h3{
+    color:var(--gold-light);
+    font-size:18px;
+    margin-bottom:14px;
+}
+
+.grid{
+    display:grid;
+    gap:20px;
+}
+
+.grid.cols-2{ grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); }
+.grid.cols-3{ grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); }
+
+/* =========================================================
+   TABS
+========================================================= */
+
+.tabs{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:22px;
+    border-bottom:1px solid rgba(212,175,55,.25);
+}
+
+.tab-btn{
+    background:none;
+    border:none;
+    color:var(--muted);
+    font-family:"DM Sans",sans-serif;
+    font-size:14px;
+    padding:10px 16px;
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+}
+
+.tab-btn.active{
+    color:var(--gold-light);
+    border-bottom-color:var(--gold);
+}
+
+.tab-panel{
+    display:none;
+}
+
+.tab-panel.active{
+    display:block;
+}
+
+/* =========================================================
+   FORMS
+========================================================= */
+
+.form-group{
+    margin-bottom:16px;
+}
+
+.form-row{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:16px;
+}
+
+label{
+    display:block;
+    font-size:12px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:6px;
+}
+
+input,select,textarea{
+    width:100%;
+    padding:11px 14px;
+    border-radius:10px;
+    border:1px solid rgba(212,175,55,.35);
+    background:rgba(255,255,255,.04);
+    color:var(--cream);
+    font-family:"DM Sans",sans-serif;
+    font-size:14px;
+    outline:none;
+}
+
+input::placeholder,textarea::placeholder{
+    color:rgba(255,248,232,.4);
+}
+
+input:focus,select:focus,textarea:focus{
+    border-color:var(--gold);
+}
+
+textarea{
+    resize:vertical;
+    min-height:80px;
+}
+
+select option{
+    background:var(--maroon-dark);
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+
+    padding:10px 20px;
+    border-radius:10px;
+    border:1px solid transparent;
+
+    font-family:"DM Sans",sans-serif;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+
+    background:linear-gradient(135deg, var(--gold), #b8912a);
+    color:#2b0714;
+}
+
+.btn:hover{
+    filter:brightness(1.08);
+}
+
+.btn:disabled{
+    opacity:.55;
+    cursor:not-allowed;
+}
+
+.btn-outline{
+    background:transparent;
+    border:1px solid rgba(212,175,55,.5);
+    color:var(--gold-light);
+}
+
+.btn-danger{
+    background:linear-gradient(135deg, #c9414a, #8f2a30);
+    color:var(--cream);
+}
+
+.btn-sm{
+    padding:6px 12px;
+    font-size:12px;
+    border-radius:8px;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13.5px;
+}
+
+th,td{
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid rgba(212,175,55,.15);
+}
+
+th{
+    color:var(--muted);
+    text-transform:uppercase;
+    font-size:11px;
+    letter-spacing:1px;
+}
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+.thumb{
+    width:56px;
+    height:42px;
+    object-fit:cover;
+    border-radius:8px;
+    border:1px solid rgba(212,175,55,.3);
+    display:block;
+}
+
+/* =========================================================
+   BADGES / STATUS PILLS
+========================================================= */
+
+.badge{
+    display:inline-block;
+    padding:4px 10px;
+    border-radius:999px;
+    font-size:11px;
+    letter-spacing:.5px;
+    text-transform:uppercase;
+    font-weight:600;
+    background:rgba(212,175,55,.18);
+    color:var(--gold-light);
+    white-space:nowrap;
+}
+
+.badge.success{ background:rgba(76,175,107,.18); color:#7be09a; }
+.badge.danger{ background:rgba(226,85,90,.18); color:#f28c90; }
+.badge.warning{ background:rgba(224,165,49,.18); color:#f4c766; }
+
+/* =========================================================
+   MESSAGES
+========================================================= */
+
+.message{
+    padding:12px 16px;
+    border-radius:10px;
+    font-size:13.5px;
+    margin-bottom:16px;
+    display:none;
+}
+
+.message.show{ display:block; }
+
+.message.success{
+    background:rgba(76,175,107,.15);
+    border:1px solid rgba(76,175,107,.4);
+    color:#a4e9b8;
+}
+
+.message.error{
+    background:rgba(226,85,90,.15);
+    border:1px solid rgba(226,85,90,.4);
+    color:#f6b0b3;
+}
+
+.empty-state{
+    color:var(--muted);
+    font-size:13.5px;
+    padding:20px 0;
+    text-align:center;
+}
+
+.muted{ color:var(--muted); }
+.small{ font-size:12px; }
+
+.flex{ display:flex; align-items:center; }
+.flex-between{ display:flex; align-items:center; justify-content:space-between; }
+.gap-8{ gap:8px; }
+.gap-12{ gap:12px; }
+.mt-12{ margin-top:12px; }
+.mt-20{ margin-top:20px; }
+
+@media (max-width:640px){
+    .container{ padding:20px 16px 60px; }
+    .navbar{ padding:14px 16px; }
+}

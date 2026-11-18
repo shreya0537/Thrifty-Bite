@@ -1,0 +1,2180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Thrifty Bite | Login</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,
+body{
+    width:100%;
+    min-height:100%;
+}
+
+body{
+    min-height:100vh;
+    font-family:"DM Sans",sans-serif;
+    color:#fff8e8;
+
+    background:
+        radial-gradient(
+            circle at 10% 15%,
+            rgba(212,175,55,.15),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 90% 15%,
+            rgba(143,29,60,.30),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(212,175,55,.08),
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            #2b0714,
+            #4b0d1d 48%,
+            #260611
+        );
+
+    overflow:hidden;
+}
+
+/* =========================================================
+   DOUBLE ROYAL BORDER
+========================================================= */
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:10px;
+
+    border:1px solid rgba(212,175,55,.48);
+
+    pointer-events:none;
+    z-index:50;
+}
+
+body::after{
+    content:"";
+    position:fixed;
+    inset:17px;
+
+    border:1px solid rgba(212,175,55,.16);
+
+    pointer-events:none;
+    z-index:50;
+}
+
+/* =========================================================
+   AMBIENT GLOW
+========================================================= */
+
+.glow{
+    position:fixed;
+
+    width:330px;
+    height:330px;
+
+    border-radius:50%;
+
+    filter:blur(80px);
+
+    opacity:.20;
+
+    pointer-events:none;
+}
+
+.glow.one{
+    background:#d4af37;
+
+    top:-140px;
+    left:-100px;
+
+    animation:
+        floatGlow
+        8s
+        infinite
+        alternate
+        ease-in-out;
+}
+
+.glow.two{
+    background:#8f1d3c;
+
+    right:-120px;
+    bottom:-100px;
+
+    animation:
+        floatGlow
+        10s
+        infinite
+        alternate-reverse
+        ease-in-out;
+}
+
+@keyframes floatGlow{
+
+    from{
+        transform:translate(0,0) scale(1);
+    }
+
+    to{
+        transform:translate(50px,35px) scale(1.2);
+    }
+
+}
+
+/* =========================================================
+   SPARKS
+========================================================= */
+
+.spark{
+    position:fixed;
+
+    width:4px;
+    height:4px;
+
+    border-radius:50%;
+
+    background:#f7df7a;
+
+    box-shadow:
+        0 0 12px #d4af37;
+
+    animation:
+        sparkFloat
+        linear
+        infinite;
+
+    opacity:.7;
+
+    pointer-events:none;
+}
+
+.spark:nth-child(1){
+    left:12%;
+    top:75%;
+    animation-duration:7s;
+}
+
+.spark:nth-child(2){
+    left:24%;
+    top:25%;
+    animation-duration:9s;
+}
+
+.spark:nth-child(3){
+    left:75%;
+    top:70%;
+    animation-duration:8s;
+}
+
+.spark:nth-child(4){
+    left:87%;
+    top:35%;
+    animation-duration:6s;
+}
+
+.spark:nth-child(5){
+    left:60%;
+    top:15%;
+    animation-duration:10s;
+}
+
+.spark:nth-child(6){
+    left:40%;
+    top:85%;
+    animation-duration:7s;
+}
+
+@keyframes sparkFloat{
+
+    0%{
+        transform:translateY(20px);
+        opacity:0;
+    }
+
+    20%{
+        opacity:.8;
+    }
+
+    80%{
+        opacity:.7;
+    }
+
+    100%{
+        transform:translateY(-130px);
+        opacity:0;
+    }
+
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.wrapper{
+    min-height:100vh;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    position:relative;
+
+    z-index:2;
+}
+
+/* =========================================================
+   LOGIN CARD
+========================================================= */
+
+.login-card{
+
+    width:430px;
+
+    padding:42px 40px;
+
+    border-radius:24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(75,13,29,.88),
+            rgba(38,6,17,.94)
+        );
+
+    border:
+        1px solid rgba(212,175,55,.48);
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.55),
+        inset 0 0 35px rgba(212,175,55,.035),
+        0 0 30px rgba(212,175,55,.06);
+
+    backdrop-filter:blur(18px);
+
+    animation:
+        cardIn
+        .8s
+        ease;
+}
+
+@keyframes cardIn{
+
+    from{
+        opacity:0;
+        transform:
+            translateY(25px)
+            scale(.97);
+    }
+
+    to{
+        opacity:1;
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.logo-area{
+
+    text-align:center;
+
+    margin-bottom:30px;
+
+}
+
+.logo-circle{
+
+    width:88px;
+    height:88px;
+
+    margin:auto;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border:
+        2px solid #d4af37;
+
+    background:
+        radial-gradient(
+            circle,
+            #4b0d1d,
+            #260611
+        );
+
+    box-shadow:
+        0 0 25px rgba(212,175,55,.22),
+        inset 0 0 20px rgba(212,175,55,.10);
+
+    overflow:hidden;
+}
+
+.logo-circle img{
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+}
+
+.crown{
+
+    color:#f7df7a;
+
+    font-size:28px;
+}
+
+.logo-area h1{
+
+    margin-top:15px;
+
+    font-family:"Cinzel",serif;
+
+    font-size:26px;
+
+    letter-spacing:3px;
+
+    color:#f7df7a;
+}
+
+.logo-area p{
+
+    margin-top:5px;
+
+    font-size:11px;
+
+    letter-spacing:2px;
+
+    color:#d4af37;
+}
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.title{
+
+    text-align:center;
+
+    margin-bottom:25px;
+}
+
+.title h2{
+
+    font-family:"Cinzel",serif;
+
+    font-size:22px;
+
+    color:#fff8e8;
+}
+
+.title p{
+
+    margin-top:7px;
+
+    color:#cdbfa9;
+
+    font-size:13px;
+}
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+.field{
+
+    margin-bottom:18px;
+}
+
+.field label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    font-size:13px;
+
+    color:#eadfca;
+}
+
+.input-box{
+
+    position:relative;
+}
+
+.input-box input{
+
+    width:100%;
+
+    height:50px;
+
+    border:
+        1px solid rgba(212,175,55,.28);
+
+    outline:none;
+
+    border-radius:12px;
+
+    padding:
+        0 45px
+        0 15px;
+
+    background:
+        rgba(20,3,10,.55);
+
+    color:#fff8e8;
+
+    font-family:inherit;
+
+    transition:.3s;
+}
+
+.input-box input:focus{
+
+    border-color:#d4af37;
+
+    box-shadow:
+        0 0 18px
+        rgba(212,175,55,.12);
+}
+
+.input-box input::placeholder{
+
+    color:#8f7c72;
+}
+
+/* =========================================================
+   EYE
+========================================================= */
+
+.eye{
+
+    position:absolute;
+
+    right:14px;
+    top:50%;
+
+    transform:translateY(-50%);
+
+    cursor:pointer;
+
+    color:#d4af37;
+
+    font-size:18px;
+
+    user-select:none;
+}
+
+/* =========================================================
+   FORGOT
+========================================================= */
+
+.forgot{
+
+    text-align:right;
+
+    margin-top:-7px;
+
+    margin-bottom:20px;
+}
+
+.forgot a{
+
+    color:#f7df7a;
+
+    text-decoration:none;
+
+    font-size:12px;
+}
+
+.otp-links{
+    text-align:center;
+    margin-top:16px;
+}
+
+.otp-links a.disabled{
+    opacity:.45;
+    pointer-events:none;
+}
+
+.resend-timer{
+    font-size:12px;
+    opacity:.7;
+}
+
+.message.warning{
+    color:#f7df7a;
+}
+
+.forgot a:hover{
+
+    color:white;
+}
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.btn{
+
+    width:100%;
+
+    height:50px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-family:"Cinzel",serif;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    color:#2b0714;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d4af37,
+            #f7df7a,
+            #c99d27
+        );
+
+    box-shadow:
+        0 8px 25px
+        rgba(212,175,55,.18);
+
+    transition:.3s;
+}
+
+.btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 12px 32px
+        rgba(212,175,55,.30);
+}
+
+.btn:disabled{
+
+    cursor:not-allowed;
+
+    opacity:.65;
+
+    transform:none;
+}
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+.message{
+
+    min-height:20px;
+
+    text-align:center;
+
+    margin:12px 0;
+
+    font-size:13px;
+}
+
+.success{
+
+    color:#f7df7a;
+}
+
+.error{
+
+    color:#ff9b9b;
+}
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.divider{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin:20px 0;
+
+    color:#80616b;
+
+    font-size:11px;
+}
+
+.divider span{
+
+    flex:1;
+
+    height:1px;
+
+    background:
+        rgba(212,175,55,.18);
+}
+
+/* =========================================================
+   REGISTER
+========================================================= */
+
+.register-text{
+
+    text-align:center;
+
+    color:#cdbfa9;
+
+    font-size:13px;
+}
+
+.register-text a{
+
+    color:#f7df7a;
+
+    text-decoration:none;
+
+    font-weight:600;
+}
+
+.register-text a:hover{
+
+    text-decoration:underline;
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:
+        rgba(8,0,4,.78);
+
+    backdrop-filter:blur(8px);
+
+    z-index:100;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+}
+
+.modal.show{
+
+    display:flex;
+}
+
+.modal-card{
+
+    width:430px;
+
+    max-width:100%;
+
+    padding:32px;
+
+    border-radius:22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #4b0d1d,
+            #260611
+        );
+
+    border:
+        1px solid rgba(212,175,55,.55);
+
+    box-shadow:
+        0 30px 80px
+        rgba(0,0,0,.65);
+
+    animation:
+        cardIn
+        .4s
+        ease;
+}
+
+.modal-card h2{
+
+    font-family:"Cinzel",serif;
+
+    color:#f7df7a;
+
+    margin-bottom:8px;
+}
+
+.modal-card p{
+
+    color:#cdbfa9;
+
+    font-size:13px;
+
+    margin-bottom:20px;
+
+    line-height:1.6;
+}
+
+.modal-step{
+
+    display:none;
+}
+
+.modal-step.active{
+
+    display:block;
+}
+
+/* =========================================================
+   MODAL INPUT
+========================================================= */
+
+.modal-input{
+
+    width:100%;
+
+    height:48px;
+
+    padding:0 14px;
+
+    border-radius:10px;
+
+    border:
+        1px solid rgba(212,175,55,.3);
+
+    background:#19040c;
+
+    color:#fff8e8;
+
+    outline:none;
+
+    font-family:inherit;
+
+    transition:.3s;
+}
+
+.modal-input:focus{
+
+    border-color:#d4af37;
+
+    box-shadow:
+        0 0 15px
+        rgba(212,175,55,.10);
+}
+
+.modal-input::placeholder{
+
+    color:#8f7c72;
+}
+
+/* =========================================================
+   CLOSE
+========================================================= */
+
+.close{
+
+    float:right;
+
+    cursor:pointer;
+
+    color:#d4af37;
+
+    font-size:22px;
+
+    transition:.2s;
+}
+
+.close:hover{
+
+    color:white;
+
+    transform:rotate(90deg);
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:520px){
+
+    body{
+        overflow:auto;
+    }
+
+    .login-card{
+
+        width:
+            calc(100% - 35px);
+
+        padding:
+            32px 25px;
+    }
+
+    .modal-card{
+
+        padding:25px;
+    }
+}
+
+</style>
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+
+<body>
+
+<!-- =====================================================
+     BACKGROUND
+===================================================== -->
+
+<div class="glow one"></div>
+<div class="glow two"></div>
+
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+
+
+<!-- =====================================================
+     LOGIN
+===================================================== -->
+
+<div class="wrapper">
+
+    <div class="login-card">
+
+        <!-- LOGO -->
+
+        <div class="logo-area">
+
+            <div class="logo-circle">
+
+                <img
+                    src="logo.jpeg"
+                    alt="Thrifty Bite Logo"
+                    onerror="
+                        this.style.display='none';
+                        this.parentElement.innerHTML='<span class=\'crown\'>♛</span>';
+                    "
+                >
+
+            </div>
+
+            <h1>THRIFTY BITE</h1>
+
+            <p>
+                ROYAL TASTE • SMART CHOICE
+            </p>
+
+        </div>
+
+
+        <!-- TITLE -->
+
+        <div class="title">
+
+            <h2>Welcome Back</h2>
+
+            <p>
+                Sign in to continue your royal dining experience.
+            </p>
+
+        </div>
+
+
+        <!-- LOGIN FORM -->
+
+        <form id="loginForm">
+
+            <!-- EMAIL -->
+
+            <div class="field">
+
+                <label>
+                    Email Address
+                </label>
+
+                <div class="input-box">
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter your email"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="field">
+
+                <label>
+                    Password
+                </label>
+
+                <div class="input-box">
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                    <span
+                        class="eye"
+                        id="togglePassword"
+                        title="Show password"
+                    >
+                        ◉
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- FORGOT -->
+
+            <div class="forgot">
+
+                <a
+                    href="#"
+                    id="forgotLink"
+                >
+                    Forgot Password?
+                </a>
+
+            </div>
+
+
+            <!-- MESSAGE -->
+
+            <div
+                id="loginMessage"
+                class="message"
+            ></div>
+
+
+            <!-- LOGIN BUTTON -->
+
+            <button
+                type="submit"
+                class="btn"
+                id="loginBtn"
+            >
+                LOGIN
+            </button>
+
+        </form>
+
+
+        <!-- DIVIDER -->
+
+        <div class="divider">
+
+            <span></span>
+
+            OR
+
+            <span></span>
+
+        </div>
+
+
+        <!-- REGISTER -->
+
+        <div class="register-text">
+
+            Don't have an account?
+
+            <a href="register.html">
+                Create Account
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     FORGOT PASSWORD MODAL
+===================================================== -->
+
+<div
+    class="modal"
+    id="forgotModal"
+>
+
+    <div class="modal-card">
+
+        <span
+            class="close"
+            id="closeModal"
+        >
+            &times;
+        </span>
+
+
+        <!-- =================================================
+             STEP 1
+        ================================================== -->
+
+        <div
+            class="modal-step active"
+            id="step1"
+        >
+
+            <h2>
+                Reset Password
+            </h2>
+
+            <p>
+                Enter your registered email address.
+                We will send you a verification OTP.
+            </p>
+
+
+            <div class="field">
+
+                <label>
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="forgotEmail"
+                    class="modal-input"
+                    placeholder="Enter registered email"
+                    autocomplete="email"
+                >
+
+            </div>
+
+
+            <div
+                id="forgotMessage"
+                class="message"
+            ></div>
+
+
+            <button
+                class="btn"
+                id="sendOtpBtn"
+            >
+                SEND OTP
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             STEP 2
+        ================================================== -->
+
+        <div
+            class="modal-step"
+            id="step2"
+        >
+
+            <h2>
+                Verify OTP
+            </h2>
+
+            <p>
+                Enter the 6-digit OTP sent to
+                <strong id="otpEmailLabel">your email</strong>.
+            </p>
+
+
+            <div class="field">
+
+                <label>
+                    OTP
+                </label>
+
+                <input
+                    type="text"
+                    id="otp"
+                    class="modal-input"
+                    maxlength="6"
+                    inputmode="numeric"
+                    placeholder="Enter 6-digit OTP"
+                    autocomplete="one-time-code"
+                >
+
+            </div>
+
+
+            <div
+                id="otpMessage"
+                class="message"
+            ></div>
+
+
+            <button
+                class="btn"
+                id="verifyOtpBtn"
+            >
+                VERIFY OTP
+            </button>
+
+            <div class="forgot otp-links">
+                <a href="#" id="resendOtpLink">Resend OTP</a>
+                <span id="resendTimer" class="resend-timer"></span>
+                &nbsp;&middot;&nbsp;
+                <a href="#" id="changeEmailLink">Change email</a>
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             STEP 3
+        ================================================== -->
+
+        <div
+            class="modal-step"
+            id="step3"
+        >
+
+            <h2>
+                Create New Password
+            </h2>
+
+            <p>
+                Your email has been verified.
+                Create a new password for your account.
+            </p>
+
+
+            <div class="field">
+
+                <label>
+                    New Password
+                </label>
+
+                <input
+                    type="password"
+                    id="newPassword"
+                    class="modal-input"
+                    placeholder="Enter new password"
+                    autocomplete="new-password"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Confirm Password
+                </label>
+
+                <input
+                    type="password"
+                    id="confirmNewPassword"
+                    class="modal-input"
+                    placeholder="Confirm new password"
+                    autocomplete="new-password"
+                >
+
+            </div>
+
+
+            <div
+                id="resetMessage"
+                class="message"
+            ></div>
+
+
+            <button
+                class="btn"
+                id="resetPasswordBtn"
+            >
+                RESET PASSWORD
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   API
+========================================================= */
+
+const API_BASE =
+    window.location.origin + "/api/auth";
+
+const DASHBOARD_BY_ROLE = {
+    CUSTOMER: "home.html",
+    RESTAURANT: "restaurant-dashboard.html",
+    MASTER_CHEF: "chef-dashboard.html",
+    ADMIN: "admin-dashboard.html"
+};
+
+
+/* =========================================================
+   HELPER
+   Safely read JSON from backend
+========================================================= */
+
+async function getResponseData(response){
+
+    const contentType =
+        response.headers.get("content-type") || "";
+
+    if(contentType.includes("application/json")){
+
+        return await response.json();
+
+    }
+
+    const text =
+        await response.text();
+
+    throw new Error(
+        `Server returned an unexpected response (${response.status}).`
+    );
+}
+
+
+/* =========================================================
+   PASSWORD SHOW / HIDE
+========================================================= */
+
+document
+.getElementById("togglePassword")
+.addEventListener("click", function(){
+
+    const password =
+        document.getElementById("password");
+
+    if(password.type === "password"){
+
+        password.type = "text";
+
+        this.textContent = "◉";
+
+        this.title = "Hide password";
+
+    }else{
+
+        password.type = "password";
+
+        this.textContent = "◉";
+
+        this.title = "Show password";
+
+    }
+
+});
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+document
+.getElementById("loginForm")
+.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+
+    const email =
+        document
+        .getElementById("email")
+        .value
+        .trim();
+
+
+    const password =
+        document
+        .getElementById("password")
+        .value;
+
+
+    const message =
+        document
+        .getElementById("loginMessage");
+
+
+    const loginBtn =
+        document
+        .getElementById("loginBtn");
+
+
+    message.className =
+        "message";
+
+    message.textContent =
+        "Signing you in...";
+
+
+    loginBtn.disabled = true;
+
+
+    try{
+
+        const response =
+            await fetch(
+                `${API_BASE}/login`,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            email,
+                            password
+                        })
+                }
+            );
+
+
+        const data =
+            await getResponseData(response);
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Login failed."
+            );
+
+        }
+
+
+        /* SAVE USER */
+
+        if(data.user){
+
+            localStorage.setItem(
+                "thriftyBiteUser",
+                JSON.stringify(data.user)
+            );
+
+        }
+
+
+        // Show a one-time welcome message when this login lands on the home page.
+        try { sessionStorage.setItem("thriftyBiteShowWelcome", "1"); } catch (_) {}
+
+        /* SAVE TOKEN */
+
+        if(data.token){
+
+            localStorage.setItem(
+                "thriftyBiteToken",
+                data.token
+            );
+
+        }
+
+
+        message.className =
+            "message success";
+
+        message.textContent =
+            "Login successful. Welcome to Thrifty Bite!";
+
+
+        setTimeout(function(){
+
+            const role =
+                (data.user && data.user.role) || "CUSTOMER";
+
+            window.location.href =
+                DASHBOARD_BY_ROLE[role] || "home.html";
+
+        },900);
+
+
+    }catch(error){
+
+        message.className =
+            "message error";
+
+
+        if(
+            error.name === "TypeError" &&
+            error.message.includes("fetch")
+        ){
+
+            message.textContent =
+                "Cannot connect to the server. Please start the backend.";
+
+        }else{
+
+            message.textContent =
+                error.message;
+
+        }
+
+
+    }finally{
+
+        loginBtn.disabled = false;
+
+    }
+
+});
+
+
+/* =========================================================
+   FORGOT PASSWORD MODAL
+========================================================= */
+
+const modal =
+    document.getElementById("forgotModal");
+
+
+/* OPEN */
+
+document
+.getElementById("forgotLink")
+.addEventListener("click", function(e){
+
+    e.preventDefault();
+
+    modal.classList.add("show");
+
+});
+
+
+/* CLOSE */
+
+document
+.getElementById("closeModal")
+.addEventListener("click", function(){
+
+    modal.classList.remove("show");
+
+});
+
+
+/* CLOSE WHEN CLICKING OUTSIDE */
+
+modal.addEventListener("click", function(e){
+
+    if(e.target === modal){
+
+        modal.classList.remove("show");
+
+    }
+
+});
+
+
+/* =========================================================
+   RESET FLOW VARIABLES
+========================================================= */
+
+let verifiedEmail = "";
+
+let otpVerified = false;
+
+
+/* =========================================================
+   STEP 1
+   SEND OTP
+========================================================= */
+
+document
+.getElementById("sendOtpBtn")
+.addEventListener("click", async function(){
+
+    const email =
+        document
+        .getElementById("forgotEmail")
+        .value
+        .trim();
+
+
+    const message =
+        document
+        .getElementById("forgotMessage");
+
+
+    const button =
+        document
+        .getElementById("sendOtpBtn");
+
+
+    /* EMAIL VALIDATION */
+
+    const emailPattern =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+    if(!email){
+
+        message.className =
+            "message error";
+
+        message.textContent =
+            "Please enter your email.";
+
+        return;
+
+    }
+
+
+    if(!emailPattern.test(email)){
+
+        message.className =
+            "message error";
+
+        message.textContent =
+            "Please enter a valid email address.";
+
+        return;
+
+    }
+
+
+    message.className =
+        "message";
+
+    message.textContent =
+        "Sending OTP...";
+
+
+    button.disabled = true;
+
+
+    try{
+
+        const response =
+            await fetch(
+                `${API_BASE}/forgot-password`,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            email
+                        })
+                }
+            );
+
+
+        const data =
+            await getResponseData(response);
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Unable to send OTP."
+            );
+
+        }
+
+
+        verifiedEmail =
+            email;
+
+        otpVerified =
+            false;
+
+        document.getElementById("otpEmailLabel").textContent = email;
+
+        message.className =
+            data.devMode ? "message warning" : "message success";
+
+        message.textContent =
+            data.message || "OTP sent successfully.";
+
+        const otpMessage = document.getElementById("otpMessage");
+        otpMessage.className = data.devMode ? "message warning" : "message";
+        otpMessage.textContent = data.devMode ? "Development mode: check the server console for the OTP." : "";
+
+        startResendCountdown();
+
+        setTimeout(function(){
+
+            document
+            .getElementById("step1")
+            .classList
+            .remove("active");
+
+
+            document
+            .getElementById("step2")
+            .classList
+            .add("active");
+
+        },data.devMode ? 2500 : 700);
+
+
+    }catch(error){
+
+        message.className =
+            "message error";
+
+        message.textContent =
+            error.message;
+
+    }finally{
+
+        button.disabled = false;
+
+    }
+
+});
+
+
+/* =========================================================
+   STEP 2
+   VERIFY OTP
+========================================================= */
+
+document
+.getElementById("verifyOtpBtn")
+.addEventListener("click", async function(){
+
+    const otp =
+        document
+        .getElementById("otp")
+        .value
+        .trim();
+
+
+    const message =
+        document
+        .getElementById("otpMessage");
+
+
+    const button =
+        document
+        .getElementById("verifyOtpBtn");
+
+
+    /* OTP VALIDATION */
+
+    if(!otp){
+
+        message.className =
+            "message error";
+
+        message.textContent =
+            "Please enter the OTP.";
+
+        return;
+
+    }
+
+
+    if(!/^\d{6}$/.test(otp)){
+
+        message.className =
+            "message error";
+
+        message.textContent =
+            "Please enter a valid 6-digit OTP.";
+
+        return;
+
+    }
+
+
+    message.className =
+        "message";
+
+    message.textContent =
+        "Verifying OTP...";
+
+
+    button.disabled = true;
+
+
+    try{
+
+        const response =
+            await fetch(
+                `${API_BASE}/verify-otp`,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            email:verifiedEmail,
+                            otp
+                        })
+                }
+            );
+
+
+        const data =
+            await getResponseData(response);
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Invalid OTP."
+            );
+
+        }
+
+
+        otpVerified =
+            true;
+
+
+        message.className =
+            "message success";
+
+        message.textContent =
+            "OTP verified successfully.";
+
+
+        setTimeout(function(){
+
+            document
+            .getElementById("step2")
+            .classList
+            .remove("active");
+
+
+            document
+            .getElementById("step3")
+            .classList
+            .add("active");
+
+        },700);
+
+
+    }catch(error){
+
+        message.className =
+            "message error";
+
+        message.textContent =
+            error.message;
+
+    }finally{
+
+        button.disabled = false;
+
+    }
+
+});
+
+
+/* =========================================================
+   RESEND OTP / CHANGE EMAIL
+========================================================= */
+
+let resendTimerId = null;
+
+function startResendCountdown(seconds){
+    const link = document.getElementById("resendOtpLink");
+    const timer = document.getElementById("resendTimer");
+    let remaining = seconds || 60;
+
+    clearInterval(resendTimerId);
+    link.classList.add("disabled");
+    timer.textContent = "(" + remaining + "s)";
+
+    resendTimerId = setInterval(function(){
+        remaining--;
+        if(remaining <= 0){
+            clearInterval(resendTimerId);
+            link.classList.remove("disabled");
+            timer.textContent = "";
+        }else{
+            timer.textContent = "(" + remaining + "s)";
+        }
+    }, 1000);
+}
+
+document
+.getElementById("resendOtpLink")
+.addEventListener("click", async function(e){
+
+    e.preventDefault();
+
+    const message = document.getElementById("otpMessage");
+
+    if(!verifiedEmail) return;
+
+    message.className = "message";
+    message.textContent = "Sending a new OTP...";
+
+    try{
+        const response = await fetch(`${API_BASE}/forgot-password`, {
+            method:"POST",
+            headers:{ "Content-Type":"application/json" },
+            body: JSON.stringify({ email: verifiedEmail })
+        });
+
+        const data = await getResponseData(response);
+
+        if(!response.ok){
+            if(data.retryAfter) startResendCountdown(data.retryAfter);
+            throw new Error(data.message || "Unable to resend OTP.");
+        }
+
+        document.getElementById("otp").value = "";
+        message.className = data.devMode ? "message warning" : "message success";
+        message.textContent = data.devMode
+            ? "Development mode: check the server console for the new OTP."
+            : "A new OTP has been sent to your email.";
+
+        startResendCountdown();
+
+    }catch(error){
+        message.className = "message error";
+        message.textContent = error.message;
+    }
+});
+
+document
+.getElementById("changeEmailLink")
+.addEventListener("click", function(e){
+
+    e.preventDefault();
+
+    clearInterval(resendTimerId);
+    otpVerified = false;
+
+    document.getElementById("otp").value = "";
+    document.getElementById("otpMessage").textContent = "";
+    document.getElementById("forgotMessage").textContent = "";
+
+    document.getElementById("step2").classList.remove("active");
+    document.getElementById("step1").classList.add("active");
+    document.getElementById("forgotEmail").focus();
+});
+
+
+/* =========================================================
+   STEP 3
+   RESET PASSWORD
+========================================================= */
+
+document
+.getElementById("resetPasswordBtn")
+.addEventListener("click", async function(){
+
+    const password =
+        document
+        .getElementById("newPassword")
+        .value;
+
+
+    const confirmPassword =
+        document
+        .getElementById("confirmNewPassword")
+        .value;
+
+
+    const message =
+        document
+        .getElementById("resetMessage");
+
+
+    const button =
+        document
+        .getElementById("resetPasswordBtn");
+
+
+    /* SECURITY CHECK */
+
+    if(!otpVerified){
+
+        message.className =
+            "message error";
+
+        message.textContent =
+            "Please verify your OTP first.";
+
+        return;
+
+    }
+
+
+    /* PASSWORD LENGTH */
+
+    if(password.length < 8){
+
+        message.className =
+            "message error";
+
+        message.textContent =
+            "Password must contain at least 8 characters.";
+
+        return;
+
+    }
+
+
+    /* CONFIRM PASSWORD */
+
+    if(password !== confirmPassword){
+
+        message.className =
+            "message error";
+
+        message.textContent =
+            "Passwords do not match.";
+
+        return;
+
+    }
+
+
+    message.className =
+        "message";
+
+    message.textContent =
+        "Resetting password...";
+
+
+    button.disabled = true;
+
+
+    try{
+
+        const response =
+            await fetch(
+                `${API_BASE}/reset-password`,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            email:verifiedEmail,
+                            newPassword:password
+                        })
+                }
+            );
+
+
+        const data =
+            await getResponseData(response);
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Unable to reset password."
+            );
+
+        }
+
+
+        message.className =
+            "message success";
+
+        message.textContent =
+            "Password reset successfully.";
+
+
+        setTimeout(function(){
+
+            /* CLOSE MODAL */
+
+            modal.classList.remove("show");
+
+
+            /* RESET STEPS */
+
+            document
+            .getElementById("step3")
+            .classList
+            .remove("active");
+
+
+            document
+            .getElementById("step1")
+            .classList
+            .add("active");
+
+
+            /* CLEAR FIELDS */
+
+            document
+            .getElementById("forgotEmail")
+            .value = "";
+
+
+            document
+            .getElementById("otp")
+            .value = "";
+
+
+            document
+            .getElementById("newPassword")
+            .value = "";
+
+
+            document
+            .getElementById("confirmNewPassword")
+            .value = "";
+
+
+            /* CLEAR STATE */
+
+            verifiedEmail = "";
+
+            otpVerified = false;
+
+
+            /* CLEAR MESSAGES */
+
+            document
+            .getElementById("forgotMessage")
+            .textContent = "";
+
+
+            document
+            .getElementById("otpMessage")
+            .textContent = "";
+
+
+            document
+            .getElementById("resetMessage")
+            .textContent = "";
+
+
+            /* PUT CURSOR BACK */
+
+            document
+            .getElementById("email")
+            .focus();
+
+
+        },1500);
+
+
+    }catch(error){
+
+        message.className =
+            "message error";
+
+        message.textContent =
+            error.message;
+
+    }finally{
+
+        button.disabled = false;
+
+    }
+
+});
+
+</script>
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+</html>

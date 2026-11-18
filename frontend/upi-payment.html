@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thrifty Bite | UPI Payment</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/theme.css">
+
+<style>
+.pay-wrap{
+    max-width:820px;
+    margin:40px auto;
+    display:grid;
+    grid-template-columns:280px 1fr;
+    border-radius:20px;
+    overflow:hidden;
+    border:1px solid rgba(212,175,55,.45);
+    box-shadow:0 25px 60px rgba(0,0,0,.45);
+}
+
+/* left — merchant panel (Razorpay-style) */
+.pay-side{
+    padding:30px 26px;
+    background:linear-gradient(160deg, #6b1428, #2b0714);
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+.merchant-logo{
+    width:52px; height:52px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(212,175,55,.18); border:1px solid rgba(212,175,55,.5);
+    font-family:"Cinzel",serif; font-weight:700; color:var(--gold-light); font-size:20px;
+}
+.merchant-name{ font-family:"Cinzel",serif; font-size:1.25em; color:var(--gold-light); margin-top:14px; }
+.pay-label{ font-size:12px; letter-spacing:1px; color:var(--muted); margin-top:22px; text-transform:uppercase; }
+.pay-total{ font-size:2.1em; font-weight:700; color:var(--cream); }
+.pay-for{ font-size:14px; color:var(--muted); }
+.secured{ margin-top:auto; padding-top:30px; font-size:12px; color:var(--muted); }
+.secured strong{ color:var(--gold-light); }
+
+/* right — QR panel */
+.pay-main{
+    padding:30px;
+    background:#1c050d;
+    text-align:center;
+}
+.pay-main h2{ margin-bottom:4px; }
+.qr-frame{
+    display:inline-block;
+    margin:20px auto 12px;
+    padding:14px;
+    background:#fff;
+    border-radius:14px;
+    position:relative;
+}
+.qr-frame canvas, .qr-frame img{ display:block; }
+.qr-frame.dimmed{ opacity:.12; }
+.upi-apps{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin:6px 0 16px; }
+.upi-apps span{
+    font-size:12px; padding:4px 10px; border-radius:20px;
+    border:1px solid rgba(212,175,55,.35); color:var(--cream);
+}
+.timer{ font-size:14px; color:var(--muted); }
+.timer strong{ color:var(--gold-light); font-variant-numeric:tabular-nums; }
+
+.status-line{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    margin-top:16px; font-size:14px; color:var(--cream);
+}
+.spinner{
+    width:16px; height:16px; border-radius:50%;
+    border:2px solid rgba(212,175,55,.3); border-top-color:var(--gold-light);
+    animation:spin .9s linear infinite;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+.demo-box{
+    margin-top:22px; padding:14px; border-radius:12px;
+    border:1px dashed rgba(212,175,55,.5); background:rgba(212,175,55,.05);
+}
+.demo-box .pay-tag{
+    display:inline-block; font-size:11px; padding:3px 10px; border-radius:20px;
+    background:rgba(212,175,55,.15); color:var(--gold-light); letter-spacing:1px; margin-bottom:8px;
+}
+.demo-actions{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:10px; }
+.lan-note{ font-size:12px; color:var(--muted); margin-top:8px; word-break:break-all; }
+
+.state-box{ padding:30px 10px; }
+.state-icon{
+    width:70px; height:70px; border-radius:50%; margin:0 auto 14px;
+    display:flex; align-items:center; justify-content:center; font-size:34px;
+}
+.state-icon.fail{ background:rgba(226,85,90,.15); color:var(--danger); border:2px solid var(--danger); }
+.state-icon.wait{ background:rgba(224,165,49,.15); color:var(--warning); border:2px solid var(--warning); }
+
+@media (max-width:760px){
+    .pay-wrap{ grid-template-columns:1fr; margin:16px auto; }
+    .secured{ display:none; }
+}
+</style>
+<style id="tb-cod-demo-style">
+body.cod-demo #qrState .qr-frame, body.cod-demo #qrState .upi-apps,
+body.cod-demo #qrState .timer, body.cod-demo #qrState .status-line,
+body.cod-demo #qrState #lanNote {display:none!important}
+body.cod-demo #qrState #paymentInstructions{max-width:440px;margin:10px auto 18px}
+.cod-cash-icon{display:none;width:min(220px,80%);height:auto;max-height:170px;object-fit:contain;margin:14px auto 18px;border:0;border-radius:0;background:transparent;box-shadow:none}
+body.cod-demo .cod-cash-icon{display:flex}
+body.cod-demo .demo-box{max-width:520px;margin:22px auto}
+body.cod-demo .cod-summary{display:block;text-align:left;margin:18px auto 0;padding:15px;border:1px solid rgba(212,175,55,.28);border-radius:12px;background:rgba(212,175,55,.05);max-width:420px}
+.cod-summary{display:none}.cod-summary-row{display:flex;justify-content:space-between;gap:12px;padding:5px 0}.cod-summary-total{border-top:1px solid rgba(212,175,55,.3);margin-top:7px;padding-top:10px;font-weight:700}
+</style>
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="brand">
+        THRIFTY BITE
+        <span>SECURE PAYMENT</span>
+    </div>
+
+    <nav class="nav-links">
+        <a href="checkout.html">Back to Checkout</a>
+    </nav>
+
+    <div class="nav-right"></div>
+</header>
+
+<div class="container">
+
+    <div id="message" class="message"></div>
+
+    <div class="pay-wrap" id="payWrap" style="display:none">
+
+        <aside class="pay-side">
+            <div class="merchant-logo">TB</div>
+            <div class="merchant-name">Thrifty Bite</div>
+            <div class="pay-for" id="payFor"></div>
+
+            <div class="pay-label">Amount to pay</div>
+            <div class="pay-total" id="payAmount">₹0</div>
+
+            <div class="secured">Secured by <strong>Razorpay</strong> (demo)</div>
+        </aside>
+
+        <main class="pay-main" id="payMain">
+
+            <div id="qrState">
+                <h2 id="paymentHeading">Scan &amp; Pay with UPI</h2>
+                <p class="muted small" id="paymentInstructions">Open any UPI app on your phone and scan this QR code</p>
+                <img class="cod-cash-icon" src="images/cash-on-delivery-badge.png" alt="Cash on Delivery badge" />
+                <div class="cod-summary" id="codSummary">
+                    <strong>Cash on Delivery Summary</strong>
+                    <div class="cod-summary-row"><span>Payment method</span><span>Cash on Delivery</span></div>
+                    <div class="cod-summary-row"><span>Cash to collect</span><strong id="codAmount">₹0</strong></div>
+                    <div class="cod-summary-row cod-summary-total"><span>Due when delivered</span><strong id="codDue">₹0</strong></div>
+                </div>
+
+                <div class="qr-frame" id="qrFrame"><div id="qrCode"></div></div>
+
+                <div class="upi-apps">
+                    <span>Google Pay</span><span>PhonePe</span><span>Paytm</span><span>BHIM</span>
+                </div>
+
+                <div class="timer">QR code expires in <strong id="timer">5:00</strong></div>
+
+                <div class="status-line"><div class="spinner"></div><span>Waiting for payment…</span></div>
+
+                <div class="demo-box">
+                    <span class="pay-tag">DEMO MODE · NO REAL MONEY</span>
+                    <div class="small muted">Scan the QR with your phone camera (same Wi-Fi) to open the payment page, or simulate the result here.</div>
+                    <div class="lan-note" id="lanNote"></div>
+                    <div class="demo-actions">
+                        <button class="btn btn-sm" id="simulateSuccessBtn">Simulate successful payment</button>
+                        <button class="btn btn-sm btn-outline" id="simulateFailBtn">Simulate failure</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="endState" class="state-box" style="display:none"></div>
+
+        </main>
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="assets/api.js"></script>
+<script>
+
+const user = requireAuth(["CUSTOMER"]);
+
+if(user){
+
+    const messageEl = document.getElementById("message");
+    const sessionId = new URLSearchParams(window.location.search).get("s");
+
+    let pollTimer = null;
+    let countdownTimer = null;
+    let finished = false;
+    let activeSession = null;
+
+    function stopTimers(){
+        clearInterval(pollTimer);
+        clearInterval(countdownTimer);
+    }
+
+    function showEndState(kind, title, text){
+        stopTimers();
+        finished = true;
+        document.getElementById("qrState").style.display = "none";
+
+        const box = document.getElementById("endState");
+        box.style.display = "block";
+        const summary = activeSession && activeSession.orderSummary;
+        const summaryHtml = summary
+            ? "<div class='details' style='text-align:left;margin:18px auto;max-width:420px;border-top:1px solid rgba(212,175,55,.25)'>"
+                + (summary.items || []).map(item => "<div style='display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid rgba(212,175,55,.12)'><span>" + escapeHtml(item.name) + " × " + Number(item.quantity || 1) + "</span><span>" + formatMoney(Number(item.price || 0) * Number(item.quantity || 1)) + "</span></div>").join("")
+                + "<div style='display:flex;justify-content:space-between;padding:12px 0;font-weight:700'><span>Order total</span><span>" + formatMoney(summary.totalAmount) + "</span></div>"
+                + "<div class='muted small'>Payment method: " + escapeHtml(summary.paymentMethod || "UPI") + " · Demo only</div></div>"
+            : "";
+        box.innerHTML = "<div class='state-icon " + kind + "'>" + (kind === "fail" ? "✕" : "⏱") + "</div>"
+            + "<h2>" + escapeHtml(title) + "</h2>"
+            + "<p class='muted mt-12'>" + escapeHtml(text) + "</p>"
+            + summaryHtml
+            + "<div class='demo-actions mt-20'>"
+                + "<a class='btn btn-sm' href='checkout.html'>Try again</a>"
+                + "<a class='btn btn-sm btn-outline' href='cart.html'>Back to cart</a>"
+            + "</div>";
+    }
+
+    function goToSuccess(orderId){
+        stopTimers();
+        finished = true;
+        window.location.href = "payment-success.html?order=" + encodeURIComponent(orderId);
+    }
+
+    function handleStatus(session){
+        if(finished) return;
+
+        if(session.status === "PAID" && session.orderId){
+            goToSuccess(session.orderId);
+        }else if(session.status === "FAILED"){
+            showEndState("fail", "Payment failed", "The payment was declined. No money was deducted. Your cart is still saved.");
+        }else if(session.status === "EXPIRED"){
+            showEndState("wait", "QR code expired", "The QR code was not paid in time. Please start the payment again.");
+        }
+    }
+
+    function startCountdown(expiresAt){
+        const end = new Date(expiresAt).getTime();
+
+        function tick(){
+            const left = Math.max(0, Math.round((end - Date.now()) / 1000));
+            document.getElementById("timer").textContent = Math.floor(left / 60) + ":" + String(left % 60).padStart(2, "0");
+
+            if(left <= 0){
+                document.getElementById("qrFrame").classList.add("dimmed");
+                showEndState("wait", "QR code expired", "The QR code was not paid in time. Please start the payment again.");
+            }
+        }
+
+        tick();
+        countdownTimer = setInterval(tick, 1000);
+    }
+
+    async function poll(){
+        try{
+            const data = await apiFetch("/payment/demo/session/" + encodeURIComponent(sessionId));
+            activeSession = data.session;
+            handleStatus(data.session);
+        }catch(err){
+            /* temporary network error — keep polling */
+        }
+    }
+
+    async function simulate(outcome){
+        const success = outcome === "success";
+        const localId = "LOCAL-DEMO-" + Date.now();
+        try{
+            const data = await apiFetch("/payment/demo/confirm", {
+                method: "POST",
+                body: JSON.stringify({ sessionId, outcome })
+            });
+            if(data && data.orderId && success){
+                handleStatus({ status: data.status || "SUCCEEDED", orderId: data.orderId });
+                return;
+            }
+            if(!success){
+                window.location.href = "payment-success.html?outcome=failure&localDemo=1&order=" + encodeURIComponent(sessionId || localId);
+                return;
+            }
+            throw new Error("No confirmed order id returned");
+        }catch(err){
+            // Demo outcome must remain testable even when the demo-session API is stale or unavailable.
+            if(success){
+                let items=[];try{items=JSON.parse(localStorage.getItem("thriftyBiteCart")||"[]")}catch(e){}
+                const demoOrder={_id:localId,orderId:localId,outcome:"success",status:"PLACED",restaurantName:"Thrifty Bite Restaurant",totalAmount:Number(document.getElementById("payAmount").dataset.amount||0),paymentMethod:String((activeSession&&activeSession.paymentMethod)||"UPI").toUpperCase()==="CASH"?"Cash":"UPI",items:items.map(i=>({name:i.name||i.itemName||"Menu item",quantity:Number(i.quantity)||1,price:Number(i.price)||0})),createdAt:new Date().toISOString(),localDemo:true,rider:{name:"Arjun Kumar",phone:"90000 10001",vehicle:"Honda Activa",plate:"KA 05 AB 1234"}};
+                const saved=JSON.parse(localStorage.getItem("thriftyBiteLocalDemoOrders")||"[]");saved.unshift(demoOrder);localStorage.setItem("thriftyBiteLocalDemoOrders",JSON.stringify(saved.slice(0,10)));
+                window.location.href="payment-success.html?outcome=success&localDemo=1&order="+encodeURIComponent(localId);
+            } else {
+                window.location.href="payment-success.html?outcome=failure&localDemo=1&order="+encodeURIComponent(sessionId||localId);
+            }
+        }
+    }
+
+    async function init(){
+        if(!sessionId){
+            showMessage(messageEl, "No payment found. Please start again from checkout.", "error");
+            return;
+        }
+
+        try{
+            const data = await apiFetch("/payment/demo/session/" + encodeURIComponent(sessionId));
+            const session = data.session;
+            activeSession = session;
+
+            const method = String(session.paymentMethod || "").toUpperCase();
+            if(method === "CASH"){
+                document.body.classList.add("cod-demo");
+                document.getElementById("paymentHeading").textContent = "Cash on Delivery";
+                document.getElementById("paymentInstructions").textContent = "Your order will be paid in cash when it arrives. Use the demo buttons below to simulate the delivery payment result. No real money is collected.";
+                document.getElementById("codSummary").style.display = "block";
+                document.getElementById("codAmount").textContent = formatMoney(session.amount);
+                document.getElementById("codDue").textContent = formatMoney(session.amount);
+                document.querySelector(".pay-label").textContent = "Cash to collect on delivery";
+                document.querySelector(".secured").innerHTML = "🤲 <strong>Pay at your doorstep</strong> · Demo mode";
+                document.querySelector(".demo-box .small.muted").textContent = "Demo mode · Simulate successful cash collection or a failed/unsuccessful delivery payment. No real money is collected.";
+                document.getElementById("simulateSuccessBtn").textContent = "Simulate cash received";
+                document.getElementById("simulateFailBtn").textContent = "Simulate collection failed";
+                document.getElementById("qrFrame").style.display = "none";
+                document.querySelector(".timer").style.display = "none";
+                document.querySelector(".status-line").style.display = "none";
+            }
+
+            document.getElementById("payWrap").style.display = "grid";
+            document.getElementById("payAmount").textContent = formatMoney(session.amount);
+            document.getElementById("payAmount").dataset.amount = String(session.amount || 0);
+            document.getElementById("payFor").textContent = session.restaurantName ? "Order from " + session.restaurantName : "Food order";
+
+            // QR opens the phone confirm page. On localhost, use the
+            // computer's Wi-Fi address so a phone can reach it.
+            const onLocalhost = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+            const base = (onLocalhost && data.lanBaseUrl) ? data.lanBaseUrl : window.location.origin;
+            const phoneUrl = base + "/pay-confirm.html?s=" + encodeURIComponent(sessionId);
+
+            if(method !== "CASH"){
+                new QRCode(document.getElementById("qrCode"), {
+                    text: phoneUrl, width: 220, height: 220,
+                    colorDark: "#1c050d", colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.M
+                });
+                document.getElementById("lanNote").textContent = onLocalhost && !data.lanBaseUrl
+                    ? "Phone scanning needs your computer's Wi-Fi IP address — use the simulate buttons instead."
+                    : "QR opens: " + phoneUrl;
+            }
+
+            document.getElementById("simulateSuccessBtn").addEventListener("click", () => simulate("success"));
+            document.getElementById("simulateFailBtn").addEventListener("click", () => simulate("failure"));
+
+            handleStatus(session);
+            if(finished) return;
+
+            startCountdown(session.expiresAt);
+            pollTimer = setInterval(poll, 2000);
+
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    init();
+}
+
+</script>
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+
+<style id="tb-upi-theme-switch-style">
+#tb-upi-theme-switch{position:fixed;right:16px;top:16px;z-index:10002;border:1px solid var(--tb-border,#d4af37);border-radius:999px;padding:10px 14px;background:var(--tb-panel,#4b0d1d);color:var(--tb-text,#fff8e8);font:600 13px 'DM Sans',sans-serif;cursor:pointer;box-shadow:0 5px 18px #0002}
+#tb-upi-theme-switch:focus-visible{outline:3px solid var(--tb-accent,#d4af37);outline-offset:3px}
+</style>
+<button type="button" id="tb-upi-theme-switch" aria-label="Switch between light and dark themes">☀ Light theme</button>
+<script id="tb-upi-theme-switch-script">
+(function(){
+ const btn=document.getElementById('tb-upi-theme-switch');
+ function refresh(){const light=window.ThriftyBiteTheme&&window.ThriftyBiteTheme.get()==='light';btn.textContent=light?'☾ Dark theme':'☀ Light theme';btn.setAttribute('aria-pressed',String(light));}
+ btn.addEventListener('click',function(){if(!window.ThriftyBiteTheme)return;window.ThriftyBiteTheme.saveAndApply(window.ThriftyBiteTheme.get()==='light'?'dark':'light');refresh();});
+ refresh();
+})();
+</script>
+
+</body>
+</html>

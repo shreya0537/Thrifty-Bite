@@ -1,0 +1,2414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Thrifty Bite | Royal Cart</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* Group order summary modal */
+.group-order-modal{position:fixed;inset:0;z-index:10020;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(12,2,7,.78);backdrop-filter:blur(5px)}
+.group-order-modal.open{display:flex}
+.group-order-box{width:min(720px,100%);max-height:88vh;overflow:auto;padding:24px;border:1px solid rgba(212,175,55,.7);border-radius:18px;background:linear-gradient(145deg,#fffdf7,#fff7eb);color:#35101d;box-shadow:0 25px 70px rgba(0,0,0,.4)}
+.group-order-box h2,.group-order-box h3{font-family:Cinzel,serif;color:#851735}
+.group-order-items{width:100%;border-collapse:collapse;margin:14px 0}
+.group-order-items th,.group-order-items td{text-align:left;padding:9px 7px;border-bottom:1px solid #ead9bd;font-size:14px}
+.group-split-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}
+.group-split-option{display:flex;gap:10px;align-items:flex-start;text-align:left;padding:15px;border:1px solid #dfc27e;border-radius:12px;background:#fff;color:#39101d;cursor:pointer}
+.group-split-option.selected{border:2px solid #8f1d32;background:#fff4df;box-shadow:0 0 0 3px rgba(212,175,55,.15)}
+.group-split-option input{margin-top:4px;accent-color:#8f1d32}
+.group-split-option strong{display:block;margin-bottom:4px}
+.group-modal-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:18px}
+.group-modal-actions button{min-width:145px}
+@media(max-width:560px){.group-order-box{padding:17px}.group-split-options{grid-template-columns:1fr}.group-modal-actions button{width:100%}}
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    min-height:100vh;
+    font-family:"DM Sans",sans-serif;
+    color:#fff;
+    background:
+        radial-gradient(circle at 15% 15%,rgba(212,175,55,.16),transparent 25%),
+        radial-gradient(circle at 85% 20%,rgba(143,29,60,.35),transparent 30%),
+        radial-gradient(circle at 50% 90%,rgba(212,175,55,.08),transparent 30%),
+        linear-gradient(135deg,#18030b,#2b0714,#4b0d1d,#21050e);
+
+    overflow-x:hidden;
+}
+
+/* =========================================================
+   ROYAL BORDER
+========================================================= */
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:10px;
+    border:1px solid rgba(212,175,55,.65);
+    pointer-events:none;
+    z-index:9999;
+}
+
+body::after{
+    content:"";
+    position:fixed;
+    inset:17px;
+    border:1px solid rgba(247,223,122,.25);
+    pointer-events:none;
+    z-index:9999;
+}
+
+/* =========================================================
+   BACKGROUND GLOW
+========================================================= */
+
+.background-glow{
+    position:fixed;
+    width:450px;
+    height:450px;
+    border-radius:50%;
+    background:rgba(212,175,55,.07);
+    filter:blur(90px);
+    top:-180px;
+    left:-160px;
+    pointer-events:none;
+    z-index:0;
+}
+
+.background-glow.two{
+    width:500px;
+    height:500px;
+    background:rgba(143,29,60,.12);
+    top:auto;
+    left:auto;
+    right:-200px;
+    bottom:-220px;
+}
+
+/* =========================================================
+   SPARKS
+========================================================= */
+
+.spark{
+    position:fixed;
+    width:4px;
+    height:4px;
+    border-radius:50%;
+    background:#f7df7a;
+    box-shadow:
+        0 0 8px #d4af37,
+        0 0 18px rgba(212,175,55,.7);
+    opacity:.55;
+    animation:floatSpark linear infinite;
+    pointer-events:none;
+    z-index:1;
+}
+
+.spark:nth-child(1){
+    left:8%;
+    top:25%;
+    animation-duration:7s;
+}
+
+.spark:nth-child(2){
+    left:22%;
+    top:72%;
+    animation-duration:9s;
+}
+
+.spark:nth-child(3){
+    left:39%;
+    top:17%;
+    animation-duration:6s;
+}
+
+.spark:nth-child(4){
+    left:58%;
+    top:80%;
+    animation-duration:10s;
+}
+
+.spark:nth-child(5){
+    left:73%;
+    top:35%;
+    animation-duration:8s;
+}
+
+.spark:nth-child(6){
+    left:89%;
+    top:68%;
+    animation-duration:7s;
+}
+
+.spark:nth-child(7){
+    left:48%;
+    top:45%;
+    animation-duration:11s;
+}
+
+@keyframes floatSpark{
+    0%,100%{
+        transform:translateY(0) scale(.8);
+        opacity:.25;
+    }
+
+    50%{
+        transform:translateY(-35px) scale(1.5);
+        opacity:1;
+    }
+}
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.navbar{
+    position:relative;
+    z-index:10;
+    height:82px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 65px;
+
+    background:rgba(20,2,9,.82);
+    border-bottom:1px solid rgba(212,175,55,.35);
+    backdrop-filter:blur(16px);
+}
+
+/* LOGO */
+
+.logo-area{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    cursor:pointer;
+}
+
+.logo-circle{
+    width:48px;
+    height:48px;
+
+    border:1px solid #d4af37;
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        radial-gradient(circle,#4b0d1d,#18030b);
+
+    box-shadow:
+        0 0 18px rgba(212,175,55,.2),
+        inset 0 0 15px rgba(212,175,55,.08);
+}
+
+.logo-circle span{
+    font-family:"Cinzel",serif;
+    font-size:21px;
+    color:#f7df7a;
+}
+
+.logo-text{
+    font-family:"Cinzel",serif;
+    font-size:20px;
+    font-weight:700;
+    letter-spacing:2px;
+    color:#f7df7a;
+}
+
+.logo-subtitle{
+    font-size:8px;
+    letter-spacing:2px;
+    color:#d4af37;
+    margin-top:2px;
+}
+
+/* NAVIGATION */
+
+.nav-links{
+    display:flex;
+    align-items:center;
+    gap:34px;
+}
+
+.nav-links a{
+    position:relative;
+    color:#eee;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:500;
+    transition:.3s;
+}
+
+.nav-links a::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:-8px;
+    width:0;
+    height:1px;
+    background:#d4af37;
+    transform:translateX(-50%);
+    transition:.3s;
+}
+
+.nav-links a:hover{
+    color:#f7df7a;
+}
+
+.nav-links a:hover::after{
+    width:100%;
+}
+
+/* RIGHT SIDE */
+
+.nav-right{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.profile-btn,
+.cart-nav-btn{
+    width:42px;
+    height:42px;
+
+    border-radius:50%;
+    border:1px solid rgba(212,175,55,.6);
+
+    background:rgba(255,255,255,.04);
+
+    color:#f7df7a;
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:18px;
+
+    transition:.3s;
+
+    position:relative;
+}
+
+.profile-btn:hover,
+.cart-nav-btn:hover{
+    background:rgba(212,175,55,.12);
+    box-shadow:0 0 20px rgba(212,175,55,.25);
+    transform:translateY(-2px);
+}
+
+.cart-count{
+    position:absolute;
+
+    top:-4px;
+    right:-4px;
+
+    min-width:18px;
+    height:18px;
+
+    padding:0 5px;
+
+    border-radius:20px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#d4af37;
+    color:#24050e;
+
+    font-size:10px;
+    font-weight:800;
+}
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.page{
+    position:relative;
+    z-index:2;
+    max-width:1250px;
+    margin:auto;
+    padding:70px 35px 80px;
+}
+
+.page-heading{
+    text-align:center;
+    margin-bottom:55px;
+}
+
+.crown{
+    color:#d4af37;
+    font-size:27px;
+    margin-bottom:13px;
+    animation:crownGlow 3s ease-in-out infinite;
+}
+
+@keyframes crownGlow{
+    0%,100%{
+        text-shadow:0 0 5px rgba(212,175,55,.2);
+    }
+
+    50%{
+        text-shadow:
+            0 0 10px rgba(212,175,55,.7),
+            0 0 25px rgba(212,175,55,.3);
+    }
+}
+
+.page-heading h1{
+    font-family:"Cinzel",serif;
+    font-size:38px;
+    letter-spacing:4px;
+    color:#f7df7a;
+    margin-bottom:12px;
+}
+
+.page-heading p{
+    color:#d8c8cb;
+    font-size:14px;
+    letter-spacing:.5px;
+}
+
+.royal-divider{
+    width:170px;
+    height:1px;
+    margin:22px auto 0;
+
+    background:linear-gradient(
+        90deg,
+        transparent,
+        #d4af37,
+        #f7df7a,
+        #d4af37,
+        transparent
+    );
+
+    position:relative;
+}
+
+.royal-divider::before{
+    content:"◆";
+    position:absolute;
+    left:50%;
+    top:50%;
+
+    transform:translate(-50%,-50%);
+
+    background:#2b0714;
+    padding:0 9px;
+
+    color:#d4af37;
+    font-size:9px;
+}
+
+/* =========================================================
+   CART LAYOUT
+========================================================= */
+
+.cart-layout{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 370px;
+    gap:28px;
+    align-items:start;
+}
+
+/* =========================================================
+   CART PANEL
+========================================================= */
+
+.cart-panel{
+    background:rgba(22,3,11,.72);
+
+    border:1px solid rgba(212,175,55,.38);
+
+    border-radius:18px;
+
+    padding:25px;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.25),
+        inset 0 0 30px rgba(212,175,55,.025);
+
+    backdrop-filter:blur(14px);
+}
+
+.panel-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:22px;
+
+    padding-bottom:18px;
+
+    border-bottom:1px solid rgba(212,175,55,.2);
+}
+
+.panel-title h2{
+    font-family:"Cinzel",serif;
+    color:#f7df7a;
+    font-size:20px;
+    letter-spacing:1px;
+}
+
+.item-count-text{
+    font-size:12px;
+    color:#cdbbc0;
+}
+
+/* =========================================================
+   CART ITEM
+========================================================= */
+
+.cart-item{
+    display:grid;
+    grid-template-columns:110px 1fr auto;
+    gap:20px;
+
+    align-items:center;
+
+    padding:18px 0;
+
+    border-bottom:1px solid rgba(255,255,255,.07);
+}
+
+.cart-item:last-child{
+    border-bottom:none;
+}
+
+/* IMAGE */
+
+.food-image{
+    width:110px;
+    height:105px;
+
+    border-radius:13px;
+
+    object-fit:cover;
+
+    border:1px solid rgba(212,175,55,.35);
+
+    background:#1c050d;
+
+    box-shadow:0 7px 20px rgba(0,0,0,.3);
+}
+
+/* DETAILS */
+
+.food-details h3{
+    font-family:"Cinzel",serif;
+    color:#fff;
+    font-size:17px;
+    margin-bottom:7px;
+}
+
+.food-category{
+    display:inline-block;
+
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+
+    color:#d4af37;
+
+    margin-bottom:8px;
+}
+
+.food-price-row{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin-bottom:13px;
+}
+
+.current-price{
+    color:#f7df7a;
+    font-size:17px;
+    font-weight:700;
+}
+
+.old-price{
+    color:#8d7e83;
+    text-decoration:line-through;
+    font-size:12px;
+}
+
+.saved-price{
+    color:#74d69b;
+    font-size:11px;
+}
+
+/* QUANTITY */
+
+.item-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.quantity-box{
+    display:flex;
+    align-items:center;
+
+    height:36px;
+
+    border:1px solid rgba(212,175,55,.4);
+    border-radius:9px;
+
+    background:rgba(255,255,255,.035);
+
+    overflow:hidden;
+}
+
+.quantity-btn{
+    width:34px;
+    height:36px;
+
+    border:none;
+
+    background:transparent;
+
+    color:#f7df7a;
+
+    font-size:17px;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.quantity-btn:hover{
+    background:rgba(212,175,55,.14);
+}
+
+.quantity-value{
+    min-width:32px;
+    text-align:center;
+
+    font-size:13px;
+    font-weight:700;
+
+    color:#fff;
+}
+
+.remove-btn{
+    border:none;
+    background:transparent;
+
+    color:#9c858b;
+
+    font-size:11px;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.remove-btn:hover{
+    color:#ff8b9f;
+}
+
+/* ITEM TOTAL */
+
+.item-total{
+    text-align:right;
+    min-width:90px;
+}
+
+.item-total strong{
+    display:block;
+
+    color:#f7df7a;
+    font-size:17px;
+}
+
+.item-total small{
+    color:#74d69b;
+    font-size:10px;
+}
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+.summary-panel{
+    position:sticky;
+    top:25px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(75,13,29,.8),
+            rgba(23,3,12,.92)
+        );
+
+    border:1px solid rgba(212,175,55,.5);
+
+    border-radius:18px;
+
+    padding:27px;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.35),
+        inset 0 0 25px rgba(212,175,55,.04);
+}
+
+.summary-heading{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    margin-bottom:24px;
+}
+
+.summary-heading span{
+    font-size:21px;
+}
+
+.summary-heading h2{
+    font-family:"Cinzel",serif;
+    font-size:19px;
+    color:#f7df7a;
+    letter-spacing:1px;
+}
+
+.summary-line{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:15px;
+
+    font-size:13px;
+}
+
+.summary-line span:first-child{
+    color:#cdbbc0;
+}
+
+.summary-line span:last-child{
+    color:#fff;
+    font-weight:600;
+}
+
+.summary-line.savings span:last-child{
+    color:#74d69b;
+}
+
+.summary-line.delivery span:last-child{
+    color:#74d69b;
+}
+
+.summary-divider{
+    height:1px;
+    background:rgba(212,175,55,.25);
+    margin:20px 0;
+}
+
+.total-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.total-row span:first-child{
+    font-family:"Cinzel",serif;
+    color:#fff;
+    font-size:16px;
+}
+
+.total-row span:last-child{
+    font-family:"Cinzel",serif;
+    color:#f7df7a;
+    font-size:25px;
+}
+
+.savings-box{
+    margin-top:20px;
+
+    padding:13px 15px;
+
+    border:1px solid rgba(116,214,155,.22);
+    border-radius:10px;
+
+    background:rgba(116,214,155,.05);
+
+    text-align:center;
+
+    color:#9be4b7;
+
+    font-size:12px;
+}
+
+/* =========================================================
+   PRICE COMPARISON PANEL (§19.7/§19.8)
+========================================================= */
+
+.compare-panel{
+    background:rgba(22,3,11,.72);
+    border:1px solid rgba(212,175,55,.38);
+    border-radius:18px;
+    padding:25px;
+    margin-top:22px;
+    backdrop-filter:blur(14px);
+}
+
+.compare-panel h2{
+    font-family:"Cinzel",serif;
+    color:#f7df7a;
+    font-size:18px;
+    letter-spacing:1px;
+    margin-bottom:16px;
+}
+
+.compare-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13px;
+}
+
+.compare-table th,
+.compare-table td{
+    padding:10px 8px;
+    text-align:right;
+    border-bottom:1px solid rgba(255,255,255,.07);
+}
+
+.compare-table th:first-child,
+.compare-table td:first-child{
+    text-align:left;
+}
+
+.compare-table th{
+    color:#cdbbc0;
+    font-weight:600;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+}
+
+.compare-table td{
+    color:#fff;
+}
+
+.compare-table tr.our-app td{
+    color:#f7df7a;
+    font-weight:700;
+}
+
+.compare-note{
+    margin-top:14px;
+    font-size:11px;
+    color:#a9959a;
+    line-height:1.6;
+}
+
+.compare-save-banner{
+    margin-top:16px;
+    padding:12px 15px;
+    border:1px solid rgba(116,214,155,.3);
+    border-radius:10px;
+    background:rgba(116,214,155,.06);
+    color:#9be4b7;
+    text-align:center;
+    font-size:13px;
+    font-weight:600;
+}
+
+/* =========================================================
+   CHECKOUT BUTTON
+========================================================= */
+
+.checkout-btn{
+    width:100%;
+
+    margin-top:24px;
+
+    height:52px;
+
+    border:none;
+    border-radius:11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f7df7a,
+            #d4af37
+        );
+
+    color:#2a0712;
+
+    font-family:"Cinzel",serif;
+
+    font-size:14px;
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 10px 25px rgba(212,175,55,.15);
+
+    transition:.3s;
+}
+
+.checkout-btn:hover{
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 15px 35px rgba(212,175,55,.28);
+}
+
+.checkout-btn:active{
+    transform:translateY(0);
+}
+
+/* =========================================================
+   CONTINUE BUTTON
+========================================================= */
+
+.continue-btn{
+    width:100%;
+
+    margin-top:12px;
+
+    height:45px;
+
+    border:1px solid rgba(212,175,55,.35);
+    border-radius:10px;
+
+    background:rgba(255,255,255,.025);
+
+    color:#f7df7a;
+
+    font-family:"DM Sans",sans-serif;
+    font-size:12px;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.continue-btn:hover{
+    background:rgba(212,175,55,.08);
+    border-color:#d4af37;
+}
+
+/* =========================================================
+   EMPTY CART
+========================================================= */
+
+.empty-cart{
+    display:none;
+
+    min-height:450px;
+
+    align-items:center;
+    justify-content:center;
+
+    flex-direction:column;
+
+    text-align:center;
+
+    padding:50px 20px;
+}
+
+.empty-icon{
+    width:90px;
+    height:90px;
+
+    border-radius:50%;
+
+    border:1px solid rgba(212,175,55,.45);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:38px;
+
+    margin-bottom:24px;
+
+    background:rgba(212,175,55,.05);
+
+    box-shadow:
+        0 0 30px rgba(212,175,55,.08);
+}
+
+.empty-cart h2{
+    font-family:"Cinzel",serif;
+
+    color:#f7df7a;
+
+    font-size:23px;
+
+    margin-bottom:10px;
+}
+
+.empty-cart p{
+    color:#a9959a;
+    font-size:13px;
+    max-width:390px;
+    line-height:1.7;
+
+    margin-bottom:25px;
+}
+
+.empty-menu-btn{
+    padding:13px 25px;
+
+    border:none;
+    border-radius:9px;
+
+    background:linear-gradient(
+        135deg,
+        #f7df7a,
+        #d4af37
+    );
+
+    color:#2b0714;
+
+    font-family:"Cinzel",serif;
+
+    font-size:12px;
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.empty-menu-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 25px rgba(212,175,55,.2);
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+    position:fixed;
+
+    left:50%;
+    bottom:30px;
+
+    transform:translate(-50%,120px);
+
+    z-index:10000;
+
+    background:#260611;
+
+    border:1px solid rgba(212,175,55,.55);
+
+    color:#f7df7a;
+
+    padding:13px 22px;
+
+    border-radius:10px;
+
+    font-size:12px;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.35);
+
+    transition:.35s;
+}
+
+.toast.show{
+    transform:translate(-50%,0);
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+    position:relative;
+    z-index:2;
+
+    text-align:center;
+
+    padding:25px;
+
+    border-top:1px solid rgba(212,175,55,.15);
+
+    color:#89767c;
+
+    font-size:11px;
+
+    letter-spacing:.5px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:950px){
+
+    .navbar{
+        padding:0 35px;
+    }
+
+    .nav-links{
+        gap:18px;
+    }
+
+    .cart-layout{
+        grid-template-columns:1fr;
+    }
+
+    .summary-panel{
+        position:relative;
+        top:0;
+    }
+}
+
+@media(max-width:700px){
+
+    .navbar{
+        height:auto;
+        min-height:75px;
+        padding:15px 25px;
+    }
+
+    .nav-links{
+        display:none;
+    }
+
+    .page{
+        padding:50px 20px 60px;
+    }
+
+    .page-heading h1{
+        font-size:28px;
+    }
+
+    .cart-panel{
+        padding:18px;
+    }
+
+    .cart-item{
+        grid-template-columns:80px 1fr;
+        gap:14px;
+    }
+
+    .food-image{
+        width:80px;
+        height:80px;
+    }
+
+    .item-total{
+        grid-column:2;
+        text-align:left;
+        display:flex;
+        align-items:center;
+        gap:12px;
+    }
+
+    .item-actions{
+        flex-wrap:wrap;
+    }
+
+    .summary-panel{
+        padding:22px;
+    }
+}
+
+</style>
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+
+<body>
+
+<!-- =====================================================
+     BACKGROUND
+===================================================== -->
+
+<div class="background-glow"></div>
+<div class="background-glow two"></div>
+
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<nav class="navbar">
+
+    <div class="logo-area" onclick="window.location.href='home.html'">
+
+        <div class="logo-circle">
+            <span>TB</span>
+        </div>
+
+        <div>
+            <div class="logo-text">
+                THRIFTY BITE
+            </div>
+
+            <div class="logo-subtitle">
+                ROYAL TASTE • SMART PRICE
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="home.html">Home</a>
+
+        <a href="menu.html">Menu</a>
+        <a href="occasion-planner.html">Occasion Planner</a>
+
+        <a href="profile.html">Profile</a>
+
+    </div>
+
+
+    <div class="nav-right">
+
+        <button
+            class="cart-nav-btn"
+            onclick="window.location.href='cart.html'"
+            title="Your Cart"
+            aria-label="Your Cart"
+        >
+            🛒
+
+            <span
+                class="cart-count"
+                id="navCartCount"
+            >
+                0
+            </span>
+
+        </button>
+
+
+        <button
+            class="profile-btn"
+            onclick="window.location.href='profile.html'"
+            title="Open Profile"
+            aria-label="Open Profile"
+        >
+            👤
+        </button>
+
+    </div>
+
+</nav>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="page">
+
+    <!-- PAGE HEADING -->
+
+    <section class="page-heading">
+
+        <div class="crown">♛</div>
+
+        <h1>YOUR ROYAL CART</h1>
+
+        <p>
+            Review your delicious choices before you continue.
+        </p>
+
+        <div class="royal-divider"></div>
+
+    </section>
+
+
+    <!-- =================================================
+         CART CONTENT
+    ================================================== -->
+
+    <section class="cart-layout">
+
+
+        <!-- =================================================
+             LEFT CART
+        ================================================== -->
+
+        <div class="cart-panel">
+
+            <div class="panel-title">
+
+                <h2>Selected Delicacies</h2>
+
+                <span
+                    class="item-count-text"
+                    id="itemCountText"
+                >
+                    0 items
+                </span>
+
+            </div>
+
+
+            <!-- CART ITEMS -->
+
+            <div id="cartItems"></div>
+
+
+            <!-- EMPTY CART -->
+
+            <div
+                class="empty-cart"
+                id="emptyCart"
+            >
+
+                <div class="empty-icon">
+                    🛒
+                </div>
+
+                <h2>Your Cart Is Empty</h2>
+
+                <p>
+                    Your royal table is waiting.
+                    Explore our menu and choose something delicious.
+                </p>
+
+                <button
+                    class="empty-menu-btn"
+                    onclick="window.location.href='menu.html'"
+                >
+                    EXPLORE MENU
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             RIGHT SUMMARY
+        ================================================== -->
+
+        <aside class="summary-panel">
+
+            <div class="summary-heading">
+
+                <span>👑</span>
+
+                <h2>Order Summary</h2>
+
+            </div>
+
+
+            <div class="summary-line">
+
+                <span>Items</span>
+
+                <span id="summaryItems">
+                    0
+                </span>
+
+            </div>
+
+
+            <div class="summary-line">
+
+                <span>Subtotal</span>
+
+                <span id="subtotal">
+                    ₹0
+                </span>
+
+            </div>
+
+
+            <div class="summary-line savings">
+
+                <span>Thrifty Savings</span>
+
+                <span id="savings">
+                    -₹0
+                </span>
+
+            </div>
+
+
+            <div class="summary-line delivery">
+
+                <span>Delivery</span>
+
+                <span id="delivery">
+                    FREE
+                </span>
+
+            </div>
+
+
+            <div class="summary-divider"></div>
+
+
+            <div class="total-row">
+
+                <span>Total</span>
+
+                <span id="grandTotal">
+                    ₹0
+                </span>
+
+            </div>
+
+
+            <div
+                class="savings-box"
+                id="savingsBox"
+            >
+                🎉 You're saving ₹0 with Thrifty Bite!
+            </div>
+
+
+            <button
+                class="checkout-btn"
+                id="checkComparisonBtn"
+                onclick="goToComparison()"
+                disabled
+                style="margin-bottom:10px;opacity:.45;cursor:not-allowed"
+            >
+                CHECK TO COMPARISON ↗
+            </button>
+
+            <button
+                class="checkout-btn"
+                id="placeGroupOrderBtn"
+                onclick="openGroupOrderSummary()"
+                disabled
+                style="margin-bottom:10px;background:linear-gradient(135deg,#8f1d32,#5d0b22);border:1px solid #d4af37;opacity:.45;cursor:not-allowed"
+            >
+                PLACE GROUP ORDER 👥
+            </button>
+
+            <button
+                class="checkout-btn"
+                id="checkoutBtn"
+                onclick="proceedToCheckout()"
+                disabled
+            >
+                PROCEED TO CHECKOUT →
+            </button>
+
+
+            <button
+                class="continue-btn"
+                onclick="window.location.href='menu.html'"
+            >
+                ← CONTINUE SHOPPING
+            </button>
+
+        </aside>
+
+    </section>
+
+
+    <!-- Group order confirmation stays on the Cart page -->
+    <div class="group-order-modal" id="groupOrderModal" role="dialog" aria-modal="true" aria-labelledby="groupOrderModalTitle">
+        <div class="group-order-box">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+                <div><h2 id="groupOrderModalTitle">Group Order Summary</h2><p style="margin-top:5px;color:#795d62">Review the items selected in your cart and choose how to split the bill.</p></div>
+                <button type="button" onclick="closeGroupOrderSummary()" aria-label="Close summary" style="border:0;background:transparent;font-size:26px;cursor:pointer;color:#851735">×</button>
+            </div>
+            <div id="groupOrderSummaryItems"></div>
+            <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;border-top:1px solid #dfc27e;padding-top:13px;font-weight:700"><span>Group order total</span><span id="groupOrderSummaryTotal">₹0</span></div>
+            <div id="groupSplitBreakdown" aria-live="polite"></div>
+            <h3 style="margin-top:20px">Choose bill split</h3>
+            <div class="group-split-options">
+                <label class="group-split-option selected" id="splitEqualCard"><input type="radio" name="groupSplitMethod" value="equal" checked onchange="selectGroupSplitMethod('equal')"><span><strong>Split Equal</strong><small>Divide the total bill equally between group members.</small></span></label>
+                <label class="group-split-option" id="splitItemCard"><input type="radio" name="groupSplitMethod" value="item" onchange="selectGroupSplitMethod('item')"><span><strong>Split by Item</strong><small>Calculate shares from the food items assigned to each member.</small></span></label>
+            </div>
+            <p id="groupSplitHelp" style="font-size:13px;color:#795d62">You can continue to checkout with an equal split selected.</p>
+            <div class="group-modal-actions">
+                <button type="button" class="continue-btn" onclick="closeGroupOrderSummary()">BACK TO CART</button>
+                <button type="button" class="checkout-btn" onclick="continueGroupOrderToCheckout()">CONTINUE TO CHECKOUT →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =================================================
+         PRICE COMPARISON (§19.7/§19.8)
+    ================================================== -->
+
+    <section class="compare-panel" id="comparePanel" style="display:none">
+
+        <h2>Price Comparison</h2>
+
+        <div id="compareContent"></div>
+
+    </section>
+
+</main>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    © 2026 Thrifty Bite • Royal Taste • Smart Price
+
+</footer>
+
+
+<!-- =====================================================
+     TOAST
+===================================================== -->
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
+
+<script>
+
+/* =========================================================
+   CART STORAGE
+========================================================= */
+
+const CART_KEY = "thriftyBiteCart";
+
+
+function getCart(){
+
+    try{
+
+        const storedCart =
+            localStorage.getItem(CART_KEY);
+
+        if(!storedCart){
+            return [];
+        }
+
+        const cart =
+            JSON.parse(storedCart);
+
+        return Array.isArray(cart) ? cart : [];
+
+    }catch(error){
+
+        console.error(
+            "Cart loading error:",
+            error
+        );
+
+        return [];
+    }
+}
+
+
+/* =========================================================
+   SAVE CART
+========================================================= */
+
+function saveCart(cart){
+
+    localStorage.setItem(
+        CART_KEY,
+        JSON.stringify(cart)
+    );
+
+}
+
+
+/* =========================================================
+   FORMAT PRICE
+========================================================= */
+
+function formatPrice(value){
+
+    return "₹" +
+        Number(value || 0).toLocaleString(
+            "en-IN",
+            {
+                maximumFractionDigits:0
+            }
+        );
+
+}
+
+
+/* =========================================================
+   IMAGE FALLBACK
+========================================================= */
+
+function getImageURL(item){
+
+    if(
+        item.image &&
+        String(item.image).trim() !== ""
+    ){
+
+        return item.image;
+
+    }
+
+    return "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80";
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value){
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================================
+   UPDATE NAV CART COUNT
+========================================================= */
+
+function updateNavCartCount(cart){
+
+    const count =
+        cart.reduce(
+            (total,item) =>
+                total + Number(item.quantity || 1),
+            0
+        );
+
+    document.getElementById(
+        "navCartCount"
+    ).textContent = count;
+
+}
+
+
+/* =========================================================
+   UPDATE ITEM COUNT
+========================================================= */
+
+function updateItemCount(cart){
+
+    const count =
+        cart.reduce(
+            (total,item) =>
+                total + Number(item.quantity || 1),
+            0
+        );
+
+    document.getElementById(
+        "itemCountText"
+    ).textContent =
+        count === 1
+            ? "1 item"
+            : `${count} items`;
+
+    document.getElementById(
+        "summaryItems"
+    ).textContent = count;
+
+}
+
+
+/* =========================================================
+   CHANGE QUANTITY
+========================================================= */
+
+function changeQuantity(index,change){
+
+    const cart = getCart();
+
+    if(!cart[index]){
+        return;
+    }
+
+    const currentQuantity =
+        Number(cart[index].quantity || 1);
+
+    const newQuantity =
+        currentQuantity + change;
+
+
+    if(newQuantity <= 0){
+
+        cart.splice(index,1);
+
+        showToast(
+            "Item removed from your cart."
+        );
+
+    }else{
+
+        cart[index].quantity =
+            newQuantity;
+
+    }
+
+
+    saveCart(cart);
+
+    renderCart();
+    loadPriceComparison();
+
+}
+
+
+/* =========================================================
+   REMOVE ITEM
+========================================================= */
+
+function removeItem(index){
+
+    const cart = getCart();
+
+    if(!cart[index]){
+        return;
+    }
+
+    const itemName =
+        cart[index].name || "Item";
+
+    cart.splice(index,1);
+
+    saveCart(cart);
+
+    renderCart();
+    loadPriceComparison();
+
+    showToast(
+        `${itemName} removed from cart.`
+    );
+
+}
+
+
+/* =========================================================
+   RENDER CART
+========================================================= */
+
+function renderCart(){
+
+    const cart = getCart();
+
+    const cartItems =
+        document.getElementById(
+            "cartItems"
+        );
+
+    const emptyCart =
+        document.getElementById(
+            "emptyCart"
+        );
+
+
+    updateNavCartCount(cart);
+
+    updateItemCount(cart);
+
+
+    /* EMPTY */
+
+    if(cart.length === 0){
+
+        cartItems.innerHTML = "";
+
+        emptyCart.style.display =
+            "flex";
+
+        document.getElementById("checkoutBtn").disabled = true;
+        const groupButtonEmpty = document.getElementById("placeGroupOrderBtn");
+        if(groupButtonEmpty){ groupButtonEmpty.disabled = true; groupButtonEmpty.style.opacity = ".35"; groupButtonEmpty.style.cursor = "not-allowed"; }
+        const compareButton = document.getElementById("checkComparisonBtn");
+        if (compareButton) {
+            compareButton.disabled = true;
+            compareButton.style.opacity = ".45";
+            compareButton.style.cursor = "not-allowed";
+        }
+
+        updateSummary([]);
+
+        return;
+
+    }
+
+
+    emptyCart.style.display =
+        "none";
+
+
+    document.getElementById("checkoutBtn").disabled = false;
+    // Group checkout is available only when the user arrived from the group-order flow.
+    // This prevents an individual cart from accidentally being submitted as a group order.
+    let groupCheckoutMeta = null;
+    try { groupCheckoutMeta = JSON.parse(localStorage.getItem("thriftyBiteGroupCheckout") || "null"); } catch (_) {}
+    const isActiveGroupOrder = Boolean(groupCheckoutMeta && groupCheckoutMeta.isGroupOrder === true && new URLSearchParams(window.location.search).get("groupOrderPlaced") === "1");
+    const groupButton = document.getElementById("placeGroupOrderBtn");
+    if(groupButton){
+        groupButton.disabled = !isActiveGroupOrder;
+        groupButton.style.opacity = isActiveGroupOrder ? "1" : ".35";
+        groupButton.style.cursor = isActiveGroupOrder ? "pointer" : "not-allowed";
+        groupButton.title = isActiveGroupOrder ? "Review group order and split the bill" : "Select menu items from the Group Order page first";
+    }
+    const compareButton = document.getElementById("checkComparisonBtn");
+    if (compareButton) {
+        compareButton.disabled = false;
+        compareButton.style.opacity = "1";
+        compareButton.style.cursor = "pointer";
+    }
+
+    const fragment =
+        document.createDocumentFragment();
+
+
+    cart.forEach(
+        (item,index) => {
+
+            const quantity =
+                Number(item.quantity || 1);
+
+
+            const currentPrice =
+                Number(
+                    item.discountPrice ??
+                    item.price ??
+                    0
+                );
+
+
+            const originalPrice =
+                Number(
+                    item.price ??
+                    currentPrice
+                );
+
+
+            const itemTotal =
+                currentPrice * quantity;
+
+
+            const itemSavings =
+                Math.max(
+                    0,
+                    (originalPrice - currentPrice)
+                    * quantity
+                );
+
+
+            const article =
+                document.createElement(
+                    "article"
+                );
+
+            article.className =
+                "cart-item";
+
+
+            article.innerHTML = `
+
+                <img
+                    class="food-image"
+                    src="${escapeHTML(
+                        getImageURL(item)
+                    )}"
+                    alt="${escapeHTML(
+                        item.name || "Food item"
+                    )}"
+                    onerror="
+                        this.onerror=null;
+                        this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80';
+                    "
+                >
+
+
+                <div class="food-details">
+
+                    <h3>
+                        ${escapeHTML(
+                            item.name || "Food Item"
+                        )}
+                    </h3>
+
+
+                    ${
+                        item.category
+                        ?
+                        `<span class="food-category">
+                            ${escapeHTML(item.category)}
+                        </span>`
+                        :
+                        ""
+                    }
+
+
+                    <div class="food-price-row">
+
+                        <span class="current-price">
+                            ${formatPrice(currentPrice)}
+                        </span>
+
+                        ${
+                            originalPrice > currentPrice
+                            ?
+                            `<span class="old-price">
+                                ${formatPrice(originalPrice)}
+                            </span>`
+                            :
+                            ""
+                        }
+
+                    </div>
+
+
+                    <div class="item-actions">
+
+                        <div class="quantity-box">
+
+                            <button
+                                class="quantity-btn"
+                                onclick="changeQuantity(${index},-1)"
+                                aria-label="Decrease quantity"
+                            >
+                                −
+                            </button>
+
+                            <span class="quantity-value">
+                                ${quantity}
+                            </span>
+
+                            <button
+                                class="quantity-btn"
+                                onclick="changeQuantity(${index},1)"
+                                aria-label="Increase quantity"
+                            >
+                                +
+                            </button>
+
+                        </div>
+
+
+                        <button
+                            class="remove-btn"
+                            onclick="removeItem(${index})"
+                        >
+                            Remove
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="item-total">
+
+                    <strong>
+                        ${formatPrice(itemTotal)}
+                    </strong>
+
+                    ${
+                        itemSavings > 0
+                        ?
+                        `<small>
+                            Saved ${formatPrice(itemSavings)}
+                        </small>`
+                        :
+                        ""
+                    }
+
+                </div>
+
+            `;
+
+
+            fragment.appendChild(article);
+
+        }
+    );
+
+
+    cartItems.replaceChildren(
+        fragment
+    );
+
+
+    updateSummary(cart);
+
+}
+
+
+/* =========================================================
+   UPDATE SUMMARY
+========================================================= */
+
+function updateSummary(cart){
+
+    let subtotal = 0;
+    let savings = 0;
+
+
+    cart.forEach(item => {
+
+        const quantity =
+            Number(item.quantity || 1);
+
+
+        const currentPrice =
+            Number(
+                item.discountPrice ??
+                item.price ??
+                0
+            );
+
+
+        const originalPrice =
+            Number(
+                item.price ??
+                currentPrice
+            );
+
+
+        subtotal +=
+            currentPrice * quantity;
+
+
+        savings +=
+            Math.max(
+                0,
+                (originalPrice - currentPrice)
+                * quantity
+            );
+
+    });
+
+
+    /*
+       Delivery is currently FREE.
+       This can later be replaced by
+       your backend delivery calculation.
+    */
+
+    const delivery = 0;
+
+
+    const grandTotal =
+        subtotal + delivery;
+
+
+    document.getElementById(
+        "subtotal"
+    ).textContent =
+        formatPrice(subtotal);
+
+
+    document.getElementById(
+        "savings"
+    ).textContent =
+        "-" + formatPrice(savings);
+
+
+    document.getElementById(
+        "delivery"
+    ).textContent =
+        delivery === 0
+            ? "FREE"
+            : formatPrice(delivery);
+
+
+    document.getElementById(
+        "grandTotal"
+    ).textContent =
+        formatPrice(grandTotal);
+
+
+    document.getElementById(
+        "savingsBox"
+    ).innerHTML =
+        savings > 0
+        ?
+        `🎉 You're saving ${formatPrice(savings)} with Thrifty Bite!`
+        :
+        `👑 Smart choices start with Thrifty Bite.`;
+
+}
+
+
+/* =========================================================
+   GROUP ORDER SUMMARY → CHECKOUT
+========================================================= */
+let selectedGroupSplitMethod = "equal";
+function readGroupOrderMeta(){
+    try { return JSON.parse(localStorage.getItem("thriftyBiteGroupCheckout") || "null"); }
+    catch (_) { return null; }
+}
+function openGroupOrderSummary(){
+    const cart = getCart();
+    const meta = readGroupOrderMeta();
+    const groupPlaced = new URLSearchParams(window.location.search).get("groupOrderPlaced") === "1";
+    if(!meta || meta.isGroupOrder !== true || !groupPlaced){
+        showToast("To place a group order, select dishes on the Group Order page first.");
+        return;
+    }
+    if(!cart.length){ showToast("Add items to your cart before placing a group order."); return; }
+
+    selectedGroupSplitMethod = (meta.splitMethod === "item") ? "item" : "equal";
+    const priceOf = item => Number(item.discountPrice ?? item.price ?? 0);
+    const quantityOf = item => Math.max(1, Number(item.quantity || 1));
+    const lines = cart.map(item => `<tr><td>${escapeHTML(item.name || "Food item")}</td><td>${quantityOf(item)}</td><td>${formatPrice(priceOf(item) * quantityOf(item))}</td></tr>`).join("");
+    const total = cart.reduce((sum,item) => sum + priceOf(item) * quantityOf(item), 0);
+    document.getElementById("groupOrderSummaryItems").innerHTML = `<table class="group-order-items"><thead><tr><th>Item</th><th>Qty</th><th>Amount</th></tr></thead><tbody>${lines}</tbody></table>`;
+    document.getElementById("groupOrderSummaryTotal").textContent = formatPrice(total);
+    const chosen = document.querySelector(`input[name="groupSplitMethod"][value="${selectedGroupSplitMethod}"]`);
+    if(chosen) chosen.checked = true;
+    selectGroupSplitMethod(selectedGroupSplitMethod);
+    document.getElementById("groupOrderModal").classList.add("open");
+}
+function closeGroupOrderSummary(){ document.getElementById("groupOrderModal").classList.remove("open"); }
+function renderGroupSplitBreakdown(cart, meta, method){
+    const host = document.getElementById("groupSplitBreakdown");
+    if(!host) return;
+    const money = n => formatPrice(Math.round((Number(n)||0)*100)/100);
+    const priceOf = item => Number(item.discountPrice ?? item.price ?? 0);
+    const quantityOf = item => Math.max(1, Number(item.quantity || 1));
+    const total = cart.reduce((sum,item)=>sum+priceOf(item)*quantityOf(item),0);
+    const memberIds = Array.isArray(meta.memberIds) ? meta.memberIds : [];
+    const memberNames = Array.isArray(meta.memberNames) ? meta.memberNames : [];
+    if(method === "equal"){
+        const people = [{name:"You (group creator)"}].concat(memberIds.map((id,i)=>({name:memberNames[i] || ("Group member " + (i+1))})));
+        const cents = Math.round(total * 100), base = Math.floor(cents / people.length);
+        host.innerHTML = "<h3 style='margin-top:18px'>Equal split breakdown</h3><table class='group-order-items'><thead><tr><th>Member</th><th>Share</th></tr></thead><tbody>"+people.map((person,i)=>"<tr><td>"+escapeHTML(person.name)+"</td><td>"+money((i===people.length-1 ? cents-base*(people.length-1) : base)/100)+"</td></tr>").join("")+"</tbody></table>";
+        return;
+    }
+    const shares = new Map();
+    cart.forEach(item=>{
+        const id = item.groupMemberId || item.memberId || "unassigned";
+        let name = "Unassigned items";
+        if(id !== "unassigned"){
+            if(String(id) === String(meta.createdBy || "")) name = "You (group creator)";
+            else {
+                const idx = memberIds.findIndex(memberId => String(memberId) === String(id));
+                name = idx >= 0 ? (memberNames[idx] || ("Group member " + (idx+1))) : "Group member";
+            }
+        }
+        const amount = priceOf(item) * quantityOf(item);
+        const prior = shares.get(String(id)) || {name,amount:0,items:[]};
+        prior.amount += amount; prior.items.push((item.name || "Food item") + " × " + quantityOf(item)); shares.set(String(id),prior);
+    });
+    host.innerHTML = "<h3 style='margin-top:18px'>Item-wise split breakdown</h3><table class='group-order-items'><thead><tr><th>Assigned member</th><th>Items</th><th>Share</th></tr></thead><tbody>"+Array.from(shares.values()).map(x=>"<tr><td>"+escapeHTML(x.name)+"</td><td>"+escapeHTML(x.items.join(", "))+"</td><td>"+money(x.amount)+"</td></tr>").join("")+"</tbody></table><p style='font-size:12px;color:#795d62'>Items without a member assignment are shown as Unassigned items.</p>";
+}
+function selectGroupSplitMethod(method){
+    selectedGroupSplitMethod = method === "item" ? "item" : "equal";
+    const equalCard = document.getElementById("splitEqualCard"), itemCard = document.getElementById("splitItemCard");
+    if(equalCard) equalCard.classList.toggle("selected", selectedGroupSplitMethod === "equal");
+    if(itemCard) itemCard.classList.toggle("selected", selectedGroupSplitMethod === "item");
+    const radio = document.querySelector(`input[name="groupSplitMethod"][value="${selectedGroupSplitMethod}"]`);
+    if(radio) radio.checked = true;
+    const help = document.getElementById("groupSplitHelp");
+    if(help) help.textContent = selectedGroupSplitMethod === "equal"
+        ? "The total is divided equally across you and the selected group members."
+        : "Each member's share is calculated from the dishes assigned to them. Unassigned dishes are listed separately.";
+    renderGroupSplitBreakdown(getCart(), readGroupOrderMeta() || {}, selectedGroupSplitMethod);
+}
+function continueGroupOrderToCheckout(){
+    const cart = getCart();
+    const priorMeta = readGroupOrderMeta();
+    if(!priorMeta || priorMeta.isGroupOrder !== true){ closeGroupOrderSummary(); showToast("Please place your group order first."); return; }
+    if(!cart.length){ closeGroupOrderSummary(); showToast("Your cart is empty."); return; }
+    const total = cart.reduce((sum,item) => sum + Number(item.discountPrice ?? item.price ?? 0) * Number(item.quantity || 1), 0);
+    // Preserve the original group/order/member identifiers while saving the split selection.
+    localStorage.setItem("thriftyBiteGroupCheckout", JSON.stringify({
+        ...priorMeta,
+        isGroupOrder: true,
+        splitMethod: selectedGroupSplitMethod,
+        totalAmount: total,
+        items: cart.map(item => ({ menuId: item.menuId || item._id || item.id || null, name: item.name || "Food item", quantity: Number(item.quantity || 1), price: Number(item.discountPrice ?? item.price ?? 0), memberId: item.groupMemberId || item.memberId || null })),
+        updatedAt: new Date().toISOString()
+    }));
+    window.location.href = "checkout.html?groupOrder=1&split=" + encodeURIComponent(selectedGroupSplitMethod);
+}
+
+/* =========================================================
+   CHECKOUT
+========================================================= */
+
+function goToComparison(){
+    const cart = getCart();
+    if (!cart.length) return;
+    window.location.href = "check-comparison.html";
+}
+
+function proceedToCheckout(){
+
+    const cart = getCart();
+    // Explicitly switch to the individual-order path and prevent stale group metadata
+    // from enabling bill split or changing the checkout summary.
+    localStorage.removeItem("thriftyBiteGroupCheckout");
+
+    if(cart.length === 0){
+
+        showToast(
+            "Your cart is empty."
+        );
+
+        return;
+
+    }
+
+
+    /*
+       Checkout page will be connected
+       after the Cart module is fully tested.
+    */
+
+    window.location.href =
+        "checkout.html";
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer;
+
+
+function showToast(message){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+    toast.textContent =
+        message;
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(toastTimer);
+
+
+    toastTimer =
+        setTimeout(
+            () => {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            2200
+        );
+
+}
+
+
+/* =========================================================
+   PRICE COMPARISON (§19.7/§19.8)
+========================================================= */
+
+async function loadPriceComparison(){
+
+    const panel = document.getElementById("comparePanel");
+    const content = document.getElementById("compareContent");
+    const cart = getCart();
+
+    if(cart.length === 0){
+        panel.style.display = "none";
+        return;
+    }
+
+    const ids = Array.from(new Set(cart.map(item => item.menuId).filter(Boolean)));
+
+    if(ids.length === 0){
+        panel.style.display = "none";
+        return;
+    }
+
+    try{
+
+        const response = await fetch(
+            window.location.origin + "/api/menu/price-comparison?ids=" + ids.join(",")
+        );
+        const data = await response.json();
+        const comparisons = data.items || [];
+
+        const byId = {};
+        comparisons.forEach(c => byId[c.menuItemId] = c);
+
+        let ourAppTotal = 0;
+        let swiggyTotal = 0;
+        let zomatoTotal = 0;
+        let comparableItemCount = 0;
+        let totalItemCount = 0;
+
+        cart.forEach(function(item){
+
+            const quantity = Number(item.quantity || 1);
+            const comparison = byId[item.menuId];
+
+            totalItemCount += quantity;
+
+            const ourAppPrice = comparison
+                ? comparison.ourApp.price
+                : Number(item.price || 0);
+
+            ourAppTotal += ourAppPrice * quantity;
+
+            if(comparison && comparison.hasComparison){
+
+                comparableItemCount += quantity;
+
+                if(comparison.swiggy){
+                    swiggyTotal += comparison.swiggy.totalPrice * quantity;
+                }
+
+                if(comparison.zomato){
+                    zomatoTotal += comparison.zomato.totalPrice * quantity;
+                }
+
+            }
+
+        });
+
+        panel.style.display = "block";
+
+        if(comparableItemCount === 0){
+            content.innerHTML = '<p class="compare-note">Price comparison unavailable for the items in your cart right now.</p>';
+            return;
+        }
+
+        const platforms = [
+            { label: "Our App", total: ourAppTotal, ourApp: true },
+            { label: "Swiggy", total: swiggyTotal },
+            { label: "Zomato", total: zomatoTotal }
+        ];
+
+        const maxOtherTotal = Math.max(swiggyTotal, zomatoTotal);
+        const savings = maxOtherTotal - ourAppTotal;
+
+        let html = "<table class='compare-table'><thead><tr><th>Platform</th><th>Total</th></tr></thead><tbody>"
+            + platforms.map(function(p){
+                return "<tr" + (p.ourApp ? " class='our-app'" : "") + "><td>" + p.label + "</td><td>"
+                    + (p.total > 0 ? formatPrice(p.total) : "—") + "</td></tr>";
+            }).join("")
+            + "</tbody></table>";
+
+        if(savings > 0){
+            html += "<div class='compare-save-banner'>🎉 You save up to " + formatPrice(savings) + " compared with other platforms.</div>";
+        }
+
+        if(comparableItemCount < totalItemCount){
+            html += "<p class='compare-note'>Reference prices shown for " + comparableItemCount + " of " + totalItemCount
+                + " items in your cart — the rest don't have Swiggy/Zomato reference data yet.</p>";
+        }
+
+        html += "<p class='compare-note'>Price comparison is based on sample/reference data. Final prices may vary based on restaurant, location, offers, taxes and delivery charges.</p>";
+
+        content.innerHTML = html;
+
+    }catch(error){
+
+        panel.style.display = "block";
+        content.innerHTML = '<p class="compare-note">Price comparison unavailable.</p>';
+
+    }
+
+}
+
+
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        renderCart();
+        loadPriceComparison();
+
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("groupOrderPlaced") === "1") {
+            showToast("Group order placed! Your selected dishes are now in your cart. Review them and continue to checkout.");
+            // Remove the one-time flag while keeping the cart URL clean.
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+    }
+);
+
+</script>
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+/* Thrifty Bite — shared visual polish layer (keeps the current wine/gold identity) */
+:root{--tb-ink:#260611;--tb-wine:#4b0d1d;--tb-gold:#d4af37;--tb-gold-soft:#f7df7a;--tb-cream:#fff8e8;--tb-muted:#d5c3c3;--tb-radius:18px;--tb-shadow:0 18px 48px rgba(0,0,0,.24)}
+html{scroll-behavior:smooth;scroll-padding-top:24px}body{min-width:320px;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:3px solid var(--tb-gold-soft)!important;outline-offset:3px!important}
+button,input,select,textarea{font:inherit}input,select,textarea{max-width:100%;transition:border-color .18s ease,box-shadow .18s ease}input:focus,select:focus,textarea:focus{border-color:var(--tb-gold)!important;box-shadow:0 0 0 3px rgba(212,175,55,.15)}
+button,.btn,[role=button]{transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}button:not(:disabled):hover,.btn:hover,[role=button]:hover{filter:brightness(1.06);box-shadow:0 8px 22px rgba(0,0,0,.18)}button:not(:disabled):active,.btn:active{transform:translateY(1px) scale(.99)}button:disabled{cursor:not-allowed;opacity:.48;filter:saturate(.55)}
+img{max-width:100%}a{transition:color .18s ease,opacity .18s ease}a:hover{opacity:.94}
+.card,.panel,.restaurant-card,.voice-card,.booking,.feedback-panel{border-radius:var(--tb-radius)}
+.card,.panel,.restaurant-card,.voice-card{box-shadow:var(--tb-shadow)}
+.tb-feedback-entry{max-width:1200px!important;margin:36px auto 20px!important;padding:22px 20px!important;border-radius:18px!important;box-shadow:0 14px 40px rgba(0,0,0,.2);backdrop-filter:blur(12px)}
+.tb-feedback-entry a{border-radius:999px!important;padding:10px 18px!important;box-shadow:0 6px 18px rgba(212,175,55,.16)}
+/* Shared page layouts become responsive on laptop, tablet and phone widths. */
+@media(max-width:900px){.container,.wrap,main{max-width:100%;} .nav-links,.navlinks{gap:12px}}
+@media(max-width:720px){.container{padding:22px 16px 64px!important}.navbar{padding:14px 16px!important}.nav-links,.navlinks{width:100%;overflow-x:auto;padding:4px 0 8px}.tb-feedback-entry{margin:24px 12px 16px!important;padding:18px 14px!important}.tb-feedback-entry a{display:inline-block;margin-top:10px!important}.restaurant-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:520px){.restaurant-grid{grid-template-columns:1fr!important}.restaurant-card img{height:200px!important}.card,.panel,.voice-card{padding:18px!important}.hero{padding-top:28px!important}.nav{align-items:flex-start}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thrifty Bite | Master Chef Dashboard</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/theme.css">
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="brand">
+        THRIFTY BITE
+        <span>MASTER CHEF DASHBOARD</span>
+    </div>
+
+    <nav class="nav-links">
+        <a href="home.html">Storefront</a>
+    </nav>
+
+    <div class="nav-right">
+        <span class="muted small" id="chefName">Chef</span>
+        <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="page-header">
+        <h1>Master Chef Dashboard</h1>
+        <p>Review custom food requests, send proposals and track preparation.</p>
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="profile">Profile</button>
+        <button class="tab-btn" data-tab="requests">Requests</button>
+        <button class="tab-btn" data-tab="orders">My Orders</button>
+    </div>
+
+    <!-- ============ PROFILE ============ -->
+    <div class="tab-panel active" id="tab-profile">
+        <div class="card">
+            <h2>Chef Profile</h2>
+            <form id="profileForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Chef Name</label>
+                        <input type="text" id="profileName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mobile</label>
+                        <input type="tel" id="profileMobile">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <input type="text" id="profileAddress">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Specialization</label>
+                        <input type="text" id="profileSpecialization" placeholder="e.g. Cakes & Desserts">
+                    </div>
+                    <div class="form-group">
+                        <label>Experience</label>
+                        <input type="text" id="profileExperience" placeholder="e.g. 5 years">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>About / Description</label>
+                    <textarea id="profileDescription"></textarea>
+                </div>
+                <button type="submit" class="btn">Save Profile</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============ REQUESTS ============ -->
+    <div class="tab-panel" id="tab-requests">
+
+        <div class="card">
+            <h2>Open Requests</h2>
+            <p class="muted small">Custom food requests not yet claimed by a chef.</p>
+            <div class="mt-20" id="openRequestsList">
+                <div class="empty-state">No open requests right now.</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>My Requests</h2>
+            <p class="muted small">Requests you've accepted, proposed on, or are still deciding on.</p>
+            <div class="mt-20" id="myRequestsList">
+                <div class="empty-state">You haven't accepted any requests yet.</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============ MY ORDERS (post-payment) ============ -->
+    <div class="tab-panel" id="tab-orders">
+        <div class="card">
+            <h2>Confirmed Orders</h2>
+            <p class="muted small">Orders the customer has paid for — update preparation status here.</p>
+            <div class="mt-20" id="myOrdersList">
+                <div class="empty-state">No confirmed orders yet.</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="assets/api.js"></script>
+<script>
+
+const user = requireAuth(["MASTER_CHEF"]);
+
+if(user){
+
+    document.getElementById("chefName").textContent = user.name || user.username;
+
+    document.querySelectorAll(".tab-btn").forEach(function(btn){
+        btn.addEventListener("click", function(){
+            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+            document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+            btn.classList.add("active");
+            document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+        });
+    });
+
+    const messageEl = document.getElementById("message");
+
+
+    /* =========================================================
+       PROFILE
+    ========================================================= */
+
+    async function loadProfile(){
+        try{
+            const data = await apiFetch("/chef/profile");
+            document.getElementById("profileName").value = data.chef.name || "";
+            document.getElementById("profileMobile").value = data.chef.mobile || "";
+            document.getElementById("profileAddress").value = data.chef.address || "";
+            document.getElementById("profileSpecialization").value = (data.profile && data.profile.specialization) || "";
+            document.getElementById("profileExperience").value = (data.profile && data.profile.experience) || "";
+            document.getElementById("profileDescription").value = (data.profile && data.profile.description) || "";
+            document.getElementById("chefName").textContent = data.chef.name || data.chef.username;
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    document.getElementById("profileForm").addEventListener("submit", async function(e){
+        e.preventDefault();
+        try{
+            await apiFetch("/chef/profile", {
+                method: "PUT",
+                body: JSON.stringify({
+                    name: document.getElementById("profileName").value.trim(),
+                    mobile: document.getElementById("profileMobile").value.trim(),
+                    address: document.getElementById("profileAddress").value.trim(),
+                    specialization: document.getElementById("profileSpecialization").value.trim(),
+                    experience: document.getElementById("profileExperience").value.trim(),
+                    description: document.getElementById("profileDescription").value.trim()
+                })
+            });
+            showMessage(messageEl, "Profile updated successfully!", "success");
+            loadProfile();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    });
+
+
+    /* =========================================================
+       REQUESTS
+    ========================================================= */
+
+    function requestCard(order, isOpen){
+        const customerName = order.customerId ? (order.customerId.name || order.customerId.username) : "-";
+
+        let actions = "";
+
+        if(isOpen || order.status === "REQUESTED"){
+            actions = "<button class='btn btn-sm' onclick=\"acceptRequest('" + order._id + "')\">Accept</button>"
+                + " <button class='btn btn-sm btn-danger' onclick=\"rejectRequest('" + order._id + "')\">Reject</button>";
+        }else if(order.status === "CHEF_ACCEPTED"){
+            actions = "<button class='btn btn-sm' onclick=\"showProposalForm('" + order._id + "')\">Send Proposal</button>"
+                + " <button class='btn btn-sm btn-danger' onclick=\"rejectRequest('" + order._id + "')\">Reject</button>"
+                + "<div class='mt-12' id='proposal-" + order._id + "' style='display:none'>"
+                    + "<div class='form-row'>"
+                        + "<div class='form-group'><label>Amount (₹)</label><input type='number' min='0' id='amount-" + order._id + "'></div>"
+                        + "<div class='form-group'><label>Preparation Time</label><input type='text' placeholder='e.g. 4 Hours' id='prep-" + order._id + "'></div>"
+                    + "</div>"
+                    + "<div class='form-group'><label>Notes</label><textarea id='notes-" + order._id + "'></textarea></div>"
+                    + "<button class='btn btn-sm' onclick=\"sendProposal('" + order._id + "')\">Send Proposal to Customer</button>"
+                + "</div>";
+        }
+
+        return "<div class='card' style='margin-bottom:14px'>"
+            + "<div class='flex-between'>"
+                + "<h3>" + escapeHtml(order.foodRequired) + "</h3>"
+                + "<span class='badge " + statusBadgeClass(order.status) + "'>" + statusLabel(order.status) + "</span>"
+            + "</div>"
+            + "<p class='muted small mt-12'>Customer: " + escapeHtml(customerName) + "</p>"
+            + "<p class='mt-12'>" + escapeHtml(order.description) + "</p>"
+            + "<p class='muted small mt-12'>Qty: " + order.quantity + " &middot; Preferred: " + formatDate(order.preferredDate) + " at " + escapeHtml(order.preferredTime) + "</p>"
+            + (order.specialInstructions ? "<p class='muted small mt-12'>Instructions: " + escapeHtml(order.specialInstructions) + "</p>" : "")
+            + (actions ? "<div class='mt-20'>" + actions + "</div>" : "")
+            + "</div>";
+    }
+
+    async function loadRequests(){
+        try{
+            const data = await apiFetch("/chef/requests");
+
+            const openList = document.getElementById("openRequestsList");
+            openList.innerHTML = (data.openRequests && data.openRequests.length)
+                ? data.openRequests.map(o => requestCard(o, true)).join("")
+                : '<div class="empty-state">No open requests right now.</div>';
+
+            const myList = document.getElementById("myRequestsList");
+            const activeMine = (data.myRequests || []).filter(o =>
+                ["CHEF_ACCEPTED","CHEF_PROPOSED"].includes(o.status)
+            );
+            myList.innerHTML = activeMine.length
+                ? activeMine.map(o => requestCard(o, false)).join("")
+                : '<div class="empty-state">You haven\'t accepted any requests yet.</div>';
+
+            const ordersList = document.getElementById("myOrdersList");
+            const confirmedOrders = (data.myRequests || []).filter(o =>
+                ["CONFIRMED","PREPARING","READY","OUT_FOR_DELIVERY","DELIVERED","COMPLETED"].includes(o.status)
+            );
+            ordersList.innerHTML = confirmedOrders.length
+                ? confirmedOrders.map(orderProgressCard).join("")
+                : '<div class="empty-state">No confirmed orders yet.</div>';
+
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    const NEXT_STATUS = {
+        CONFIRMED: ["PREPARING","Start Preparing"],
+        PREPARING: ["READY","Mark Ready"],
+        READY: ["OUT_FOR_DELIVERY","Out for Delivery"],
+        OUT_FOR_DELIVERY: ["DELIVERED","Mark Delivered"],
+        DELIVERED: ["COMPLETED","Mark Completed"]
+    };
+
+    function orderProgressCard(order){
+        const customerName = order.customerId ? (order.customerId.name || order.customerId.username) : "-";
+        const next = NEXT_STATUS[order.status];
+        const action = next
+            ? "<button class='btn btn-sm mt-12' onclick=\"advanceOrder('" + order._id + "','" + next[0] + "')\">" + next[1] + "</button>"
+            : "";
+
+        return "<div class='card' style='margin-bottom:14px'>"
+            + "<div class='flex-between'>"
+                + "<h3>" + escapeHtml(order.foodRequired) + "</h3>"
+                + "<span class='badge " + statusBadgeClass(order.status) + "'>" + statusLabel(order.status) + "</span>"
+            + "</div>"
+            + "<p class='muted small mt-12'>Customer: " + escapeHtml(customerName) + "</p>"
+            + action
+            + "</div>";
+    }
+
+    window.acceptRequest = async function acceptRequest(id){
+        try{
+            await apiFetch("/chef/requests/" + id + "/accept", { method: "POST" });
+            showMessage(messageEl, "Request accepted!", "success");
+            loadRequests();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    window.rejectRequest = async function rejectRequest(id){
+        try{
+            await apiFetch("/chef/requests/" + id + "/reject", { method: "POST" });
+            showMessage(messageEl, "Request rejected.", "success");
+            loadRequests();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    window.showProposalForm = function showProposalForm(id){
+        const el = document.getElementById("proposal-" + id);
+        if(el) el.style.display = "block";
+    }
+
+    window.sendProposal = async function sendProposal(id){
+        const amount = document.getElementById("amount-" + id).value;
+        const preparationTime = document.getElementById("prep-" + id).value.trim();
+        const chefNotes = document.getElementById("notes-" + id).value.trim();
+
+        if(!amount || !preparationTime){
+            showMessage(messageEl, "Amount and preparation time are required.", "error");
+            return;
+        }
+
+        try{
+            await apiFetch("/chef/requests/" + id + "/proposal", {
+                method: "POST",
+                body: JSON.stringify({ amount: Number(amount), preparationTime, chefNotes })
+            });
+            showMessage(messageEl, "Proposal sent to customer!", "success");
+            loadRequests();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    window.advanceOrder = async function advanceOrder(id, status){
+        try{
+            await apiFetch("/chef/orders/" + id + "/status", {
+                method: "PUT",
+                body: JSON.stringify({ status })
+            });
+            showMessage(messageEl, "Order status updated!", "success");
+            loadRequests();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+
+    /* =========================================================
+       INIT
+    ========================================================= */
+
+    loadProfile();
+    loadRequests();
+
+}
+
+</script>
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+</html>

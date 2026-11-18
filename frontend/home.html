@@ -1,0 +1,3485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Thrifty Bite | Home</title>
+
+<!-- GOOGLE FONTS -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap"
+rel="stylesheet">
+
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    min-height:100vh;
+
+    font-family:"DM Sans",sans-serif;
+
+    color:#fff8e8;
+
+    overflow-x:hidden;
+
+    background:
+        radial-gradient(
+            circle at 12% 18%,
+            rgba(212,175,55,.12),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 88% 30%,
+            rgba(132,28,48,.30),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #2b0714,
+            #4b0d1d 48%,
+            #260611
+        );
+}
+
+
+/* =========================================================
+   ROYAL BORDER
+========================================================= */
+
+body::before{
+
+    content:"";
+
+    position:fixed;
+
+    inset:9px;
+
+    border:1px solid
+    rgba(212,175,55,.45);
+
+    pointer-events:none;
+
+    z-index:999;
+}
+
+body::after{
+
+    content:"";
+
+    position:fixed;
+
+    inset:16px;
+
+    border:1px solid
+    rgba(212,175,55,.18);
+
+    pointer-events:none;
+
+    z-index:999;
+}
+
+
+/* =========================================================
+   AMBIENT GLOW
+========================================================= */
+
+.glow{
+
+    position:fixed;
+
+    width:420px;
+    height:420px;
+
+    border-radius:50%;
+
+    filter:blur(90px);
+
+    opacity:.22;
+
+    pointer-events:none;
+
+    z-index:-1;
+}
+
+
+.glow.one{
+
+    background:#d4af37;
+
+    top:-180px;
+    left:-100px;
+
+    animation:
+        moveGlow 9s infinite alternate ease-in-out;
+}
+
+
+.glow.two{
+
+    background:#8f1d3c;
+
+    right:-160px;
+    top:25%;
+
+    animation:
+        moveGlow 12s infinite alternate-reverse ease-in-out;
+}
+
+
+.glow.three{
+
+    background:#d4af37;
+
+    bottom:-220px;
+    left:35%;
+
+    animation:
+        moveGlow 10s infinite alternate ease-in-out;
+}
+
+
+@keyframes moveGlow{
+
+    from{
+        transform:translate(0,0) scale(1);
+    }
+
+    to{
+        transform:translate(80px,50px) scale(1.25);
+    }
+}
+
+
+/* =========================================================
+   GOLD SPARKS
+========================================================= */
+
+.spark{
+
+    position:fixed;
+
+    width:3px;
+    height:3px;
+
+    border-radius:50%;
+
+    background:#f7df7a;
+
+    box-shadow:
+        0 0 12px #d4af37;
+
+    pointer-events:none;
+
+    z-index:0;
+
+    animation:
+        sparkFloat linear infinite;
+}
+
+
+.spark:nth-of-type(4){
+    left:7%;
+    top:35%;
+    animation-duration:7s;
+}
+
+.spark:nth-of-type(5){
+    left:14%;
+    top:72%;
+    animation-duration:9s;
+}
+
+.spark:nth-of-type(6){
+    left:24%;
+    top:18%;
+    animation-duration:6s;
+}
+
+.spark:nth-of-type(7){
+    left:37%;
+    top:82%;
+    animation-duration:8s;
+}
+
+.spark:nth-of-type(8){
+    left:48%;
+    top:24%;
+    animation-duration:10s;
+}
+
+.spark:nth-of-type(9){
+    left:57%;
+    top:66%;
+    animation-duration:7s;
+}
+
+.spark:nth-of-type(10){
+    left:68%;
+    top:14%;
+    animation-duration:9s;
+}
+
+.spark:nth-of-type(11){
+    left:76%;
+    top:78%;
+    animation-duration:8s;
+}
+
+.spark:nth-of-type(12){
+    left:87%;
+    top:40%;
+    animation-duration:6s;
+}
+
+.spark:nth-of-type(13){
+    left:94%;
+    top:68%;
+    animation-duration:10s;
+}
+
+.spark:nth-of-type(14){
+    left:31%;
+    top:45%;
+    animation-duration:7s;
+}
+
+.spark:nth-of-type(15){
+    left:82%;
+    top:23%;
+    animation-duration:9s;
+}
+
+
+@keyframes sparkFloat{
+
+    0%{
+
+        transform:
+            translateY(20px)
+            scale(.5);
+
+        opacity:0;
+    }
+
+    20%{
+        opacity:1;
+    }
+
+    50%{
+
+        transform:
+            translateY(-40px)
+            scale(1);
+
+        opacity:.9;
+    }
+
+    100%{
+
+        transform:
+            translateY(-100px)
+            scale(.2);
+
+        opacity:0;
+    }
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+.navbar{
+
+    height:82px;
+
+    width:100%;
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    z-index:100;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:0 55px;
+
+    background:
+        rgba(38,6,17,.90);
+
+    backdrop-filter:blur(18px);
+
+    border-bottom:
+        1px solid
+        rgba(212,175,55,.28);
+}
+
+
+/* BRAND */
+
+.brand{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:13px;
+
+    text-decoration:none;
+
+    color:#fff8e8;
+}
+
+
+.brand-logo{
+
+    width:48px;
+    height:48px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:
+        2px solid
+        #d4af37;
+
+    box-shadow:
+
+        0 0 15px
+        rgba(212,175,55,.35),
+
+        inset 0 0 10px
+        rgba(212,175,55,.2);
+}
+
+
+.brand-name{
+
+    font-family:"Cinzel",serif;
+
+    font-size:21px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+}
+
+
+.brand-name span{
+
+    color:#d4af37;
+}
+
+
+/* NAV LINKS */
+
+.nav-links{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:5px;
+}
+
+
+.nav-links a{
+
+    position:relative;
+
+    color:#eadfca;
+
+    text-decoration:none;
+
+    padding:11px 14px;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    border-radius:8px;
+
+    transition:.3s;
+}
+
+
+.nav-links a::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:0;
+
+    height:2px;
+
+    background:#d4af37;
+
+    bottom:4px;
+
+    left:50%;
+
+    transform:
+        translateX(-50%);
+
+    transition:.3s;
+}
+
+
+.nav-links a:hover,
+.nav-links a.active{
+
+    color:#f7df7a;
+
+    background:
+        rgba(212,175,55,.08);
+}
+
+
+.nav-links a:hover::after,
+.nav-links a.active::after{
+
+    width:55%;
+}
+
+
+/* NAV RIGHT */
+
+.nav-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+}
+
+
+.profile-btn{
+
+    width:43px;
+    height:43px;
+
+    border-radius:50%;
+
+    border:1px solid rgba(212,175,55,.6);
+
+    background:
+        radial-gradient(
+            circle at 35% 30%,
+            rgba(247,223,122,.16),
+            rgba(255,255,255,.035) 55%,
+            rgba(0,0,0,.12)
+        );
+
+    color:#f7df7a;
+
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    position:relative;
+
+    transition:.35s ease;
+
+    box-shadow:
+        0 0 0 rgba(212,175,55,0);
+}
+
+.profile-btn svg{
+    width:20px;
+    height:20px;
+    fill:none;
+    stroke:currentColor;
+    stroke-width:1.8;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    transition:.35s ease;
+}
+
+.profile-btn::after{
+    content:"PROFILE";
+
+    position:absolute;
+    right:52px;
+    top:50%;
+    transform:translateY(-50%) translateX(5px);
+
+    padding:6px 9px;
+
+    border:1px solid rgba(212,175,55,.35);
+    border-radius:7px;
+
+    background:#2b0714;
+    color:#f7df7a;
+
+    font-family:"DM Sans",sans-serif;
+    font-size:9px;
+    font-weight:700;
+    letter-spacing:1.5px;
+
+    opacity:0;
+    pointer-events:none;
+
+    transition:.25s ease;
+    white-space:nowrap;
+}
+
+.profile-btn:hover{
+    background:
+        linear-gradient(
+            135deg,
+            #d4af37,
+            #f7df7a
+        );
+
+    color:#2b0714;
+
+    transform:translateY(-2px) scale(1.04);
+
+    box-shadow:
+        0 8px 24px rgba(212,175,55,.25),
+        0 0 25px rgba(212,175,55,.18);
+}
+
+.profile-btn:hover svg{
+    transform:scale(1.08);
+}
+
+.profile-btn:hover::after{
+    opacity:1;
+    transform:translateY(-50%) translateX(0);
+}
+
+
+/* HAMBURGER */
+
+.menu-btn{
+
+    width:43px;
+    height:43px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.5);
+
+    background:
+        rgba(255,255,255,.04);
+
+    border-radius:9px;
+
+    cursor:pointer;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:5px;
+
+    transition:.3s;
+}
+
+
+.menu-btn span{
+
+    width:20px;
+    height:2px;
+
+    background:#f7df7a;
+
+    transition:.3s;
+}
+
+
+.menu-btn:hover{
+
+    background:
+        rgba(212,175,55,.12);
+
+    box-shadow:
+        0 0 18px
+        rgba(212,175,55,.2);
+}
+
+
+/* =========================================================
+   SIDEBAR OVERLAY
+========================================================= */
+
+.overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:
+        rgba(0,0,0,.60);
+
+    backdrop-filter:blur(4px);
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.35s;
+
+    z-index:150;
+}
+
+
+.overlay.show{
+
+    opacity:1;
+
+    visibility:visible;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar{
+
+    position:fixed;
+
+    top:0;
+
+    right:-380px;
+
+    width:350px;
+
+    max-width:90%;
+
+    height:100vh;
+
+    background:
+
+        linear-gradient(
+            180deg,
+            #390817,
+            #250610
+        );
+
+    border-left:
+        1px solid
+        rgba(212,175,55,.4);
+
+    box-shadow:
+        -15px 0 50px
+        rgba(0,0,0,.45);
+
+    z-index:200;
+
+    transition:.4s ease;
+
+    padding:25px 22px;
+
+    overflow-y:auto;
+}
+
+
+.sidebar.open{
+
+    right:0;
+}
+
+
+.sidebar-header{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding-bottom:22px;
+
+    border-bottom:
+        1px solid
+        rgba(212,175,55,.2);
+}
+
+
+.sidebar-title{
+
+    font-family:"Cinzel",serif;
+
+    color:#f7df7a;
+
+    font-size:21px;
+}
+
+
+.close-btn{
+
+    width:36px;
+    height:36px;
+
+    border-radius:8px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.4);
+
+    background:transparent;
+
+    color:#f7df7a;
+
+    font-size:22px;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+
+.close-btn:hover{
+
+    background:
+        rgba(212,175,55,.12);
+
+    transform:rotate(90deg);
+}
+
+
+/* SIDEBAR USER */
+
+.sidebar-user{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    padding:22px 5px;
+}
+
+
+.sidebar-avatar{
+
+    width:55px;
+    height:55px;
+
+    border-radius:50%;
+
+    border:
+        2px solid
+        #d4af37;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:
+        rgba(212,175,55,.1);
+
+    color:#f7df7a;
+
+    font-size:22px;
+}
+
+
+.sidebar-user h3{
+
+    font-size:14px;
+
+    color:#fff8e8;
+
+    max-width:220px;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+    white-space:nowrap;
+}
+
+
+.sidebar-user p{
+
+    font-size:12px;
+
+    color:#cdbfa9;
+
+    margin-top:4px;
+}
+
+
+/* SIDEBAR LINKS */
+
+.side-links{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:6px;
+}
+
+
+.side-links a{
+
+    text-decoration:none;
+
+    color:#eadfca;
+
+    padding:14px 15px;
+
+    border-radius:10px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:13px;
+
+    font-size:14px;
+
+    transition:.3s;
+}
+
+
+.side-links a span{
+
+    width:25px;
+
+    text-align:center;
+
+    color:#d4af37;
+
+    font-size:17px;
+}
+
+
+.side-links a:hover{
+
+    background:
+        rgba(212,175,55,.1);
+
+    color:#f7df7a;
+
+    transform:
+        translateX(5px);
+}
+
+
+/* PREMIUM */
+
+.premium-card{
+
+    margin-top:25px;
+
+    padding:20px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.45);
+
+    border-radius:14px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            rgba(212,175,55,.13),
+            rgba(255,255,255,.025)
+        );
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+
+.premium-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:120px;
+    height:120px;
+
+    border-radius:50%;
+
+    background:#d4af37;
+
+    filter:blur(65px);
+
+    opacity:.15;
+
+    right:-40px;
+    top:-40px;
+}
+
+
+.premium-label{
+
+    font-size:10px;
+
+    color:#d4af37;
+
+    letter-spacing:2px;
+
+    text-transform:uppercase;
+}
+
+
+.premium-card h3{
+
+    font-family:"Cinzel",serif;
+
+    margin:7px 0;
+
+    color:#fff8e8;
+
+    font-size:16px;
+}
+
+
+.premium-card p{
+
+    color:#cdbfa9;
+
+    font-size:12px;
+
+    line-height:1.6;
+}
+
+
+.premium-btn{
+
+    display:inline-block;
+
+    margin-top:14px;
+
+    text-decoration:none;
+
+    color:#2b0714;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d4af37,
+            #f7df7a
+        );
+
+    padding:9px 14px;
+
+    border-radius:7px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    transition:.3s;
+}
+
+
+.premium-btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 6px 18px
+        rgba(212,175,55,.25);
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+main{
+
+    padding-top:82px;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+
+    min-height:
+        calc(100vh - 82px);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    max-width:1250px;
+
+    margin:auto;
+
+    padding:80px 45px 70px;
+
+    gap:60px;
+}
+
+
+.hero-content{
+
+    max-width:650px;
+
+    animation:
+        heroIn .9s ease forwards;
+}
+
+
+@keyframes heroIn{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            translateY(30px);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+.crown{
+
+    color:#d4af37;
+
+    font-size:30px;
+
+    margin-bottom:15px;
+
+    text-shadow:
+        0 0 15px
+        rgba(212,175,55,.35);
+}
+
+
+.hero-small{
+
+    color:#d4af37;
+
+    text-transform:uppercase;
+
+    letter-spacing:4px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    margin-bottom:18px;
+}
+
+
+.hero h1{
+
+    font-family:"Cinzel",serif;
+
+    font-size:
+        clamp(42px,6vw,76px);
+
+    line-height:1.05;
+
+    letter-spacing:1px;
+
+    color:#fff8e8;
+}
+
+
+.hero h1 span{
+
+    color:#d4af37;
+}
+
+
+.hero-subtitle{
+
+    margin-top:22px;
+
+    max-width:590px;
+
+    color:#d9ccb6;
+
+    line-height:1.8;
+
+    font-size:16px;
+}
+
+
+.hero-actions{
+
+    display:flex;
+
+    gap:14px;
+
+    margin-top:35px;
+
+    flex-wrap:wrap;
+}
+
+
+.primary-btn,
+.secondary-btn{
+
+    text-decoration:none;
+
+    padding:14px 25px;
+
+    border-radius:9px;
+
+    font-size:14px;
+
+    font-weight:700;
+
+    transition:.3s;
+}
+
+
+.primary-btn{
+
+    background:
+        linear-gradient(
+            135deg,
+            #c99d27,
+            #f7df7a
+        );
+
+    color:#2b0714;
+
+    box-shadow:
+        0 8px 25px
+        rgba(212,175,55,.18);
+}
+
+
+.primary-btn:hover{
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0 12px 30px
+        rgba(212,175,55,.32);
+}
+
+
+.secondary-btn{
+
+    color:#f7df7a;
+
+    border:
+        1px solid
+        rgba(212,175,55,.55);
+
+    background:
+        rgba(212,175,55,.05);
+}
+
+
+.secondary-btn:hover{
+
+    background:
+        rgba(212,175,55,.12);
+
+    transform:
+        translateY(-3px);
+}
+
+
+/* =========================================================
+   HERO VISUAL
+========================================================= */
+
+.hero-visual{
+
+    width:390px;
+
+    height:390px;
+
+    flex-shrink:0;
+
+    position:relative;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+}
+
+
+.hero-ring{
+
+    position:absolute;
+
+    width:340px;
+    height:340px;
+
+    border-radius:50%;
+
+    border:
+        1px solid
+        rgba(212,175,55,.55);
+
+    box-shadow:
+
+        0 0 35px
+        rgba(212,175,55,.13),
+
+        inset 0 0 35px
+        rgba(212,175,55,.08);
+
+    animation:
+        rotateRing 18s linear infinite;
+}
+
+
+.hero-ring::before,
+.hero-ring::after{
+
+    content:"✦";
+
+    position:absolute;
+
+    color:#f7df7a;
+
+    font-size:20px;
+}
+
+
+.hero-ring::before{
+
+    top:-12px;
+
+    left:50%;
+}
+
+
+.hero-ring::after{
+
+    bottom:-12px;
+
+    right:50%;
+}
+
+
+@keyframes rotateRing{
+
+    from{
+        transform:rotate(0);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+
+/* HERO IMAGE */
+
+.hero-food{
+
+    width:270px;
+    height:270px;
+
+    border-radius:50%;
+
+    border:
+        2px solid
+        #d4af37;
+
+    overflow:hidden;
+
+    position:relative;
+
+    background:#3b0a19;
+
+    box-shadow:
+
+        0 0 60px
+        rgba(212,175,55,.18),
+
+        inset 0 0 50px
+        rgba(212,175,55,.08);
+
+    animation:
+        floatFood 4s ease-in-out infinite;
+}
+
+
+.hero-food::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            rgba(212,175,55,.08),
+            transparent 45%,
+            rgba(43,7,20,.35)
+        );
+
+    pointer-events:none;
+}
+
+
+.hero-food img{
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    display:block;
+
+    transition:.5s;
+}
+
+
+.hero-food:hover img{
+
+    transform:scale(1.08);
+}
+
+
+@keyframes floatFood{
+
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-12px);
+    }
+}
+
+
+/* HERO BADGE */
+
+.hero-badge{
+
+    position:absolute;
+
+    bottom:30px;
+
+    right:0;
+
+    background:
+        rgba(43,7,20,.94);
+
+    border:
+        1px solid
+        rgba(212,175,55,.5);
+
+    padding:13px 17px;
+
+    border-radius:10px;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0,0,0,.25);
+}
+
+
+.hero-badge strong{
+
+    display:block;
+
+    color:#f7df7a;
+
+    font-size:17px;
+}
+
+
+.hero-badge small{
+
+    color:#cdbfa9;
+
+    font-size:11px;
+}
+
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+.section{
+
+    max-width:1250px;
+
+    margin:auto;
+
+    padding:85px 45px;
+}
+
+
+.section-heading{
+
+    text-align:center;
+
+    margin-bottom:45px;
+}
+
+
+.section-tag{
+
+    color:#d4af37;
+
+    font-size:11px;
+
+    letter-spacing:3px;
+
+    text-transform:uppercase;
+
+    font-weight:700;
+}
+
+
+.section-heading h2{
+
+    margin-top:10px;
+
+    font-family:"Cinzel",serif;
+
+    font-size:35px;
+
+    color:#fff8e8;
+}
+
+
+.section-heading p{
+
+    max-width:650px;
+
+    margin:12px auto 0;
+
+    color:#cdbfa9;
+
+    line-height:1.7;
+
+    font-size:14px;
+}
+
+
+/* =========================================================
+   FEATURE CARDS
+========================================================= */
+
+.features{display:flex;justify-content:center;align-items:stretch;gap:24px;max-width:1050px;margin:0 auto;}
+
+
+.feature-card{
+
+    min-height:330px;
+
+    padding:18px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.22);
+
+    border-radius:15px;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.045),
+            rgba(212,175,55,.025)
+        );
+
+    position:relative;
+
+    overflow:hidden;
+
+    transition:.35s;
+}
+
+
+.feature-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:100px;
+    height:100px;
+
+    border-radius:50%;
+
+    background:#d4af37;
+
+    filter:blur(60px);
+
+    opacity:0;
+
+    right:-30px;
+    top:-30px;
+
+    transition:.35s;
+}
+
+
+.feature-card:hover{
+
+    transform:
+        translateY(-9px);
+
+    border-color:
+        rgba(212,175,55,.7);
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(212,175,55,.09),
+            rgba(255,255,255,.035)
+        );
+
+    box-shadow:
+        0 18px 40px
+        rgba(0,0,0,.25);
+}
+
+
+.feature-card:hover::before{
+
+    opacity:.2;
+}
+
+
+/* =========================================================
+   FOOD CATEGORY CAROUSEL (§19.1)
+========================================================= */
+
+.category-carousel-wrap{
+    position:relative;
+    max-width:1250px;
+    margin:0 auto 20px;
+    padding:0 45px;
+}
+
+.category-scroll{
+    display:flex;
+    gap:16px;
+    overflow-x:auto;
+    scroll-behavior:smooth;
+    padding:6px 2px 16px;
+    scrollbar-width:none;
+}
+
+.category-scroll::-webkit-scrollbar{
+    display:none;
+}
+
+.category-tile{
+    flex:0 0 auto;
+    width:112px;
+    text-decoration:none;
+    color:#fff8e8;
+    text-align:center;
+    border:1px solid rgba(212,175,55,.25);
+    border-radius:14px;
+    padding:16px 8px;
+    background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(212,175,55,.025));
+    transition:.3s;
+}
+
+.category-tile:hover{
+    border-color:rgba(212,175,55,.7);
+    background:linear-gradient(145deg,rgba(212,175,55,.12),rgba(255,255,255,.03));
+    transform:translateY(-4px);
+}
+
+.category-tile .emoji{
+    font-size:34px;
+    display:block;
+    margin-bottom:8px;
+}
+
+.category-tile .cat-name{
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:.3px;
+}
+
+.category-nav-btn{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    border:1px solid rgba(212,175,55,.5);
+    background:rgba(38,6,17,.9);
+    color:#f7df7a;
+    font-size:16px;
+    cursor:pointer;
+    z-index:5;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:.25s;
+}
+
+.category-nav-btn:hover{
+    background:rgba(212,175,55,.2);
+}
+
+.category-nav-btn.prev{ left:12px; }
+.category-nav-btn.next{ right:12px; }
+
+@media(max-width:800px){
+    .category-carousel-wrap{ padding:0 20px; }
+    .category-nav-btn{ display:none; }
+}
+
+/* FEATURE IMAGE */
+
+.feature-image{
+
+    width:100%;
+
+    height:130px;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+    margin-bottom:20px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.30);
+
+    background:#3b0a19;
+
+    position:relative;
+}
+
+
+.feature-image::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+
+        linear-gradient(
+            to top,
+            rgba(43,7,20,.65),
+            transparent 55%
+        );
+
+    pointer-events:none;
+}
+
+
+.feature-image img{
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    display:block;
+
+    transition:.5s ease;
+}
+
+
+.feature-card:hover
+.feature-image img{
+
+    transform:scale(1.08);
+}
+
+
+.feature-card h3{
+
+    font-family:"Cinzel",serif;
+
+    font-size:16px;
+
+    color:#fff8e8;
+
+    margin-bottom:10px;
+}
+
+
+.feature-card p{
+
+    font-size:12px;
+
+    color:#cdbfa9;
+
+    line-height:1.65;
+}
+
+
+/* =========================================================
+   SAVINGS BANNER
+========================================================= */
+
+.savings{
+
+    max-width:1250px;
+
+    margin:20px auto 90px;
+
+    padding:0 45px;
+}
+
+
+.savings-box{
+
+    position:relative;
+
+    overflow:hidden;
+
+    border:
+        1px solid
+        rgba(212,175,55,.4);
+
+    border-radius:18px;
+
+    padding:35px 40px;
+
+    background:
+
+        linear-gradient(
+            110deg,
+            rgba(212,175,55,.10),
+            rgba(255,255,255,.035),
+            rgba(143,29,60,.12)
+        );
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:30px;
+}
+
+
+.savings-box h2{
+
+    font-family:"Cinzel",serif;
+
+    font-size:27px;
+
+    margin-bottom:9px;
+}
+
+
+.savings-box p{
+
+    color:#cdbfa9;
+
+    font-size:13px;
+}
+
+
+.savings-highlight{
+
+    text-align:center;
+
+    min-width:150px;
+}
+
+
+.savings-highlight strong{
+
+    display:block;
+
+    font-family:"Cinzel",serif;
+
+    color:#f7df7a;
+
+    font-size:32px;
+}
+
+
+.savings-highlight span{
+
+    color:#cdbfa9;
+
+    font-size:11px;
+}
+
+
+/* =========================================================
+   QUICK LINKS
+========================================================= */
+
+.quick-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:18px;
+}
+
+
+.quick-card{
+
+    text-decoration:none;
+
+    color:#fff8e8;
+
+    border:
+        1px solid
+        rgba(212,175,55,.22);
+
+    border-radius:13px;
+
+    padding:24px;
+
+    background:
+        rgba(255,255,255,.035);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    transition:.3s;
+}
+
+
+.quick-card:hover{
+
+    border-color:
+        rgba(212,175,55,.65);
+
+    background:
+        rgba(212,175,55,.07);
+
+    transform:
+        translateY(-5px);
+}
+
+
+.quick-card h3{
+
+    font-family:"Cinzel",serif;
+
+    font-size:15px;
+}
+
+
+.quick-card p{
+
+    color:#bcae9a;
+
+    font-size:11px;
+
+    margin-top:6px;
+}
+
+
+.quick-arrow{
+
+    color:#d4af37;
+
+    font-size:22px;
+
+    transition:.3s;
+}
+
+
+.quick-card:hover
+.quick-arrow{
+
+    transform:
+        translateX(5px);
+
+    color:#f7df7a;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+
+    border-top:
+        1px solid
+        rgba(212,175,55,.2);
+
+    margin-top:40px;
+
+    padding:35px 45px 45px;
+
+    text-align:center;
+}
+
+
+.footer-brand{
+
+    font-family:"Cinzel",serif;
+
+    color:#d4af37;
+
+    font-size:20px;
+}
+
+
+footer p{
+
+    color:#a99b88;
+
+    font-size:11px;
+
+    margin-top:9px;
+}
+
+
+.footer-links{
+
+    margin-top:17px;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:20px;
+
+    flex-wrap:wrap;
+}
+
+
+.footer-links a{
+
+    color:#cdbfa9;
+
+    text-decoration:none;
+
+    font-size:11px;
+
+    transition:.3s;
+}
+
+
+.footer-links a:hover{
+
+    color:#f7df7a;
+}
+
+
+/* =========================================================
+   ROYAL CART — SIGNATURE FLOATING CART
+========================================================= */
+
+.royal-cart{
+    position:fixed;
+    right:28px;
+    bottom:28px;
+    width:76px;
+    height:76px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    padding:8px;
+    text-decoration:none;
+    color:#fff8e8;
+    background:
+        linear-gradient(145deg,
+            rgba(83,16,35,.96),
+            rgba(38,6,17,.98));
+    border:1px solid rgba(212,175,55,.72);
+    border-radius:24px 24px 10px 24px;
+    box-shadow:
+        0 16px 40px rgba(0,0,0,.42),
+        0 0 24px rgba(212,175,55,.13),
+        inset 0 0 0 1px rgba(247,223,122,.06),
+        inset 0 0 20px rgba(212,175,55,.06);
+    backdrop-filter:blur(16px);
+    z-index:80;
+    overflow:visible;
+    transition:
+        width .45s cubic-bezier(.2,.8,.2,1),
+        border-radius .35s ease,
+        transform .35s ease,
+        box-shadow .35s ease,
+        background .35s ease;
+    isolation:isolate;
+}
+
+/* slim royal corner accent */
+.royal-cart::before{
+    content:"";
+    position:absolute;
+    left:-1px;
+    top:12px;
+    bottom:12px;
+    width:3px;
+    border-radius:0 4px 4px 0;
+    background:linear-gradient(180deg,#f7df7a,#d4af37,#8d6a14);
+    box-shadow:0 0 12px rgba(247,223,122,.32);
+    transition:.35s ease;
+    pointer-events:none;
+}
+
+/* moving shine */
+.royal-cart::after{
+    content:"";
+    position:absolute;
+    inset:1px;
+    border-radius:23px 23px 9px 23px;
+    background:linear-gradient(
+        115deg,
+        transparent 20%,
+        rgba(247,223,122,.15) 42%,
+        rgba(255,255,255,.05) 49%,
+        transparent 62%
+    );
+    background-size:250% 250%;
+    opacity:0;
+    transition:opacity .35s ease;
+    animation:royalCartShine 4s ease-in-out infinite;
+    pointer-events:none;
+    z-index:-1;
+}
+
+@keyframes royalCartShine{
+    0%,55%,100%{background-position:140% 0;}
+    75%{background-position:-40% 100%;}
+}
+
+.royal-cart:hover{
+    width:252px;
+    border-radius:22px;
+    transform:translateY(-7px);
+    background:
+        linear-gradient(120deg,
+            rgba(90,17,39,.98),
+            rgba(43,7,20,.99));
+    box-shadow:
+        0 22px 48px rgba(0,0,0,.48),
+        0 0 35px rgba(212,175,55,.20),
+        inset 0 0 24px rgba(212,175,55,.07);
+}
+
+.royal-cart:hover::before{
+    top:9px;
+    bottom:9px;
+    box-shadow:0 0 18px rgba(247,223,122,.48);
+}
+
+.royal-cart:hover::after{
+    opacity:1;
+}
+
+.royal-cart:focus-visible{
+    outline:2px solid #f7df7a;
+    outline-offset:4px;
+}
+
+.royal-cart:active{
+    transform:translateY(-3px) scale(.98);
+}
+
+/* CART ICON PANEL */
+.cart-image{
+    width:56px;
+    height:56px;
+    flex:0 0 56px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    border-radius:18px;
+    border:1px solid rgba(212,175,55,.62);
+    background:
+        radial-gradient(circle at 28% 22%, rgba(247,223,122,.20), transparent 42%),
+        linear-gradient(145deg, rgba(212,175,55,.10), rgba(255,255,255,.025));
+    box-shadow:
+        inset 0 0 18px rgba(212,175,55,.08),
+        0 0 20px rgba(212,175,55,.10);
+    transition:.4s cubic-bezier(.2,.8,.2,1);
+    z-index:2;
+}
+
+.cart-icon{
+    width:31px;
+    height:31px;
+    fill:none;
+    stroke:#f7df7a;
+    stroke-width:1.7;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    filter:drop-shadow(0 0 6px rgba(247,223,122,.25));
+    transition:.4s ease;
+}
+
+.cart-icon .cart-basket{
+    fill:rgba(212,175,55,.10);
+}
+
+.cart-icon .cart-crown{
+    fill:#f7df7a;
+    stroke:#f7df7a;
+    stroke-width:1.1;
+}
+
+.cart-icon .wheel{
+    fill:#f7df7a;
+    stroke:none;
+}
+
+.royal-cart:hover .cart-image{
+    border-color:#f7df7a;
+    background:linear-gradient(145deg,#d4af37,#f7df7a);
+    box-shadow:
+        0 0 28px rgba(212,175,55,.34),
+        inset 0 0 16px rgba(255,255,255,.28);
+    transform:rotate(-2deg) scale(1.05);
+}
+
+.royal-cart:hover .cart-icon{
+    stroke:#2b0714;
+    filter:none;
+    transform:scale(1.08);
+}
+
+.royal-cart:hover .cart-icon .cart-basket{
+    fill:rgba(43,7,20,.10);
+}
+
+.royal-cart:hover .cart-icon .cart-crown,
+.royal-cart:hover .cart-icon .wheel{
+    fill:#2b0714;
+    stroke:#2b0714;
+}
+
+/* CART TEXT */
+.cart-text{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    min-width:0;
+    max-width:0;
+    opacity:0;
+    overflow:hidden;
+    transform:translateX(-10px);
+    transition:
+        max-width .40s ease,
+        opacity .22s ease,
+        transform .35s ease;
+}
+
+.royal-cart:hover .cart-text{
+    max-width:138px;
+    opacity:1;
+    transform:translateX(0);
+}
+
+.cart-label{
+    font-size:8px;
+    letter-spacing:2px;
+    color:#d4af37;
+    font-weight:800;
+    white-space:nowrap;
+}
+
+.cart-text strong{
+    font-family:"Cinzel",serif;
+    font-size:13px;
+    margin-top:5px;
+    color:#fff8e8;
+    white-space:nowrap;
+}
+
+.cart-subtext{
+    margin-top:3px;
+    color:#bcae9a;
+    font-size:9px;
+    white-space:nowrap;
+}
+
+/* ARROW */
+.cart-arrow{
+    width:30px;
+    height:30px;
+    flex:0 0 30px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(212,175,55,.09);
+    border:1px solid rgba(212,175,55,.34);
+    color:#f7df7a;
+    font-size:16px;
+    opacity:0;
+    transform:translateX(-8px);
+    transition:.35s ease;
+    z-index:2;
+}
+
+.royal-cart:hover .cart-arrow{
+    opacity:1;
+    transform:translateX(0);
+    background:#d4af37;
+    color:#2b0714;
+    box-shadow:0 0 14px rgba(212,175,55,.25);
+}
+
+/* CART COUNT */
+.cart-count{
+    position:absolute;
+    top:-7px;
+    right:-7px;
+    min-width:25px;
+    height:25px;
+    padding:0 7px;
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,#fff0a8,#d4af37);
+    color:#3a0919;
+    border:2px solid #3f0a18;
+    font-size:10px;
+    font-weight:900;
+    box-shadow:
+        0 0 0 2px rgba(212,175,55,.12),
+        0 0 14px rgba(212,175,55,.42);
+    z-index:5;
+    transition:.25s ease;
+}
+
+.royal-cart.has-items .cart-count{
+    animation:countPulse 1.7s ease-in-out infinite;
+}
+
+@keyframes countPulse{
+    0%,100%{
+        transform:scale(1);
+        box-shadow:0 0 10px rgba(212,175,55,.35);
+    }
+    50%{
+        transform:scale(1.16);
+        box-shadow:0 0 22px rgba(212,175,55,.62);
+    }
+}
+
+.royal-cart.has-items .cart-image{
+    animation:cartBreathe 2.2s ease-in-out infinite;
+}
+
+@keyframes cartBreathe{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-2px);}
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1100px){
+
+    .navbar{
+
+        padding:0 35px;
+    }
+
+    .nav-links{
+
+        display:none;
+    }
+
+    .hero{
+
+        padding-left:35px;
+        padding-right:35px;
+    }
+
+    .features{
+
+        grid-template-columns:
+            repeat(3,1fr);
+    }
+}
+
+
+@media(max-width:800px){
+
+    .hero{
+
+        flex-direction:column;
+
+        text-align:center;
+
+        padding-top:70px;
+    }
+
+
+    .hero-content{
+
+        display:flex;
+
+        flex-direction:column;
+
+        align-items:center;
+    }
+
+
+    .hero-subtitle{
+
+        max-width:500px;
+    }
+
+
+    .hero-visual{
+
+        width:320px;
+
+        height:320px;
+    }
+
+
+    .hero-ring{
+
+        width:280px;
+
+        height:280px;
+    }
+
+
+    .hero-food{
+
+        width:220px;
+
+        height:220px;
+    }
+
+
+    .features{
+
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+
+    .quick-grid{
+
+        grid-template-columns:1fr;
+    }
+
+
+    .savings-box{
+
+        flex-direction:column;
+
+        text-align:center;
+    }
+}
+
+
+@media(max-width:560px){
+
+    body::before{
+
+        inset:5px;
+    }
+
+
+    body::after{
+
+        inset:10px;
+    }
+
+
+    .navbar{
+
+        height:72px;
+
+        padding:0 20px;
+    }
+
+
+    main{
+
+        padding-top:72px;
+    }
+
+
+    .brand-name{
+
+        font-size:16px;
+    }
+
+
+    .brand-logo{
+
+        width:40px;
+
+        height:40px;
+    }
+
+
+    .profile-btn{
+
+        display:none;
+    }
+
+
+    .hero{
+
+        min-height:auto;
+
+        padding:70px 25px 50px;
+    }
+
+
+    .hero h1{
+
+        font-size:43px;
+    }
+
+
+    .hero-subtitle{
+
+        font-size:14px;
+    }
+
+
+    .hero-actions{
+
+        justify-content:center;
+    }
+
+
+    .hero-visual{
+
+        width:280px;
+
+        height:280px;
+    }
+
+
+    .hero-ring{
+
+        width:240px;
+
+        height:240px;
+    }
+
+
+    .hero-food{
+
+        width:190px;
+
+        height:190px;
+    }
+
+
+    .hero-badge{
+
+        right:-5px;
+
+        bottom:5px;
+    }
+
+
+    .section{
+
+        padding:65px 25px;
+    }
+
+
+    .section-heading h2{
+
+        font-size:28px;
+    }
+
+
+    .features{
+
+        grid-template-columns:1fr;
+    }
+
+
+    .feature-card{
+
+        min-height:auto;
+
+        padding:18px;
+    }
+
+
+    .feature-image{
+
+        height:170px;
+    }
+
+
+    .savings{
+
+        padding:0 25px;
+
+        margin-bottom:60px;
+    }
+
+
+    .savings-box{
+
+        padding:28px 22px;
+    }
+
+
+    .savings-box h2{
+
+        font-size:22px;
+    }
+
+
+    /* MOBILE ROYAL CART */
+.royal-cart{
+    right:16px;
+    bottom:16px;
+    width:62px;
+    height:62px;
+    border-radius:20px 20px 8px 20px;
+}
+
+.royal-cart:hover{
+    width:62px;
+    border-radius:20px 20px 8px 20px;
+    transform:translateY(-5px);
+}
+
+.cart-image{
+    width:48px;
+    height:48px;
+    flex-basis:48px;
+    border-radius:15px;
+}
+
+.cart-text,
+.cart-arrow{
+    display:none;
+}
+
+.cart-count{
+    top:-4px;
+    right:-4px;
+}
+
+    footer{
+
+        padding-left:25px;
+
+        padding-right:25px;
+    }
+}
+
+
+    .feature-link{text-decoration:none;color:inherit;cursor:pointer;}
+    .feature-link .feature-open{margin-top:18px;color:#f7df7a;font-weight:700;letter-spacing:.5px;}
+
+.music-toggle{border:1px solid rgba(212,175,55,.55);border-radius:999px;padding:10px 13px;background:rgba(212,175,55,.08);color:#f7df7a;font:600 12px "DM Sans",sans-serif;cursor:pointer;white-space:nowrap;transition:.2s}
+.music-toggle:hover,.music-toggle[aria-pressed="true"]{background:rgba(212,175,55,.2);box-shadow:0 0 15px rgba(212,175,55,.16)}
+@media(max-width:560px){.music-toggle{padding:8px 10px;font-size:11px}}
+</style>
+
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     AMBIENT GLOW
+========================================================= -->
+
+<div class="glow one"></div>
+<div class="glow two"></div>
+<div class="glow three"></div>
+
+
+<!-- =========================================================
+     GOLD SPARKS
+========================================================= -->
+
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+
+
+<!-- =========================================================
+     NAVIGATION BAR
+========================================================= -->
+
+<header class="navbar">
+
+
+    <!-- BRAND -->
+
+    <a href="home.html"
+       class="brand">
+
+        <img
+            src="logo.jpeg"
+            alt="Thrifty Bite Logo"
+            class="brand-logo"
+        >
+
+        <div class="brand-name">
+
+            Thrifty <span>Bite</span>
+
+        </div>
+
+    </a>
+
+
+    <!-- NAVIGATION -->
+
+    <nav class="nav-links">
+
+        <a
+            href="home.html"
+            class="active"
+        >
+            Home
+        </a>
+
+
+        <a href="menu.html">
+            Menu
+        </a>
+
+
+        <a href="restaurants.html">
+            Restaurants
+        </a>
+
+
+        <a href="dineout.html">
+            Dine Out
+        </a>
+
+
+        <a href="custom-order.html">
+            Ask a Chef
+        </a>
+
+
+        <a href="friends.html">
+            Friends
+        </a>
+
+
+        <a href="group-order.html">
+            Group Orders
+        </a>
+
+
+        <a href="my-orders.html">
+            Track Order
+        </a>
+
+
+        <a href="blog.html">
+            Blog
+        </a>
+
+
+        <a href="help.html">
+            Help
+        </a>
+
+    </nav>
+
+
+    <!-- RIGHT SIDE -->
+
+    <div class="nav-right">
+
+
+        <button id="homeMusicToggle" class="music-toggle" type="button" aria-pressed="false" title="Play or pause gentle home ambience">♫ Music Off</button>
+
+        <button
+            class="profile-btn"
+            onclick="window.location.href='profile.html'"
+            title="Open Profile"
+            aria-label="Open Profile"
+        >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="8" r="3.2"></circle>
+                <path d="M5.5 20c.7-3.2 2.8-5 6.5-5s5.8 1.8 6.5 5"></path>
+            </svg>
+        </button>
+
+
+        <button
+            class="menu-btn"
+            onclick="openSidebar()"
+            aria-label="Open Menu"
+        >
+
+            <span></span>
+            <span></span>
+            <span></span>
+
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     SIDEBAR OVERLAY
+========================================================= -->
+
+<div
+    class="overlay"
+    id="overlay"
+    onclick="closeSidebar()"
+></div>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside
+    class="sidebar"
+    id="sidebar"
+>
+
+
+    <div class="sidebar-header">
+
+        <div class="sidebar-title">
+            Thrifty Bite
+        </div>
+
+
+        <button
+            class="close-btn"
+            onclick="closeSidebar()"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <!-- USER -->
+
+    <div class="sidebar-user">
+
+        <div class="sidebar-avatar">
+            ♙
+        </div>
+
+
+        <div>
+
+            <h3 id="userEmail">
+                Welcome, Royal Guest
+            </h3>
+
+            <p>
+                Smart dining starts here
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- SIDEBAR LINKS -->
+
+    <div class="side-links">
+        <a href="offers.html"><span>✦</span>Offers</a>
+        <a href="about.html"><span>◇</span>About Us</a>
+        <a href="profile.html"><span>♙</span>Profile</a>
+        <a href="help.html"><span>?</span>Help Centre</a>
+    </div>
+
+    <!-- PREMIUM CARD -->
+
+    <div class="premium-card">
+
+        <div class="premium-label">
+            Royal Membership
+        </div>
+
+
+        <h3>
+            Become a Royal Member
+        </h3>
+
+
+        <p>
+            Discover Golden Member perks, curated seasonal offers and a more rewarding way to plan every meal.
+        </p>
+
+
+        <a
+            href="premium.html"
+            class="premium-btn"
+        >
+            View Benefits
+        </a>
+
+    </div>
+
+</aside>
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main>
+
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <section class="hero">
+
+
+        <div class="hero-content">
+
+
+            <div class="crown">
+                ♛
+            </div>
+
+
+            <div class="hero-small">
+                Welcome to Thrifty Bite
+            </div>
+
+
+            <h1>
+
+                Royal Taste.<br>
+
+                <span>
+                    Smart Choice.
+                </span>
+
+            </h1>
+
+
+            <p class="hero-subtitle">
+
+                Enjoy delicious food without paying more
+                than you need to. Thrifty Bite helps you
+                discover smarter deals, optimize your cart
+                and make every meal worth it.
+
+            </p>
+
+
+            <div class="hero-actions">
+
+
+                <a
+                    href="menu.html"
+                    class="primary-btn"
+                >
+                    Order Now
+                </a>
+
+
+                <a
+                    href="menu.html"
+                    class="secondary-btn"
+                >
+                    Explore Menu
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- HERO FOOD -->
+
+        <div class="hero-visual">
+
+
+            <div class="hero-ring"></div>
+
+
+            <div class="hero-food">
+
+                <img
+                    src="dashbrd.jpeg.png"
+                    alt="Delicious Food"
+                >
+
+            </div>
+
+
+            <div class="hero-badge">
+
+                <strong>
+                    Smart Savings
+                </strong>
+
+                <small>
+                    Better food. Better value.
+                </small>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FOOD CATEGORY CAROUSEL (§19.1)
+    ====================================================== -->
+
+    <section class="section" style="padding-top:0;padding-bottom:40px;">
+        <div class="section-heading">
+            <div class="section-tag">Craving Something?</div>
+            <h2>Order our best food options</h2>
+        </div>
+
+        <div class="category-carousel-wrap">
+            <button class="category-nav-btn prev" onclick="scrollCategories(-1)" aria-label="Scroll left">‹</button>
+            <div class="category-scroll" id="categoryScroll">
+                <div class="empty-state" style="color:#cdbfa9;padding:20px;">Loading categories...</div>
+            </div>
+            <button class="category-nav-btn next" onclick="scrollCategories(1)" aria-label="Scroll right">›</button>
+        </div>
+    </section>
+
+
+    <!-- =====================================================
+         FEATURES
+    ====================================================== -->
+
+    <section class="section">
+        <div class="section-heading">
+            <div class="section-tag">Your Smart Dining Companion</div>
+            <h2>More Than Just Food Ordering</h2>
+            <p>Thrifty Bite combines smart technology and food ordering to help you discover better choices and save more.</p>
+        </div>
+
+        <div class="features">
+            <a href="voice.html" class="feature-card feature-link">
+                <div class="feature-image"><img src="images/voice-order.svg" alt="Voice Ordering"></div>
+                <h3>Voice Ordering</h3>
+                <p>Order your favourite food using your voice. Speak naturally and choose your food without typing every item manually.</p>
+                <div class="feature-open">Explore More →</div>
+            </a>
+
+            <a href="cart.html" class="feature-card feature-link">
+                <div class="feature-image"><img src="images/smart-cart.svg" alt="Smart Cart"></div>
+                <h3>Smart Cart</h3>
+                <p>Our smart cart helps identify better combinations and choices so you can enjoy your meal while keeping your spending under control.</p>
+                <div class="feature-open">Explore More →</div>
+            </a>
+
+            <a href="meal-budget.html" class="feature-card feature-link">
+                <div class="feature-image"><img src="images/budget-meal.svg" alt="Meal Budget"></div>
+                <h3>Meal Budget</h3>
+                <p>Set the amount you want to spend and discover food choices that fit your budget without compromising your cravings.</p>
+                <div class="feature-open">Explore More →</div>
+            </a>
+        </div>
+    </section>
+
+</main>
+
+
+<!-- =========================================================
+     ROYAL CART
+========================================================= -->
+
+<a
+    href="cart.html"
+    class="royal-cart"
+    id="royalCart"
+    title="Open Your Royal Cart"
+    aria-label="Open Your Royal Cart"
+>
+
+    <div class="cart-image" aria-hidden="true">
+
+        <svg class="cart-icon" viewBox="0 0 40 40" role="img" aria-label="Shopping cart">
+            <path d="M6 8h4l2.2 15.2a2.6 2.6 0 0 0 2.6 2.2h15.1a2.6 2.6 0 0 0 2.5-1.9L35 13H11.2"></path>
+            <path class="cart-basket" d="M11.5 13h21.8l-2 9.1a2 2 0 0 1-2 1.5H14.5a2 2 0 0 1-2-1.7L11.5 13z"></path>
+            <circle class="wheel" cx="16.2" cy="31.1" r="2"></circle>
+            <circle class="wheel" cx="29.1" cy="31.1" r="2"></circle>
+            <path class="cart-crown" d="M17 7.8l2.3-2.1 2.5 2.2 2.3-2.2 2.4 2.1v2.7H17V7.8z"></path>
+        </svg>
+
+    </div>
+
+    <div class="cart-text">
+
+        <span class="cart-label">
+            YOUR ROYAL CART
+        </span>
+
+        <strong>
+            View My Cart
+        </strong>
+
+        <span class="cart-subtext">Ready when you are</span>
+
+    </div>
+
+    <div class="cart-arrow" aria-hidden="true">
+        →
+    </div>
+
+    <span
+        class="cart-count"
+        id="cartCount"
+        aria-label="Cart item count"
+    >
+        0
+    </span>
+
+</a>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+
+    <div class="footer-brand">
+        THRIFTY BITE
+    </div>
+
+
+    <p>
+        Royal Taste. Smart Choice.
+    </p>
+
+
+    <div class="footer-links">
+
+
+        <a href="about.html">
+            About
+        </a>
+
+
+        <a href="privacy.html">
+            Privacy Policy
+        </a>
+
+
+        <a href="terms.html">
+            Terms & Conditions
+        </a>
+
+
+        <a href="help.html">
+            Help Centre
+        </a>
+
+    </div>
+
+
+    <p style="margin-top:20px;">
+        © 2026 Thrifty Bite. All rights reserved.
+    </p>
+
+</footer>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+// Greet the user after each successful login that opens the home page.
+(function showLoginWelcome(){
+    try {
+        if (sessionStorage.getItem("thriftyBiteShowWelcome") !== "1") return;
+        sessionStorage.removeItem("thriftyBiteShowWelcome");
+        document.addEventListener("DOMContentLoaded", function(){
+            const greeting = document.createElement("div");
+            greeting.setAttribute("role", "status");
+            greeting.textContent = "Welcome to Thrifty Bite! We're happy to have you here.";
+            greeting.style.cssText = "position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:20000;max-width:calc(100vw - 28px);padding:14px 22px;border-radius:14px;background:#851735;color:#fff;font-weight:700;text-align:center;box-shadow:0 8px 28px rgba(0,0,0,.22);border:1px solid #d4af37";
+            document.body.appendChild(greeting);
+            window.setTimeout(function(){ greeting.style.transition="opacity .35s ease"; greeting.style.opacity="0"; window.setTimeout(function(){ greeting.remove(); }, 400); }, 4200);
+        }, { once:true });
+    } catch (_) {}
+})();
+
+/* =========================================================
+   SIDEBAR OPEN
+========================================================= */
+
+function openSidebar(){
+
+    document
+        .getElementById("sidebar")
+        .classList
+        .add("open");
+
+
+    document
+        .getElementById("overlay")
+        .classList
+        .add("show");
+
+}
+
+
+/* =========================================================
+   SIDEBAR CLOSE
+========================================================= */
+
+function closeSidebar(){
+
+    document
+        .getElementById("sidebar")
+        .classList
+        .remove("open");
+
+
+    document
+        .getElementById("overlay")
+        .classList
+        .remove("show");
+
+}
+
+
+/* =========================================================
+   LOAD USER EMAIL
+========================================================= */
+
+try{
+
+    const savedUser =
+        localStorage.getItem(
+            "thriftyBiteUser"
+        );
+
+
+    if(savedUser){
+
+        const user =
+            JSON.parse(savedUser);
+
+
+        if(user.email){
+
+            document
+                .getElementById("userEmail")
+                .textContent =
+                user.email;
+
+        }
+
+    }
+
+}
+catch(error){
+
+    console.log(
+        "User information could not be loaded."
+    );
+
+}
+
+
+/* =========================================================
+   CART COUNT
+========================================================= */
+
+function updateCartCount(){
+
+    try{
+
+        const cart =
+            JSON.parse(
+                localStorage.getItem(
+                    "thriftyBiteCart"
+                )
+            ) || [];
+
+
+        let totalItems = 0;
+
+
+        cart.forEach(function(item){
+
+            if(item.quantity){
+
+                totalItems +=
+                    Number(item.quantity);
+
+            }
+            else{
+
+                totalItems++;
+
+            }
+
+        });
+
+
+        const cartCount =
+            document.getElementById("cartCount");
+
+        const royalCart =
+            document.getElementById("royalCart");
+
+        cartCount.textContent = totalItems;
+
+        royalCart.classList.toggle(
+            "has-items",
+            totalItems > 0
+        );
+
+    }
+    catch(error){
+
+        document
+            .getElementById("cartCount")
+            .textContent = "0";
+
+        document
+            .getElementById("royalCart")
+            .classList
+            .remove("has-items");
+
+    }
+
+}
+
+
+/* INITIAL CART COUNT */
+
+updateCartCount();
+
+
+/* =========================================================
+   FOOD CATEGORY CAROUSEL (§19.1)
+========================================================= */
+
+async function loadDiscoveryCategories(){
+
+    const scroll = document.getElementById("categoryScroll");
+
+    try{
+
+        const response = await fetch(window.location.origin + "/api/menu/discovery-categories");
+        const data = await response.json();
+
+        const categories = data.categories || [];
+
+        if(categories.length === 0){
+            scroll.innerHTML = "";
+            return;
+        }
+
+        scroll.innerHTML = categories.map(function(cat){
+            return "<a class='category-tile' href='food-result.html?category="
+                + encodeURIComponent(cat.name)
+                + "'><span class='emoji'>" + (cat.image || "🍽️") + "</span>"
+                + "<span class='cat-name'>" + cat.name.replace(/&/g,"&amp;").replace(/</g,"&lt;") + "</span></a>";
+        }).join("");
+
+    }catch(error){
+
+        scroll.innerHTML = "";
+
+    }
+
+}
+
+window.scrollCategories = function scrollCategories(direction){
+
+    const scroll = document.getElementById("categoryScroll");
+    if(!scroll) return;
+
+    scroll.scrollBy({ left: direction * 260, behavior: "smooth" });
+
+}
+
+loadDiscoveryCategories();
+
+
+/* =========================================================
+   UPDATE CART WHEN USER RETURNS TO PAGE
+========================================================= */
+
+window.addEventListener(
+    "storage",
+    function(event){
+
+        if(
+            event.key ===
+            "thriftyBiteCart"
+        ){
+
+            updateCartCount();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   ESC KEY
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Escape"){
+
+            closeSidebar();
+
+        }
+
+    }
+);
+
+</script>
+
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+
+<script>
+/* Gentle, original ambient tones on the home page only. Browsers require a user gesture. */
+(()=> {
+ const button=document.getElementById("homeMusicToggle"); if(!button)return;
+ let ctx=null, timer=null, noteIndex=0;
+ const notes=[261.63,329.63,392.00,329.63,293.66,349.23,440.00,349.23];
+ function playNote(){
+   if(!ctx||ctx.state!=="running")return;
+   const now=ctx.currentTime, osc=ctx.createOscillator(), gain=ctx.createGain();
+   osc.type="sine";osc.frequency.value=notes[noteIndex++%notes.length];
+   gain.gain.setValueAtTime(0.0001,now);gain.gain.exponentialRampToValueAtTime(0.022,now+0.22);gain.gain.exponentialRampToValueAtTime(0.0001,now+2.1);
+   osc.connect(gain);gain.connect(ctx.destination);osc.start(now);osc.stop(now+2.15);
+ }
+ async function toggle(){
+   if(timer){clearInterval(timer);timer=null;if(ctx)await ctx.suspend();button.textContent="♫ Music Off";button.setAttribute("aria-pressed","false");return;}
+   try{
+     const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+     if(!AudioContextClass){button.textContent="Music unavailable";return;}
+     ctx=ctx||new AudioContextClass();await ctx.resume();playNote();timer=setInterval(playNote,1900);button.textContent="♫ Music On";button.setAttribute("aria-pressed","true");
+   }catch(e){button.textContent="Music unavailable";}
+ }
+ button.addEventListener("click",toggle);
+})();
+</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+
+</html>

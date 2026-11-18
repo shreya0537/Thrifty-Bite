@@ -1,0 +1,2076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Thrifty Bite | My Addresses</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    min-height:100vh;
+    font-family:"DM Sans",Arial,sans-serif;
+    color:#fff8e8;
+    background:
+        radial-gradient(circle at 15% 15%,rgba(212,175,55,.16),transparent 28%),
+        radial-gradient(circle at 85% 20%,rgba(143,29,60,.32),transparent 30%),
+        radial-gradient(circle at 50% 90%,rgba(212,175,55,.08),transparent 30%),
+        linear-gradient(135deg,#2b0714,#4b0d1d 48%,#260611);
+    overflow-x:hidden;
+}
+
+
+/* =========================================================
+   ROYAL DOUBLE BORDER
+========================================================= */
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:10px;
+    border:1px solid rgba(212,175,55,.75);
+    pointer-events:none;
+    z-index:100;
+}
+
+body::after{
+    content:"";
+    position:fixed;
+    inset:17px;
+    border:1px solid rgba(212,175,55,.25);
+    pointer-events:none;
+    z-index:100;
+}
+
+
+/* =========================================================
+   BACKGROUND GLOWS
+========================================================= */
+
+.glow{
+    position:fixed;
+    border-radius:50%;
+    filter:blur(2px);
+    pointer-events:none;
+    z-index:-1;
+}
+
+.glow.one{
+    width:350px;
+    height:350px;
+    background:rgba(212,175,55,.08);
+    top:-120px;
+    left:-100px;
+    animation:floatGlow 8s ease-in-out infinite;
+}
+
+.glow.two{
+    width:420px;
+    height:420px;
+    background:rgba(143,29,60,.18);
+    right:-150px;
+    top:25%;
+    animation:floatGlow 10s ease-in-out infinite reverse;
+}
+
+.glow.three{
+    width:300px;
+    height:300px;
+    background:rgba(212,175,55,.06);
+    bottom:-120px;
+    left:40%;
+    animation:floatGlow 12s ease-in-out infinite;
+}
+
+@keyframes floatGlow{
+    0%,100%{
+        transform:translate(0,0) scale(1);
+    }
+
+    50%{
+        transform:translate(30px,-25px) scale(1.08);
+    }
+}
+
+
+/* =========================================================
+   SPARKS
+========================================================= */
+
+.spark{
+    position:fixed;
+    width:4px;
+    height:4px;
+    background:#d4af37;
+    border-radius:50%;
+    box-shadow:
+        0 0 8px #d4af37,
+        0 0 16px rgba(212,175,55,.6);
+    opacity:.7;
+    pointer-events:none;
+    animation:sparkFloat linear infinite;
+}
+
+.spark:nth-child(1){
+    left:8%;
+    bottom:-20px;
+    animation-duration:9s;
+}
+
+.spark:nth-child(2){
+    left:20%;
+    bottom:-20px;
+    animation-duration:12s;
+    animation-delay:2s;
+}
+
+.spark:nth-child(3){
+    left:35%;
+    bottom:-20px;
+    animation-duration:10s;
+    animation-delay:4s;
+}
+
+.spark:nth-child(4){
+    left:52%;
+    bottom:-20px;
+    animation-duration:13s;
+    animation-delay:1s;
+}
+
+.spark:nth-child(5){
+    left:68%;
+    bottom:-20px;
+    animation-duration:11s;
+    animation-delay:3s;
+}
+
+.spark:nth-child(6){
+    left:82%;
+    bottom:-20px;
+    animation-duration:9s;
+    animation-delay:5s;
+}
+
+.spark:nth-child(7){
+    left:92%;
+    bottom:-20px;
+    animation-duration:14s;
+    animation-delay:2s;
+}
+
+@keyframes sparkFloat{
+
+    0%{
+        transform:translateY(0) scale(.5);
+        opacity:0;
+    }
+
+    15%{
+        opacity:.8;
+    }
+
+    80%{
+        opacity:.7;
+    }
+
+    100%{
+        transform:translateY(-105vh) scale(1);
+        opacity:0;
+    }
+}
+
+
+/* =========================================================
+   MAIN PAGE
+========================================================= */
+
+.page{
+    width:100%;
+    min-height:100vh;
+    padding:55px 65px 70px;
+}
+
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+.topbar{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:45px;
+}
+
+.back-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+
+    padding:12px 20px;
+
+    color:#fff8e8;
+    text-decoration:none;
+
+    border:1px solid rgba(212,175,55,.55);
+    border-radius:12px;
+
+    background:rgba(255,255,255,.04);
+
+    transition:.3s ease;
+}
+
+.back-btn:hover{
+    background:rgba(212,175,55,.12);
+    border-color:#d4af37;
+    transform:translateX(-4px);
+}
+
+.logo-title{
+    font-family:"Cinzel",serif;
+    letter-spacing:3px;
+    font-size:25px;
+    color:#f7df7a;
+}
+
+.logout-btn{
+    border:1px solid rgba(212,175,55,.6);
+    background:transparent;
+    color:#fff8e8;
+    padding:12px 20px;
+    border-radius:12px;
+    cursor:pointer;
+    font-family:inherit;
+    font-weight:600;
+    transition:.3s ease;
+}
+
+.logout-btn:hover{
+    background:#d4af37;
+    color:#2b0714;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.page-heading{
+    text-align:center;
+    margin-bottom:45px;
+}
+
+.crown{
+    font-size:30px;
+    margin-bottom:12px;
+    filter:drop-shadow(0 0 10px rgba(212,175,55,.5));
+}
+
+.page-heading h1{
+    font-family:"Cinzel",serif;
+    font-size:42px;
+    letter-spacing:3px;
+    color:#f7df7a;
+    margin-bottom:10px;
+}
+
+.page-heading p{
+    color:rgba(255,248,232,.68);
+    font-size:15px;
+}
+
+.gold-line{
+    width:130px;
+    height:1px;
+    margin:18px auto 0;
+    background:linear-gradient(
+        90deg,
+        transparent,
+        #d4af37,
+        transparent
+    );
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.content{
+    width:min(1200px,100%);
+    margin:auto;
+}
+
+
+/* =========================================================
+   ADD ADDRESS BUTTON
+========================================================= */
+
+.action-row{
+    display:flex;
+    justify-content:flex-end;
+    margin-bottom:25px;
+}
+
+.add-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+
+    border:none;
+    border-radius:13px;
+
+    padding:14px 23px;
+
+    font-family:inherit;
+    font-size:14px;
+    font-weight:700;
+
+    color:#2b0714;
+
+    background:
+        linear-gradient(
+            135deg,
+            #c99d27,
+            #f7df7a,
+            #d4af37
+        );
+
+    box-shadow:
+        0 8px 25px rgba(212,175,55,.15);
+
+    cursor:pointer;
+
+    transition:.3s ease;
+}
+
+.add-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:
+        0 12px 35px rgba(212,175,55,.3);
+}
+
+
+/* =========================================================
+   ADDRESS GRID
+========================================================= */
+
+.address-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
+}
+
+
+/* =========================================================
+   ADDRESS CARD
+========================================================= */
+
+.address-card{
+    position:relative;
+
+    padding:25px;
+
+    min-height:265px;
+
+    border-radius:20px;
+
+    border:1px solid rgba(212,175,55,.32);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.07),
+            rgba(255,255,255,.025)
+        );
+
+    backdrop-filter:blur(16px);
+
+    box-shadow:
+        0 15px 45px rgba(0,0,0,.25);
+
+    transition:.35s ease;
+
+    overflow:hidden;
+}
+
+.address-card::before{
+    content:"";
+    position:absolute;
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    background:rgba(212,175,55,.08);
+    top:-50px;
+    right:-50px;
+}
+
+.address-card:hover{
+    transform:translateY(-7px);
+    border-color:rgba(212,175,55,.7);
+
+    box-shadow:
+        0 20px 55px rgba(0,0,0,.4),
+        0 0 25px rgba(212,175,55,.08);
+}
+
+
+/* =========================================================
+   CARD HEADER
+========================================================= */
+
+.address-card-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:20px;
+}
+
+.address-type{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    font-family:"Cinzel",serif;
+    font-size:18px;
+    color:#f7df7a;
+}
+
+.address-icon{
+    width:39px;
+    height:39px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:11px;
+
+    border:1px solid rgba(212,175,55,.45);
+
+    background:rgba(212,175,55,.08);
+
+    font-size:18px;
+}
+
+.default-badge{
+    padding:5px 10px;
+
+    border-radius:20px;
+
+    background:rgba(212,175,55,.13);
+    border:1px solid rgba(212,175,55,.45);
+
+    color:#f7df7a;
+
+    font-size:11px;
+    font-weight:700;
+}
+
+
+/* =========================================================
+   ADDRESS INFORMATION
+========================================================= */
+
+.address-name{
+    font-weight:700;
+    font-size:16px;
+    margin-bottom:5px;
+}
+
+.address-phone{
+    font-size:13px;
+    color:rgba(255,248,232,.65);
+    margin-bottom:14px;
+}
+
+.address-text{
+    font-size:13px;
+    line-height:1.7;
+    color:rgba(255,248,232,.78);
+}
+
+
+/* =========================================================
+   CARD ACTIONS
+========================================================= */
+
+.card-actions{
+    position:absolute;
+    left:25px;
+    right:25px;
+    bottom:20px;
+
+    display:flex;
+    gap:10px;
+}
+
+.card-btn{
+    flex:1;
+
+    padding:9px 12px;
+
+    border-radius:9px;
+
+    border:1px solid rgba(212,175,55,.35);
+
+    background:rgba(255,255,255,.04);
+
+    color:#fff8e8;
+
+    font-family:inherit;
+    font-size:12px;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s ease;
+}
+
+.card-btn:hover{
+    border-color:#d4af37;
+    background:rgba(212,175,55,.1);
+}
+
+.card-btn.delete:hover{
+    border-color:#e66b83;
+    color:#ff9aad;
+    background:rgba(230,107,131,.08);
+}
+
+.card-btn.default:hover{
+    background:rgba(212,175,55,.16);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty-state{
+    display:none;
+
+    text-align:center;
+
+    padding:70px 25px;
+
+    border:1px dashed rgba(212,175,55,.35);
+    border-radius:22px;
+
+    background:rgba(255,255,255,.025);
+}
+
+.empty-icon{
+    font-size:48px;
+    margin-bottom:18px;
+}
+
+.empty-state h2{
+    font-family:"Cinzel",serif;
+    color:#f7df7a;
+    margin-bottom:8px;
+}
+
+.empty-state p{
+    color:rgba(255,248,232,.62);
+    font-size:14px;
+    margin-bottom:25px;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading{
+    text-align:center;
+    padding:60px;
+    color:#f7df7a;
+    font-family:"Cinzel",serif;
+    letter-spacing:1px;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+
+    display:none;
+    align-items:center;
+    justify-content:center;
+
+    padding:30px;
+
+    background:rgba(10,2,6,.78);
+
+    backdrop-filter:blur(10px);
+
+    z-index:200;
+}
+
+.modal.active{
+    display:flex;
+}
+
+.modal-box{
+    width:min(620px,100%);
+
+    max-height:90vh;
+    overflow-y:auto;
+
+    padding:35px;
+
+    border-radius:24px;
+
+    border:1px solid rgba(212,175,55,.5);
+
+    background:
+        linear-gradient(
+            145deg,
+            #3c0b19,
+            #260611
+        );
+
+    box-shadow:
+        0 30px 100px rgba(0,0,0,.6),
+        0 0 40px rgba(212,175,55,.08);
+
+    position:relative;
+}
+
+.modal-box h2{
+    font-family:"Cinzel",serif;
+    color:#f7df7a;
+    font-size:25px;
+    margin-bottom:8px;
+}
+
+.modal-subtitle{
+    color:rgba(255,248,232,.58);
+    font-size:13px;
+    margin-bottom:25px;
+}
+
+.close-btn{
+    position:absolute;
+    top:18px;
+    right:20px;
+
+    width:35px;
+    height:35px;
+
+    border-radius:50%;
+
+    border:1px solid rgba(212,175,55,.35);
+
+    background:rgba(255,255,255,.04);
+
+    color:#fff8e8;
+
+    font-size:20px;
+
+    cursor:pointer;
+
+    transition:.25s ease;
+}
+
+.close-btn:hover{
+    background:#d4af37;
+    color:#2b0714;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+.form-group label{
+    font-size:12px;
+    font-weight:600;
+    color:#f7df7a;
+}
+
+.form-group input,
+.form-group select{
+    width:100%;
+
+    padding:12px 14px;
+
+    border-radius:10px;
+
+    border:1px solid rgba(212,175,55,.25);
+
+    outline:none;
+
+    background:rgba(255,255,255,.055);
+
+    color:#fff8e8;
+
+    font-family:inherit;
+    font-size:13px;
+
+    transition:.25s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+    border-color:#d4af37;
+
+    box-shadow:
+        0 0 0 3px rgba(212,175,55,.08);
+}
+
+.form-group select option{
+    background:#3c0b19;
+    color:#fff8e8;
+}
+
+
+/* =========================================================
+   DEFAULT CHECKBOX
+========================================================= */
+
+.checkbox-row{
+    grid-column:1/-1;
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    margin-top:3px;
+
+    font-size:13px;
+    color:rgba(255,248,232,.72);
+}
+
+.checkbox-row input{
+    accent-color:#d4af37;
+    width:16px;
+    height:16px;
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+========================================================= */
+
+.form-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:12px;
+
+    margin-top:25px;
+}
+
+.cancel-btn,
+.save-btn{
+    padding:12px 20px;
+
+    border-radius:10px;
+
+    font-family:inherit;
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.25s ease;
+}
+
+.cancel-btn{
+    border:1px solid rgba(212,175,55,.3);
+    background:transparent;
+    color:#fff8e8;
+}
+
+.cancel-btn:hover{
+    background:rgba(255,255,255,.06);
+}
+
+.save-btn{
+    border:none;
+
+    color:#2b0714;
+
+    background:
+        linear-gradient(
+            135deg,
+            #c99d27,
+            #f7df7a,
+            #d4af37
+        );
+}
+
+.save-btn:hover{
+    transform:translateY(-2px);
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+.message{
+    display:none;
+
+    margin-bottom:18px;
+
+    padding:12px 15px;
+
+    border-radius:10px;
+
+    font-size:13px;
+}
+
+.message.success{
+    display:block;
+
+    border:1px solid rgba(212,175,55,.45);
+    background:rgba(212,175,55,.08);
+    color:#f7df7a;
+}
+
+.message.error{
+    display:block;
+
+    border:1px solid rgba(230,107,131,.45);
+    background:rgba(230,107,131,.08);
+    color:#ff9aad;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer{
+    text-align:center;
+    margin-top:55px;
+
+    color:rgba(255,248,232,.4);
+
+    font-size:12px;
+    letter-spacing:.5px;
+}
+
+.footer span{
+    color:#d4af37;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1000px){
+
+    .address-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:700px){
+
+    .page{
+        padding:45px 25px 60px;
+    }
+
+    .topbar{
+        gap:15px;
+    }
+
+    .logo-title{
+        font-size:18px;
+    }
+
+    .page-heading h1{
+        font-size:31px;
+    }
+
+    .address-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-group.full,
+    .checkbox-row{
+        grid-column:auto;
+    }
+
+}
+
+</style>
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+
+
+<body>
+
+<!-- BACKGROUND -->
+
+<div class="glow one"></div>
+<div class="glow two"></div>
+<div class="glow three"></div>
+
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+<div class="spark"></div>
+
+
+<!-- MAIN PAGE -->
+
+<div class="page">
+
+    <!-- TOP BAR -->
+
+    <div class="topbar">
+
+        <a href="profile.html" class="back-btn">
+            ← Back to Profile
+        </a>
+
+        <div class="logo-title">
+            THRIFTY BITE
+        </div>
+
+        <button class="logout-btn" onclick="logout()">
+            Logout
+        </button>
+
+    </div>
+
+
+    <!-- PAGE HEADING -->
+
+    <div class="page-heading">
+
+        <div class="crown">♛</div>
+
+        <h1>My Addresses</h1>
+
+        <p>
+            Manage your delivery destinations with ease.
+        </p>
+
+        <div class="gold-line"></div>
+
+    </div>
+
+
+    <!-- CONTENT -->
+
+    <main class="content">
+
+        <div class="action-row">
+
+            <button class="add-btn" onclick="openAddModal()">
+                ＋ Add New Address
+            </button>
+
+        </div>
+
+
+        <!-- LOADING -->
+
+        <div id="loading" class="loading">
+            Loading your royal addresses...
+        </div>
+
+
+        <!-- ADDRESS GRID -->
+
+        <div id="addressGrid" class="address-grid"></div>
+
+
+        <!-- EMPTY STATE -->
+
+        <div id="emptyState" class="empty-state">
+
+            <div class="empty-icon">📍</div>
+
+            <h2>No Addresses Yet</h2>
+
+            <p>
+                Add your first delivery address to make ordering faster.
+            </p>
+
+            <button class="add-btn" onclick="openAddModal()">
+                ＋ Add Address
+            </button>
+
+        </div>
+
+    </main>
+
+
+    <div class="footer">
+        <span>♛</span>
+        Thrifty Bite • Royal Taste. Smart Choice.
+        <span>♛</span>
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     ADD / EDIT MODAL
+========================================================= -->
+
+<div id="addressModal" class="modal">
+
+    <div class="modal-box">
+
+        <button class="close-btn" onclick="closeModal()">
+            ×
+        </button>
+
+        <h2 id="modalTitle">
+            Add New Address
+        </h2>
+
+        <p class="modal-subtitle">
+            Save your delivery details securely.
+        </p>
+
+
+        <div id="message" class="message"></div>
+
+
+        <form id="addressForm">
+
+            <div class="form-grid">
+
+                <!-- FULL NAME -->
+
+                <div class="form-group">
+
+                    <label for="fullName">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="fullName"
+                        placeholder="Enter full name"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- PHONE -->
+
+                <div class="form-group">
+
+                    <label for="phone">
+                        Phone Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        placeholder="Enter phone number"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- HOUSE ADDRESS -->
+
+                <div class="form-group full">
+
+                    <label for="houseAddress">
+                        House / Flat / Street Address
+                    </label>
+
+                    <input
+                        type="text"
+                        id="houseAddress"
+                        placeholder="House number, flat, street"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- AREA -->
+
+                <div class="form-group">
+
+                    <label for="area">
+                        Area / Locality
+                    </label>
+
+                    <input
+                        type="text"
+                        id="area"
+                        placeholder="Enter area"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- CITY -->
+
+                <div class="form-group">
+
+                    <label for="city">
+                        City
+                    </label>
+
+                    <input
+                        type="text"
+                        id="city"
+                        placeholder="Enter city"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- STATE -->
+
+                <div class="form-group">
+
+                    <label for="state">
+                        State
+                    </label>
+
+                    <input
+                        type="text"
+                        id="state"
+                        placeholder="Enter state"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- PINCODE -->
+
+                <div class="form-group">
+
+                    <label for="pincode">
+                        PIN Code
+                    </label>
+
+                    <input
+                        type="text"
+                        id="pincode"
+                        placeholder="6-digit PIN code"
+                        maxlength="6"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- ADDRESS TYPE -->
+
+                <div class="form-group">
+
+                    <label for="addressType">
+                        Address Type
+                    </label>
+
+                    <select id="addressType">
+
+                        <option value="Home">
+                            🏠 Home
+                        </option>
+
+                        <option value="Work">
+                            💼 Work
+                        </option>
+
+                        <option value="Other">
+                            📍 Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- DEFAULT -->
+
+                <label class="checkbox-row">
+
+                    <input
+                        type="checkbox"
+                        id="isDefault"
+                    >
+
+                    <span>
+                        Make this my default delivery address
+                    </span>
+
+                </label>
+
+            </div>
+
+
+            <!-- ACTIONS -->
+
+            <div class="form-actions">
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="closeModal()"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="save-btn"
+                    id="saveBtn"
+                >
+                    Save Address
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+/* =========================================================
+   API
+========================================================= */
+
+const API_BASE = window.location.origin;
+
+let editingAddressId = null;
+
+
+/* =========================================================
+   CHECK LOGIN
+========================================================= */
+
+const token = localStorage.getItem("thriftyBiteToken");
+
+if(!token){
+
+    window.location.href = "login.html";
+
+}
+
+
+/* =========================================================
+   LOAD ADDRESSES
+========================================================= */
+
+async function loadAddresses(){
+
+    const loading = document.getElementById("loading");
+    const grid = document.getElementById("addressGrid");
+    const emptyState = document.getElementById("emptyState");
+
+    try{
+
+        const response = await fetch(
+            `${API_BASE}/api/addresses`,
+            {
+                method:"GET",
+
+                headers:{
+                    "Authorization":`Bearer ${token}`
+                }
+            }
+        );
+
+
+        const data = await response.json();
+
+
+        if(response.status === 401){
+
+            localStorage.removeItem("thriftyBiteToken");
+            localStorage.removeItem("thriftyBiteUser");
+
+            window.location.href = "login.html";
+
+            return;
+        }
+
+
+        if(!data.success){
+
+            throw new Error(
+                data.message || "Unable to load addresses."
+            );
+
+        }
+
+
+        loading.style.display = "none";
+
+        grid.innerHTML = "";
+
+
+        if(!data.addresses || data.addresses.length === 0){
+
+            emptyState.style.display = "block";
+
+            return;
+
+        }
+
+
+        emptyState.style.display = "none";
+
+
+        data.addresses.forEach(address => {
+
+            grid.innerHTML += createAddressCard(address);
+
+        });
+
+
+    }catch(error){
+
+        console.error("Address loading error:",error);
+
+        loading.innerHTML =
+            "Unable to load your addresses. Please try again.";
+
+    }
+
+}
+
+
+/* =========================================================
+   CREATE ADDRESS CARD
+========================================================= */
+
+function createAddressCard(address){
+
+    let icon = "📍";
+
+    if(address.addressType === "Home"){
+        icon = "🏠";
+    }
+
+    if(address.addressType === "Work"){
+        icon = "💼";
+    }
+
+
+    return `
+
+        <div class="address-card">
+
+            <div class="address-card-header">
+
+                <div class="address-type">
+
+                    <div class="address-icon">
+                        ${icon}
+                    </div>
+
+                    ${escapeHTML(address.addressType)}
+
+                </div>
+
+
+                ${
+                    address.isDefault
+                    ?
+                    `<div class="default-badge">
+                        DEFAULT
+                    </div>`
+                    :
+                    ""
+                }
+
+            </div>
+
+
+            <div class="address-name">
+                ${escapeHTML(address.fullName)}
+            </div>
+
+
+            <div class="address-phone">
+                ${escapeHTML(address.phone)}
+            </div>
+
+
+            <div class="address-text">
+
+                ${escapeHTML(address.houseAddress)}<br>
+
+                ${escapeHTML(address.area)}<br>
+
+                ${escapeHTML(address.city)},
+                ${escapeHTML(address.state)}
+                - ${escapeHTML(address.pincode)}
+
+            </div>
+
+
+            <div class="card-actions">
+
+                <button
+                    class="card-btn"
+                    onclick='editAddress(${JSON.stringify(address)})'
+                >
+                    ✏ Edit
+                </button>
+
+
+                ${
+                    !address.isDefault
+                    ?
+                    `<button
+                        class="card-btn default"
+                        onclick="makeDefault('${address._id}')"
+                    >
+                        ★ Default
+                    </button>`
+                    :
+                    `<button
+                        class="card-btn"
+                        disabled
+                        style="opacity:.5;cursor:default;"
+                    >
+                        ★ Selected
+                    </button>`
+                }
+
+
+                <button
+                    class="card-btn delete"
+                    onclick="deleteAddress('${address._id}')"
+                >
+                    🗑 Delete
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value){
+
+    if(value === undefined || value === null){
+        return "";
+    }
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+
+/* =========================================================
+   OPEN ADD MODAL
+========================================================= */
+
+function openAddModal(){
+
+    editingAddressId = null;
+
+    document.getElementById("modalTitle").textContent =
+        "Add New Address";
+
+    document.getElementById("saveBtn").textContent =
+        "Save Address";
+
+    document.getElementById("addressForm").reset();
+
+    clearMessage();
+
+    document
+        .getElementById("addressModal")
+        .classList.add("active");
+
+}
+
+
+/* =========================================================
+   EDIT ADDRESS
+========================================================= */
+
+function editAddress(address){
+
+    editingAddressId = address._id;
+
+    document.getElementById("modalTitle").textContent =
+        "Edit Address";
+
+    document.getElementById("saveBtn").textContent =
+        "Update Address";
+
+
+    document.getElementById("fullName").value =
+        address.fullName || "";
+
+    document.getElementById("phone").value =
+        address.phone || "";
+
+    document.getElementById("houseAddress").value =
+        address.houseAddress || "";
+
+    document.getElementById("area").value =
+        address.area || "";
+
+    document.getElementById("city").value =
+        address.city || "";
+
+    document.getElementById("state").value =
+        address.state || "";
+
+    document.getElementById("pincode").value =
+        address.pincode || "";
+
+    document.getElementById("addressType").value =
+        address.addressType || "Home";
+
+    document.getElementById("isDefault").checked =
+        Boolean(address.isDefault);
+
+    clearMessage();
+
+    document
+        .getElementById("addressModal")
+        .classList.add("active");
+
+}
+
+
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
+
+function closeModal(){
+
+    document
+        .getElementById("addressModal")
+        .classList.remove("active");
+
+    editingAddressId = null;
+
+    document
+        .getElementById("addressForm")
+        .reset();
+
+    clearMessage();
+
+}
+
+
+/* =========================================================
+   FORM SUBMIT
+========================================================= */
+
+document
+    .getElementById("addressForm")
+    .addEventListener("submit", async function(event){
+
+        event.preventDefault();
+
+
+        const addressData = {
+
+            fullName:
+                document.getElementById("fullName").value.trim(),
+
+            phone:
+                document.getElementById("phone").value.trim(),
+
+            houseAddress:
+                document.getElementById("houseAddress").value.trim(),
+
+            area:
+                document.getElementById("area").value.trim(),
+
+            city:
+                document.getElementById("city").value.trim(),
+
+            state:
+                document.getElementById("state").value.trim(),
+
+            pincode:
+                document.getElementById("pincode").value.trim(),
+
+            addressType:
+                document.getElementById("addressType").value,
+
+            isDefault:
+                document.getElementById("isDefault").checked
+
+        };
+
+
+        const saveBtn =
+            document.getElementById("saveBtn");
+
+
+        saveBtn.disabled = true;
+
+        saveBtn.textContent = "Saving...";
+
+
+        try{
+
+            let url = `${API_BASE}/api/addresses`;
+
+            let method = "POST";
+
+
+            if(editingAddressId){
+
+                url =
+                    `${API_BASE}/api/addresses/${editingAddressId}`;
+
+                method = "PUT";
+
+            }
+
+
+            const response = await fetch(
+                url,
+                {
+                    method:method,
+
+                    headers:{
+                        "Content-Type":"application/json",
+                        "Authorization":`Bearer ${token}`
+                    },
+
+                    body:JSON.stringify(addressData)
+                }
+            );
+
+
+            const data = await response.json();
+
+
+            if(response.status === 401){
+
+                localStorage.removeItem("thriftyBiteToken");
+                localStorage.removeItem("thriftyBiteUser");
+
+                window.location.href = "login.html";
+
+                return;
+
+            }
+
+
+            if(!data.success){
+
+                showMessage(
+                    data.message || "Unable to save address.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            showMessage(
+                data.message || "Address saved successfully!",
+                "success"
+            );
+
+
+            setTimeout(() => {
+
+                closeModal();
+
+                loadAddresses();
+
+            },700);
+
+
+        }catch(error){
+
+            console.error("Save address error:",error);
+
+            showMessage(
+                "Cannot connect to the server.",
+                "error"
+            );
+
+        }finally{
+
+            saveBtn.disabled = false;
+
+            saveBtn.textContent =
+                editingAddressId
+                ?
+                "Update Address"
+                :
+                "Save Address";
+
+        }
+
+    });
+
+
+/* =========================================================
+   DELETE ADDRESS
+========================================================= */
+
+async function deleteAddress(id){
+
+    const confirmDelete =
+        confirm(
+            "Are you sure you want to delete this address?"
+        );
+
+
+    if(!confirmDelete){
+        return;
+    }
+
+
+    try{
+
+        const response = await fetch(
+            `${API_BASE}/api/addresses/${id}`,
+            {
+                method:"DELETE",
+
+                headers:{
+                    "Authorization":`Bearer ${token}`
+                }
+            }
+        );
+
+
+        const data = await response.json();
+
+
+        if(response.status === 401){
+
+            localStorage.removeItem("thriftyBiteToken");
+            localStorage.removeItem("thriftyBiteUser");
+
+            window.location.href = "login.html";
+
+            return;
+
+        }
+
+
+        if(!data.success){
+
+            alert(
+                data.message ||
+                "Unable to delete address."
+            );
+
+            return;
+
+        }
+
+
+        loadAddresses();
+
+
+    }catch(error){
+
+        console.error("Delete address error:",error);
+
+        alert(
+            "Cannot connect to the server."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   MAKE DEFAULT
+========================================================= */
+
+async function makeDefault(id){
+
+    try{
+
+        /*
+            First get all addresses so we can find
+            the selected address.
+        */
+
+        const getResponse = await fetch(
+            `${API_BASE}/api/addresses`,
+            {
+                headers:{
+                    "Authorization":`Bearer ${token}`
+                }
+            }
+        );
+
+
+        const getData = await getResponse.json();
+
+
+        if(!getData.success){
+
+            alert("Unable to load addresses.");
+
+            return;
+
+        }
+
+
+        const selected =
+            getData.addresses.find(
+                address => address._id === id
+            );
+
+
+        if(!selected){
+
+            alert("Address not found.");
+
+            return;
+
+        }
+
+
+        const updateResponse = await fetch(
+            `${API_BASE}/api/addresses/${id}`,
+            {
+                method:"PUT",
+
+                headers:{
+                    "Content-Type":"application/json",
+
+                    "Authorization":
+                        `Bearer ${token}`
+                },
+
+                body:JSON.stringify({
+
+                    fullName:selected.fullName,
+
+                    phone:selected.phone,
+
+                    houseAddress:selected.houseAddress,
+
+                    area:selected.area,
+
+                    city:selected.city,
+
+                    state:selected.state,
+
+                    pincode:selected.pincode,
+
+                    addressType:selected.addressType,
+
+                    isDefault:true
+
+                })
+
+            }
+        );
+
+
+        const updateData =
+            await updateResponse.json();
+
+
+        if(!updateData.success){
+
+            alert(
+                updateData.message ||
+                "Unable to set default address."
+            );
+
+            return;
+
+        }
+
+
+        loadAddresses();
+
+
+    }catch(error){
+
+        console.error(
+            "Default address error:",
+            error
+        );
+
+        alert(
+            "Cannot connect to the server."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+function showMessage(text,type){
+
+    const message =
+        document.getElementById("message");
+
+    message.textContent = text;
+
+    message.className =
+        `message ${type}`;
+
+}
+
+
+function clearMessage(){
+
+    const message =
+        document.getElementById("message");
+
+    message.textContent = "";
+
+    message.className = "message";
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+function logout(){
+
+    localStorage.removeItem("thriftyBiteToken");
+    localStorage.removeItem("thriftyBiteUser");
+
+    window.location.href = "login.html";
+
+}
+
+
+/* =========================================================
+   CLOSE MODAL WHEN CLICKING OUTSIDE
+========================================================= */
+
+document
+    .getElementById("addressModal")
+    .addEventListener("click",function(event){
+
+        if(event.target === this){
+
+            closeModal();
+
+        }
+
+    });
+
+
+/* =========================================================
+   LOAD ON PAGE OPEN
+========================================================= */
+
+loadAddresses();
+
+</script>
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+</html>

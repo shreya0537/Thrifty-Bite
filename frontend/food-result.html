@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thrifty Bite | Food Result</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/theme.css">
+
+<style>
+.dish-card{ display:flex; flex-direction:column; }
+.dish-img{ width:100%; height:140px; object-fit:cover; border-radius:12px; border:1px solid rgba(212,175,55,.28); margin-bottom:12px; }
+.dish-restaurant{ display:flex; align-items:center; gap:6px; font-size:11px; color:#d4af37; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px; text-decoration:none; }
+.restaurant-avatar{ width:18px; height:18px; border-radius:50%; object-fit:cover; border:1px solid rgba(212,175,55,.4); }
+.filter-bar{ display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end; margin-bottom:20px; }
+.filter-bar .form-group{ margin-bottom:0; min-width:150px; }
+.veg-badge{ display:inline-block; font-size:9px; font-weight:700; padding:2px 6px; border-radius:4px; margin-left:6px; vertical-align:middle; }
+.veg-badge.veg{ background:rgba(80,200,120,.18); color:#7de3a0; }
+.veg-badge.nonveg{ background:rgba(220,80,80,.18); color:#f39; color:#ff8b9f; }
+</style>
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="brand">
+        THRIFTY BITE
+        <span id="pageHeading">FOOD RESULT</span>
+    </div>
+
+    <nav class="nav-links">
+        <a href="home.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="cart.html">Cart</a>
+    </nav>
+
+    <div class="nav-right">
+        <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="page-header">
+        <h1 id="categoryTitle">Food Result</h1>
+        <p class="muted" id="resultCount"></p>
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <div class="card">
+        <div class="filter-bar">
+            <div class="form-group">
+                <label>Search</label>
+                <input type="text" id="f_search" placeholder="Search dish or restaurant...">
+            </div>
+            <div class="form-group">
+                <label>Restaurant</label>
+                <select id="f_restaurant"><option value="">All restaurants</option></select>
+            </div>
+            <div class="form-group">
+                <label>Max Price (₹)</label>
+                <input type="number" id="f_maxPrice" min="0" placeholder="Any">
+            </div>
+            <div class="form-group">
+                <label>Min Rating</label>
+                <select id="f_minRating">
+                    <option value="0">Any</option>
+                    <option value="3">3+ ★</option>
+                    <option value="4">4+ ★</option>
+                    <option value="4.5">4.5+ ★</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Food Type</label>
+                <select id="f_vegType">
+                    <option value="">All</option>
+                    <option value="veg">Veg only</option>
+                    <option value="nonveg">Non-veg only</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Availability</label>
+                <select id="f_availability">
+                    <option value="">All</option>
+                    <option value="available">Available now</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid cols-3" id="resultGrid">
+        <div class="empty-state">Loading...</div>
+    </div>
+
+</div>
+
+<script src="assets/api.js"></script>
+<script>
+
+const messageEl = document.getElementById("message");
+const params = new URLSearchParams(window.location.search);
+const category = params.get("category") || "";
+
+document.getElementById("categoryTitle").textContent = category ? category : "Food Result";
+document.getElementById("pageHeading").textContent = (category || "FOOD RESULT").toUpperCase();
+document.title = "Thrifty Bite | " + (category || "Food Result");
+
+const CART_KEY = "thriftyBiteCart";
+
+function getLocalCart(){
+    try{
+        const raw = localStorage.getItem(CART_KEY);
+        const cart = raw ? JSON.parse(raw) : [];
+        return Array.isArray(cart) ? cart : [];
+    }catch(e){
+        return [];
+    }
+}
+
+function saveLocalCart(cart){
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+}
+
+let allResults = [];
+
+window.addToLocalCartById = function addToLocalCartById(id){
+    const dish = allResults.find(d => d._id === id);
+    if(!dish) return;
+
+    const cart = getLocalCart();
+    const existing = cart.find(item => String(item.menuId) === String(dish._id));
+
+    if(existing){
+        existing.quantity = Number(existing.quantity || 1) + 1;
+    }else{
+        cart.push({
+            menuId: dish._id,
+            name: dish.name,
+            description: dish.description || "",
+            price: Number(dish.discountPrice ?? dish.price ?? 0),
+            originalPrice: Number(dish.price ?? dish.discountPrice ?? 0),
+            image: dish.image || "",
+            quantity: 1,
+            category: dish.category || "",
+            isVeg: Boolean(dish.isVeg)
+        });
+    }
+
+    saveLocalCart(cart);
+    showCartToast("<strong>" + escapeHtml(dish.name) + "</strong> added to cart <a href='cart.html'>View cart</a>");
+}
+
+if(!category){
+    document.getElementById("resultGrid").innerHTML = '<div class="empty-state">No food or category selected. <a href="home.html">Go back home</a>.</div>';
+}else{
+    loadResults();
+}
+
+async function loadResults(){
+    try{
+        /* Try an exact category match first (the discovery tiles use
+           real Menu.category values); fall back to a name/description
+           search so a specific dish name (e.g. "Chicken Biryani") also
+           works as a food-first entry point. */
+        let data = await apiFetch("/menu/category/" + encodeURIComponent(category));
+
+        if(!data.menu || data.menu.length === 0){
+            data = await apiFetch("/menu/search?q=" + encodeURIComponent(category));
+        }
+
+        allResults = data.menu || [];
+
+        populateRestaurantFilter();
+        renderResults();
+
+    }catch(err){
+        document.getElementById("resultGrid").innerHTML = '<div class="empty-state">Could not load results right now.</div>';
+    }
+}
+
+/* Lists every active restaurant (so newly added ones always show up),
+   not just the ones that happen to have dishes in these results. */
+async function populateRestaurantFilter(){
+    const select = document.getElementById("f_restaurant");
+    const seen = new Map();
+
+    allResults.forEach(function(dish){
+        if(dish.restaurantId && dish.restaurantId._id){
+            seen.set(dish.restaurantId._id, dish.restaurantId.name);
+        }
+    });
+
+    try{
+        const data = await apiFetch("/menu/restaurants");
+        (data.restaurants || []).forEach(function(r){
+            if(!seen.has(r._id)) seen.set(r._id, r.name);
+        });
+    }catch(err){
+        /* fall back to restaurants found in the results */
+    }
+
+    const selected = select.value;
+    const sorted = Array.from(seen.entries()).sort((a, b) => String(a[1]).localeCompare(String(b[1])));
+
+    select.innerHTML = '<option value="">All restaurants</option>'
+        + sorted.map(([id, name]) => "<option value='" + id + "'>" + escapeHtml(name) + "</option>").join("");
+    select.value = selected;
+}
+
+function renderResults(){
+    const grid = document.getElementById("resultGrid");
+
+    const search = document.getElementById("f_search").value.trim().toLowerCase();
+    const restaurantId = document.getElementById("f_restaurant").value;
+    const maxPrice = Number(document.getElementById("f_maxPrice").value) || Infinity;
+    const minRating = Number(document.getElementById("f_minRating").value) || 0;
+    const vegType = document.getElementById("f_vegType").value;
+    const availability = document.getElementById("f_availability").value;
+
+    const filtered = allResults.filter(function(dish){
+        const restName = dish.restaurantId ? (dish.restaurantId.name || "") : "";
+        const searchable = (dish.name + " " + restName).toLowerCase();
+
+        if(search && !searchable.includes(search)) return false;
+        if(restaurantId && (!dish.restaurantId || dish.restaurantId._id !== restaurantId)) return false;
+        if((dish.discountPrice ?? dish.price ?? 0) > maxPrice) return false;
+        if((dish.rating || 0) < minRating) return false;
+        if(vegType === "veg" && !dish.isVeg) return false;
+        if(vegType === "nonveg" && dish.isVeg) return false;
+        if(availability === "available" && !dish.isAvailable) return false;
+
+        return true;
+    });
+
+    document.getElementById("resultCount").textContent = filtered.length + " result" + (filtered.length === 1 ? "" : "s") + " found";
+
+    if(filtered.length === 0){
+        const restSelect = document.getElementById("f_restaurant");
+        const hasNoDishesHere = restaurantId && !allResults.some(d => d.restaurantId && d.restaurantId._id === restaurantId);
+
+        grid.innerHTML = hasNoDishesHere
+            ? '<div class="empty-state">' + escapeHtml(restSelect.options[restSelect.selectedIndex].text)
+                + ' has no dishes in this category. <a href="restaurant-menu.html?id=' + encodeURIComponent(restaurantId) + '">View their full menu</a>.</div>'
+            : '<div class="empty-state">No matching food found. Try adjusting your filters.</div>';
+        return;
+    }
+
+    grid.innerHTML = filtered.map(function(dish){
+        const restName = dish.restaurantId ? escapeHtml(dish.restaurantId.name) : "";
+        const restAvatar = dish.restaurantId && dish.restaurantId.avatar;
+        const vegBadge = dish.isVeg
+            ? "<span class='veg-badge veg'>VEG</span>"
+            : "<span class='veg-badge nonveg'>NON-VEG</span>";
+
+        const restaurantLine = restName
+            ? "<a class='dish-restaurant' href='restaurant-menu.html?id=" + dish.restaurantId._id + "'>"
+                + (restAvatar ? "<img class='restaurant-avatar' src='" + escapeHtml(restAvatar) + "' alt=''>" : "")
+                + restName + "</a>"
+            : "";
+
+        return "<div class='card dish-card'>"
+            + tbFavHeart(dish._id)
+            + "<img class='dish-img' src='" + escapeHtml(dish.image || "images/food-placeholder.svg") + "' onerror=\"this.src='images/food-placeholder.svg'\" alt=''>"
+            + restaurantLine
+            + "<h3>" + escapeHtml(dish.name) + vegBadge + "</h3>"
+            + "<p class='muted small mt-12'>" + escapeHtml(dish.description || "") + "</p>"
+            + "<div class='flex-between mt-20'>"
+                + "<span><strong>" + formatMoney(dish.discountPrice) + "</strong> &middot; ★ " + (dish.rating || "-") + "</span>"
+                + (dish.isAvailable
+                    ? "<button class='btn btn-sm' onclick=\"addToLocalCartById('" + dish._id + "')\">Add</button>"
+                    : "<span class='badge danger'>Unavailable</span>")
+            + "</div>"
+            + "</div>";
+    }).join("");
+
+    tbMarkFavHearts();
+}
+
+["f_search","f_restaurant","f_maxPrice","f_minRating","f_vegType","f_availability"].forEach(function(id){
+    const el = document.getElementById(id);
+    el.addEventListener(el.tagName === "SELECT" ? "change" : "input", renderResults);
+});
+
+</script>
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+</html>

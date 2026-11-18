@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thrifty Bite | Group Orders</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/theme.css">
+
+<style>
+.menu-item-card{ display:flex; flex-direction:column; }
+.menu-item-img{ width:100%; height:120px; object-fit:cover; border-radius:10px; border:1px solid rgba(212,175,55,.28); margin-bottom:10px; background:rgba(255,255,255,.03); }
+.menu-item-price{ color:var(--gold-light,#f7df7a); font-weight:700; margin:2px 0 12px; }
+
+.order-bar-spacer{ height:0; }
+.order-bar-spacer.show{ height:90px; }
+
+.sticky-order-bar{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:200;
+    display:none;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    padding:16px 30px;
+    background:rgba(38,6,17,.96);
+    border-top:1px solid rgba(212,175,55,.4);
+    backdrop-filter:blur(14px);
+    box-shadow:0 -10px 30px rgba(0,0,0,.35);
+}
+
+.sticky-order-bar.show{ display:flex; }
+
+.sticky-order-bar .bar-total{ font-size:15px; }
+.sticky-order-bar .bar-total strong{ color:var(--gold-light,#f7df7a); font-size:20px; margin-left:8px; }
+
+@media(max-width:600px){
+    .sticky-order-bar{ padding:14px 16px; flex-wrap:wrap; }
+}
+</style>
+
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+<style>
+.whatsapp-chat #groupChatTitle{color:#e9edef}.whatsapp-chat #groupChatInput{background:#202c33;color:#e9edef;border:1px solid #34434b;border-radius:22px;padding:12px 16px}.wa-bubble{box-shadow:0 1px 1px #0004;position:relative}.wa-reactions{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}.wa-reaction{border:1px solid #52616a;background:#18252c;border-radius:14px;padding:2px 7px;color:#e9edef;cursor:pointer;font-size:13px}.wa-reaction:hover{background:#29414a}.wa-react-options{display:flex;gap:4px;margin-top:5px}.wa-react-options button{background:#18252c;border:0;border-radius:14px;padding:3px 5px;cursor:pointer;font-size:15px}.notification-attention{animation:notificationPulse 1.8s infinite}@keyframes notificationPulse{50%{box-shadow:0 0 0 4px #25d36622}}
+</style>
+
+</head>
+<body>
+
+<header class="navbar">
+    <div class="brand">
+        THRIFTY BITE
+        <span>GROUP ORDERS</span>
+    </div>
+
+    <nav class="nav-links">
+        <a href="home.html">Storefront</a>
+        <a href="friends.html">Friends</a>
+        <a href="custom-order.html">Custom Orders</a>
+    </nav>
+
+    <div class="nav-right">
+        <span class="muted small" id="customerName">Customer</span>
+        <button class="btn btn-outline btn-sm" id="groupNotificationBtn" type="button" aria-label="Group notifications">🔔 Notifications <span id="groupNotificationCount" style="display:none;margin-left:5px;background:#25d366;color:#fff;border-radius:99px;padding:2px 7px;font-size:11px">0</span></button>
+        <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="page-header">
+        <h1>Group Orders</h1>
+        <p>Order together with friends — a normal food order or a shared custom chef request.</p>
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="normal">Normal Group Order</button>
+        <button class="tab-btn" data-tab="custom">Group Custom Request</button>
+    </div>
+
+    <!-- ============ NORMAL GROUP ORDER ============ -->
+    <div class="tab-panel active" id="tab-normal">
+        <div class="card">
+            <h2>Create Group Order</h2>
+
+            <div class="form-group">
+                <label>Friends in this group</label>
+                <div id="friendCheckboxes" class="mt-12"><div class="empty-state">You have no friends yet — add some on the Friends page.</div></div>
+            </div>
+
+            <div class="form-group">
+                <label>Restaurant</label>
+                <select id="restaurantSelect"><option value="">Select a restaurant</option></select>
+            </div>
+
+            <div id="menuItemsArea" class="mt-20"></div>
+        </div>
+    </div>
+
+    <!-- ============ CUSTOM GROUP REQUEST ============ -->
+    <div class="tab-panel" id="tab-custom">
+        <div class="card">
+            <h2>Create Group Custom Chef Request</h2>
+
+            <div class="form-group">
+                <label>Friends in this group</label>
+                <div id="friendCheckboxesCustom" class="mt-12"><div class="empty-state">You have no friends yet — add some on the Friends page.</div></div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Food Required</label>
+                    <input type="text" id="c_foodRequired" placeholder="e.g. Dinner for the group" required>
+                </div>
+                <div class="form-group">
+                    <label>Quantity / Servings</label>
+                    <input type="number" id="c_quantity" min="1" value="1">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="c_description" placeholder="Describe what the group wants" required></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Preferred Date</label>
+                    <input type="date" id="c_preferredDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Preferred Time</label>
+                    <input type="time" id="c_preferredTime" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Special Instructions (optional)</label>
+                <textarea id="c_specialInstructions"></textarea>
+            </div>
+
+            <button class="btn" onclick="submitCustomGroupOrder()">Submit Group Request</button>
+        </div>
+    </div>
+
+    <div class="card group-social-card" style="margin-bottom:20px">
+        <h2>Group Invites & Chat</h2>
+        <p class="muted small mt-12">Send a request to an accepted friend. Once they accept, your private group chat opens so you can discuss dishes and then place the food order.</p>
+        <div class="form-row mt-12"><div class="form-group"><label>Invite a friend</label><select id="groupInviteFriend"><option value="">Select a friend</option></select></div><div class="form-group" style="display:flex;align-items:end"><button class="btn" id="sendGroupInviteBtn" type="button">Send group request</button></div></div>
+        <div class="grid cols-2 mt-20"><div><h3>Incoming requests</h3><div id="incomingGroupInvites" class="mt-12"><div class="empty-state">Loading requests…</div></div></div><div><h3>Accepted group chats</h3><div id="activeGroupChats" class="mt-12"><div class="empty-state">No accepted group chats yet.</div></div></div></div>
+        <div id="groupChatPanel" class="mt-20 whatsapp-chat" style="display:none;border:1px solid rgba(37,211,102,.35);border-radius:14px;padding:16px;background:#0b141a;color:#e9edef"><div class="flex-between"><h3 id="groupChatTitle">Group conversation</h3><button class="btn btn-outline btn-sm" id="closeGroupChatBtn" type="button">Close chat</button></div><div id="groupChatMessages" style="height:300px;overflow:auto;padding:12px;margin:12px 0;border-radius:10px;background-color:#0b141a;background-image:radial-gradient(rgba(255,255,255,.035) .8px,transparent .8px);background-size:18px 18px"></div><form id="groupChatForm" class="flex gap-8"><input id="groupChatInput" maxlength="1500" placeholder="Discuss dishes, budget or delivery…" required style="flex:1;min-width:0"><button class="btn" type="submit" style="background:#25d366;color:#082b1a">➤ Send</button></form><p class="muted small mt-12">Ready to order? Use <a href="group-order.html#tab-normal">Normal Group Order</a> and select your accepted group members.</p></div>
+    </div>
+</div>
+
+    <div class="order-bar-spacer" id="orderBarSpacer"></div>
+
+</div>
+
+<div class="sticky-order-bar" id="stickyOrderBar">
+    <span class="bar-total">Total: <strong id="normalTotal">₹0</strong></span>
+    <button class="btn" onclick="submitNormalGroupOrder()">Place Group Order</button>
+</div>
+
+
+
+<script src="assets/api.js"></script>
+<script>
+
+const user = requireAuth(["CUSTOMER"]);
+
+if(user){
+
+    document.getElementById("customerName").textContent = user.name || user.username;
+
+    const messageEl = document.getElementById("message");
+
+    const stickyOrderBar = document.getElementById("stickyOrderBar");
+    const orderBarSpacer = document.getElementById("orderBarSpacer");
+
+    document.querySelectorAll(".tab-btn").forEach(function(btn){
+        btn.addEventListener("click", function(){
+            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+            document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+            btn.classList.add("active");
+            document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+            const showBar = btn.dataset.tab === "normal";
+            stickyOrderBar.classList.toggle("show", showBar);
+            orderBarSpacer.classList.toggle("show", showBar);
+        });
+    });
+
+    stickyOrderBar.classList.add("show");
+    orderBarSpacer.classList.add("show");
+
+
+    /* =========================================================
+       FRIENDS
+    ========================================================= */
+
+    async function loadFriends(){
+        try{
+            const data = await apiFetch("/friends");
+            const friends = data.friends || [];
+            groupFriends = friends;
+
+            [document.getElementById("friendCheckboxes"), document.getElementById("friendCheckboxesCustom")].forEach(function(container){
+                if(friends.length === 0){
+                    container.innerHTML = '<div class="empty-state">You have no friends yet — add some on the Friends page.</div>';
+                    return;
+                }
+                container.innerHTML = friends.map(function(f, i){
+                    const inputName = container.id === "friendCheckboxes" ? "member" : "memberCustom";
+                    return "<label class='flex gap-8 mt-12' style='text-transform:none;font-size:14px'>"
+                        + "<input type='checkbox' class='" + inputName + "' value='" + f._id + "' style='width:auto'> "
+                        + escapeHtml(f.name || f.username)
+                        + "</label>";
+                }).join("");
+            });
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+
+    /* =========================================================
+       NORMAL GROUP ORDER
+    ========================================================= */
+
+    let selectedRestaurantMenu = [];
+    let groupFriends = [];
+    const cart = {};
+    const cartAssignee = {};
+
+    async function loadRestaurants(){
+        try{
+            const data = await apiFetch("/menu/restaurants");
+            const select = document.getElementById("restaurantSelect");
+            select.innerHTML = '<option value="">Select a restaurant</option>' +
+                (data.restaurants || []).map(r => '<option value="' + r._id + '">' + escapeHtml(r.name) + '</option>').join("");
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    document.getElementById("restaurantSelect").addEventListener("change", async function(){
+        const id = this.value;
+        const area = document.getElementById("menuItemsArea");
+        Object.keys(cart).forEach(k => delete cart[k]);
+        Object.keys(cartAssignee).forEach(k => delete cartAssignee[k]);
+        updateNormalTotal();
+
+        if(!id){
+            area.innerHTML = "";
+            return;
+        }
+
+        try{
+            const data = await apiFetch("/menu/restaurant/" + id);
+            selectedRestaurantMenu = data.menu || [];
+
+            const assigneeOptions = "<option value=''>Shared (split equally)</option>"
+                + "<option value='" + user.id + "'>Me</option>"
+                + groupFriends.map(f => "<option value='" + f._id + "'>" + escapeHtml(f.name || f.username) + "</option>").join("");
+
+            area.innerHTML = "<p class='muted small'>Optionally assign an item to one person for an item-wise bill split later — leave it \"Shared\" to split it equally.</p>"
+                + "<div class='grid cols-3 mt-12'>"
+                + selectedRestaurantMenu.map(function(item){
+                    return "<div class='card menu-item-card'>"
+                        + "<img class='menu-item-img' src='" + escapeHtml(item.image || "images/food-placeholder.svg") + "' onerror=\"this.src='images/food-placeholder.svg'\" alt=''>"
+                        + "<h3 style='font-size:15px'>" + escapeHtml(item.name) + "</h3>"
+                        + "<div class='menu-item-price'>" + formatMoney(item.discountPrice) + "</div>"
+                        + "<label>Quantity</label>"
+                        + "<input type='number' min='0' value='0' onchange=\"setQty('" + item._id + "', this.value)\">"
+                        + "<label class='mt-12'>For</label>"
+                        + "<select onchange=\"setAssignee('" + item._id + "', this.value)\">" + assigneeOptions + "</select>"
+                        + "</div>";
+                }).join("")
+                + "</div>";
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    });
+
+    window.setQty = function setQty(menuItemId, qty){
+        const n = Number(qty) || 0;
+        if(n <= 0){ delete cart[menuItemId]; delete cartAssignee[menuItemId]; }
+        else{ cart[menuItemId] = n; }
+        updateNormalTotal();
+    }
+
+    window.setAssignee = function setAssignee(menuItemId, memberId){
+        if(memberId){ cartAssignee[menuItemId] = memberId; }
+        else{ delete cartAssignee[menuItemId]; }
+    }
+
+    function updateNormalTotal(){
+        let total = 0;
+        Object.keys(cart).forEach(function(id){
+            const item = selectedRestaurantMenu.find(m => m._id === id);
+            if(item) total += item.discountPrice * cart[id];
+        });
+        document.getElementById("normalTotal").textContent = formatMoney(total);
+    }
+
+    window.submitNormalGroupOrder = async function submitNormalGroupOrder(){
+        const restaurantId = document.getElementById("restaurantSelect").value;
+        let memberIds = Array.from(document.querySelectorAll(".member:checked")).map(el => el.value);
+        const items = Object.keys(cart).map(id => ({ menuItemId: id, quantity: cart[id], memberId: cartAssignee[id] || null }));
+
+        if(!restaurantId || items.length === 0 || memberIds.length === 0){
+            showMessage(messageEl, "Select a restaurant, at least one friend, and at least one item.", "error");
+            return;
+        }
+
+        /* An item can be assigned to someone who wasn't ticked as a group
+           member yet — include them automatically so the assignment is valid. */
+        items.forEach(function(item){
+            if(item.memberId && item.memberId !== user.id && !memberIds.includes(item.memberId)){
+                memberIds.push(item.memberId);
+            }
+        });
+
+        try{
+            const result = await apiFetch("/group-orders", {
+                method: "POST",
+                body: JSON.stringify({ memberIds, restaurantId, items })
+            });
+
+            // Copy the selected group dishes into the same local cart used by
+            // menu.html/cart.html, so the user can review them before checkout.
+            const CART_KEY = "thriftyBiteCart";
+            let savedCart = [];
+            try {
+                const parsed = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+                if (Array.isArray(parsed)) savedCart = parsed;
+            } catch (_) { savedCart = []; }
+
+            const selectedItems = Object.keys(cart).map(function(id){
+                const menuItem = selectedRestaurantMenu.find(m => String(m._id) === String(id));
+                if (!menuItem) return null;
+                const quantity = Number(cart[id]) || 1;
+                const price = Number(menuItem.discountPrice ?? menuItem.price ?? 0);
+                const existing = savedCart.find(item => String(item.menuId || item._id || item.id) === String(id));
+                if (existing) {
+                    existing.quantity = Number(existing.quantity || 1) + quantity;
+                    existing.groupMemberId = cartAssignee[id] || null;
+                } else {
+                    savedCart.push({
+                        menuId: menuItem._id,
+                        name: menuItem.name,
+                        description: menuItem.description || "",
+                        price: price,
+                        originalPrice: Number(menuItem.price ?? price),
+                        image: menuItem.image || "",
+                        quantity: quantity,
+                        category: menuItem.category || "",
+                        isVeg: Boolean(menuItem.isVeg),
+                        groupMemberId: cartAssignee[id] || null
+                    });
+                }
+                return { menuId: menuItem._id, name: menuItem.name, quantity, price, memberId: cartAssignee[id] || null };
+            }).filter(Boolean);
+
+            localStorage.setItem(CART_KEY, JSON.stringify(savedCart));
+            localStorage.setItem("thriftyBiteGroupCheckout", JSON.stringify({
+                isGroupOrder: true,
+                groupOrderId: result.groupOrder?._id || result.groupOrderId || null,
+                restaurantId: restaurantId,
+                memberIds: memberIds,
+                memberNames: memberIds.map(function(id){
+                    const friend = groupFriends.find(function(f){ return String(f._id) === String(id); });
+                    return friend ? (friend.name || friend.username || "Group member") : "Group member";
+                }),
+                createdBy: user.id,
+                splitMethod: "equal",
+                items: selectedItems,
+                totalAmount: selectedItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
+                createdAt: new Date().toISOString()
+            }));
+
+            showMessage(messageEl, "Group order placed! Redirecting to checkout…", "success");
+            // Go straight to checkout after the group order is accepted. The
+            // group metadata is saved above so checkout can enable split options.
+            setTimeout(function(){ window.location.href = "checkout.html?groupOrder=1&split=equal"; }, 350);
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+
+    /* =========================================================
+       CUSTOM GROUP REQUEST
+    ========================================================= */
+
+    window.submitCustomGroupOrder = async function submitCustomGroupOrder(){
+        const memberIds = Array.from(document.querySelectorAll(".memberCustom:checked")).map(el => el.value);
+
+        const customRequest = {
+            foodRequired: document.getElementById("c_foodRequired").value.trim(),
+            description: document.getElementById("c_description").value.trim(),
+            quantity: Number(document.getElementById("c_quantity").value) || 1,
+            preferredDate: document.getElementById("c_preferredDate").value,
+            preferredTime: document.getElementById("c_preferredTime").value,
+            specialInstructions: document.getElementById("c_specialInstructions").value.trim()
+        };
+
+        if(memberIds.length === 0 || !customRequest.foodRequired || !customRequest.description || !customRequest.preferredDate || !customRequest.preferredTime){
+            showMessage(messageEl, "Select at least one friend and fill in all required fields.", "error");
+            return;
+        }
+
+        try{
+            await apiFetch("/group-orders", {
+                method: "POST",
+                body: JSON.stringify({ memberIds, customRequest })
+            });
+            showMessage(messageEl, "Group custom request submitted!", "success");
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    async function loadGroupInvites(){
+        try{
+            const [incoming,active]=await Promise.all([apiFetch("/group-orders/invites/incoming"),apiFetch("/group-orders/invites/mine")]);
+            const bell=document.getElementById('groupNotificationCount'); const unread=(incoming.invites||[]).length; bell.textContent=unread; bell.style.display=unread?'inline-block':'none'; document.getElementById('groupNotificationBtn').classList.toggle('notification-attention',unread>0);
+            const inArea=document.getElementById("incomingGroupInvites");
+            inArea.innerHTML=(incoming.invites||[]).length?incoming.invites.map(i=>"<div class='card' style='padding:12px;margin-bottom:9px'><strong>"+safeText(i.senderId?.name||i.senderId?.username||"Friend")+"</strong><p class='muted small mt-12'>Invited you to order together.</p><div class='flex gap-8 mt-12'><button class='btn btn-sm' type='button' onclick=\"acceptGroupInvite('"+i._id+"')\">Accept & chat</button><button class='btn btn-sm btn-outline' type='button' onclick=\"rejectGroupInvite('"+i._id+"')\">Decline</button></div></div>").join("") : "<div class='empty-state'>No pending requests.</div>";
+            const chatArea=document.getElementById("activeGroupChats");
+            chatArea.innerHTML=(active.invites||[]).length?active.invites.map(i=>{const other=String(i.senderId?._id)===String(user.id)?i.recipientId:i.senderId;return "<div class='card' style='padding:12px;margin-bottom:9px'><strong>"+safeText(other?.name||other?.username||"Friend")+"</strong><p class='muted small mt-12'>Group chat is active.</p><button class='btn btn-sm btn-outline mt-12' type='button' onclick=\"openGroupChat('"+i.groupOrderId._id+"','"+safeText(other?.name||other?.username||"Friend")+"')\">Open chat</button></div>"}).join("") : "<div class='empty-state'>Accept or send a group request to start chatting.</div>";
+            const select=document.getElementById("groupInviteFriend"); const current=select.value; select.innerHTML='<option value="">Select a friend</option>'+groupFriends.map(f=>'<option value="'+f._id+'">'+safeText(f.name||f.username)+'</option>').join(""); if(current)select.value=current;
+        }catch(e){showMessage(messageEl,e.message,"error")}
+    }
+    window.acceptGroupInvite=async function(id){try{const d=await apiFetch('/group-orders/invites/'+id+'/accept',{method:'PUT',body:JSON.stringify({})});showMessage(messageEl,d.message,'success');await loadGroupInvites();await openGroupChat(d.groupOrderId,'Group conversation')}catch(e){showMessage(messageEl,e.message,'error')}};
+    window.rejectGroupInvite=async function(id){try{const d=await apiFetch('/group-orders/invites/'+id+'/reject',{method:'PUT',body:JSON.stringify({})});showMessage(messageEl,d.message,'success');loadGroupInvites()}catch(e){showMessage(messageEl,e.message,'error')}};
+    document.getElementById('groupNotificationBtn').addEventListener('click',async()=>{await loadGroupInvites();document.getElementById('incomingGroupInvites').scrollIntoView({behavior:'smooth',block:'center'});document.getElementById('incomingGroupInvites').style.outline='2px solid #25d366';setTimeout(()=>document.getElementById('incomingGroupInvites').style.outline='',1400)});
+    document.getElementById('sendGroupInviteBtn').addEventListener('click',async()=>{const recipientId=document.getElementById('groupInviteFriend').value;if(!recipientId){showMessage(messageEl,'Choose a friend first.','error');return}try{const d=await apiFetch('/group-orders/invite',{method:'POST',body:JSON.stringify({recipientId})});showMessage(messageEl,d.message,'success');loadGroupInvites()}catch(e){showMessage(messageEl,e.message,'error')}});
+    window.openGroupChat=async function(id,title){activeChatId=id;document.getElementById('groupChatTitle').textContent='Chat with '+title;document.getElementById('groupChatPanel').style.display='block';await loadGroupMessages();document.getElementById('groupChatInput').focus()};
+    async function reactToGroupMessage(messageId,emoji){try{await apiFetch('/group-orders/'+activeChatId+'/messages/'+messageId+'/reactions',{method:'POST',body:JSON.stringify({emoji})});await loadGroupMessages()}catch(e){showMessage(messageEl,e.message,'error')}}
+    async function loadGroupMessages(){if(!activeChatId)return;try{const d=await apiFetch('/group-orders/'+activeChatId+'/messages');const area=document.getElementById('groupChatMessages');area.innerHTML=(d.messages||[]).map(m=>{const mine=String(m.senderId?._id)===String(user.id);const reactions=(m.reactions||[]).map(r=>r.emoji).reduce((a,e)=>{a[e]=(a[e]||0)+1;return a},{ });const reactionHtml=Object.entries(reactions).map(([e,n])=>"<button class='wa-reaction' type='button' onclick=\"reactToGroupMessage('\"+m._id+\"','\"+e+\"')\">"+e+" "+n+"</button>").join('');return "<div style='display:flex;justify-content:"+(mine?'flex-end':'flex-start')+";margin:7px 0'><div class='wa-bubble' style='max-width:85%;padding:9px 12px;border-radius:10px;background:"+(mine?'#005c4b':'#202c33')+";color:#e9edef'><div style='font-size:11px;color:#aebac1;margin-bottom:4px'>"+safeText(mine?'You':(m.senderId?.name||m.senderId?.username||'Friend'))+"</div><div style='overflow-wrap:anywhere;white-space:pre-wrap'>"+safeText(m.message)+"</div><div style='text-align:right;color:#aebac1;font-size:10px;margin-top:5px'>"+new Date(m.createdAt).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+"</div><div class='wa-reactions'>"+reactionHtml+"</div><div class='wa-react-options'>"+['❤️','👍','😂','😮','😢','🔥'].map(e=>"<button type='button' title='React "+e+"' onclick=\"reactToGroupMessage('\"+m._id+\"','\"+e+\"')\">"+e+"</button>").join('')+"</div></div></div>"}).join('')||'<p style="color:#aebac1;text-align:center">Say hello and plan your meal together.</p>';area.scrollTop=area.scrollHeight}catch(e){showMessage(messageEl,e.message,'error')}}
+    document.getElementById('groupChatForm').addEventListener('submit',async e=>{e.preventDefault();const input=document.getElementById('groupChatInput');const message=input.value.trim();if(!activeChatId||!message)return;input.disabled=true;try{await apiFetch('/group-orders/'+activeChatId+'/messages',{method:'POST',body:JSON.stringify({message})});input.value='';await loadGroupMessages()}catch(err){showMessage(messageEl,err.message,'error')}finally{input.disabled=false;input.focus()}});
+    document.getElementById('closeGroupChatBtn').addEventListener('click',()=>{activeChatId=null;document.getElementById('groupChatPanel').style.display='none'});
+    // Light polling keeps the chat fresh without requiring a separate socket server.
+    setInterval(()=>{if(activeChatId)loadGroupMessages()},4000);
+
+    loadFriends().then(loadGroupInvites);
+    loadRestaurants();
+
+}
+
+</script>
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+</html>

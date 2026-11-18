@@ -1,0 +1,2691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Thrifty Bite | Help Centre</title>
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:"DM Sans","Segoe UI",Arial,sans-serif;
+    color:#fff;
+    min-height:100vh;
+    overflow-x:hidden;
+
+    background:
+        radial-gradient(
+            circle at 12% 18%,
+            rgba(212,175,55,.13),
+            transparent 27%
+        ),
+        radial-gradient(
+            circle at 88% 75%,
+            rgba(143,29,60,.20),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(212,175,55,.07),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #2b0714 0%,
+            #4b0d1d 48%,
+            #260611 100%
+        );
+}
+
+
+/* =========================================================
+   ROYAL DOUBLE BORDER
+========================================================= */
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:10px;
+
+    border:1px solid rgba(212,175,55,.24);
+
+    pointer-events:none;
+    z-index:100;
+}
+
+body::after{
+    content:"";
+    position:fixed;
+    inset:17px;
+
+    border:1px solid rgba(212,175,55,.09);
+
+    pointer-events:none;
+    z-index:100;
+}
+
+
+/* =========================================================
+   AMBIENT GLOW
+========================================================= */
+
+body > *{
+    position:relative;
+}
+
+body{
+    isolation:isolate;
+}
+
+body .ambient-glow{
+    position:fixed;
+    width:500px;
+    height:500px;
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(212,175,55,.10),
+            transparent 70%
+        );
+
+    filter:blur(30px);
+
+    pointer-events:none;
+    z-index:-1;
+}
+
+
+/* =========================================================
+   GOLD SPARKS
+========================================================= */
+
+.spark{
+    position:fixed;
+
+    width:4px;
+    height:4px;
+
+    border-radius:50%;
+
+    background:#f7df7a;
+
+    box-shadow:
+        0 0 7px #d4af37,
+        0 0 15px rgba(212,175,55,.85),
+        0 0 28px rgba(212,175,55,.35);
+
+    opacity:.5;
+
+    animation:float 8s infinite ease-in-out;
+
+    z-index:1;
+}
+
+.s1{
+    left:8%;
+    top:25%;
+}
+
+.s2{
+    left:20%;
+    top:70%;
+    animation-delay:2s;
+}
+
+.s3{
+    left:75%;
+    top:25%;
+    animation-delay:1s;
+}
+
+.s4{
+    left:90%;
+    top:65%;
+    animation-delay:3s;
+}
+
+.s5{
+    left:55%;
+    top:12%;
+    animation-delay:4s;
+}
+
+@keyframes float{
+
+    0%,100%{
+        transform:
+            translateY(0)
+            scale(.6);
+
+        opacity:.2;
+    }
+
+    50%{
+        transform:
+            translateY(-35px)
+            scale(1.35);
+
+        opacity:1;
+    }
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+header{
+    height:82px;
+
+    display:flex;
+    align-items:center;
+
+    padding:0 6%;
+
+    position:sticky;
+    top:0;
+
+    z-index:20;
+
+    border-bottom:
+        1px solid
+        rgba(212,175,55,.28);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(30,4,14,.94),
+            rgba(64,10,27,.88)
+        );
+
+    backdrop-filter:blur(18px);
+
+    box-shadow:
+        0 10px 35px rgba(0,0,0,.28);
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
+
+.logo-circle{
+    width:46px;
+    height:46px;
+
+    border-radius:50%;
+
+    padding:2px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff0a0,
+            #d4af37,
+            #8b680c
+        );
+
+    box-shadow:
+        0 0 18px rgba(212,175,55,.18);
+}
+
+.logo-circle img{
+    width:100%;
+    height:100%;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:2px solid #2b0714;
+}
+
+.logo h2{
+    color:#f7df7a;
+
+    font-family:
+        "Cinzel",
+        Georgia,
+        serif;
+
+    letter-spacing:2px;
+
+    font-size:21px;
+
+    text-shadow:
+        0 0 15px
+        rgba(212,175,55,.18);
+}
+
+.logo span{
+    display:block;
+
+    margin-top:2px;
+
+    font-size:8px;
+
+    color:#bfae91;
+
+    letter-spacing:2.4px;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.container{
+    width:90%;
+
+    max-width:1200px;
+
+    margin:auto;
+
+    padding:65px 0 80px;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    text-align:center;
+
+    margin-bottom:52px;
+
+    animation:
+        heroEnter
+        .8s
+        ease;
+}
+
+@keyframes heroEnter{
+
+    from{
+        opacity:0;
+        transform:translateY(15px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.hero h1{
+    font-family:
+        "Cinzel",
+        Georgia,
+        serif;
+
+    font-size:46px;
+
+    letter-spacing:2px;
+
+    color:#f7df7a;
+
+    margin-bottom:13px;
+
+    text-shadow:
+        0 0 20px
+        rgba(212,175,55,.22);
+}
+
+.hero h1::after{
+    content:"";
+
+    display:block;
+
+    width:75px;
+    height:2px;
+
+    margin:14px auto 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #d4af37,
+            transparent
+        );
+
+    box-shadow:
+        0 0 12px
+        rgba(212,175,55,.45);
+}
+
+.hero p{
+    color:#c3b8ad;
+
+    font-size:15px;
+
+    margin-top:18px;
+
+    margin-bottom:29px;
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.search{
+    width:100%;
+
+    max-width:680px;
+
+    margin:auto;
+
+    position:relative;
+}
+
+.search input{
+    width:100%;
+
+    padding:18px 62px 18px 21px;
+
+    border-radius:15px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.30);
+
+    outline:none;
+
+    color:#fff;
+
+    background:
+        rgba(28,5,15,.72);
+
+    backdrop-filter:blur(12px);
+
+    font-size:14px;
+
+    transition:.3s;
+
+    box-shadow:
+        inset 0 0 20px
+        rgba(0,0,0,.15);
+}
+
+.search input::placeholder{
+    color:#927f7f;
+}
+
+.search input:hover{
+    border-color:
+        rgba(212,175,55,.48);
+}
+
+.search input:focus{
+    border-color:#d4af37;
+
+    box-shadow:
+        0 0 25px
+        rgba(212,175,55,.13),
+        inset 0 0 15px
+        rgba(212,175,55,.04);
+}
+
+.search button{
+    position:absolute;
+
+    right:6px;
+    top:6px;
+    bottom:6px;
+
+    width:48px;
+
+    border:none;
+
+    border-radius:11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff0a0,
+            #d4af37
+        );
+
+    color:#310813;
+
+    font-size:18px;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.search button:hover{
+    transform:scale(1.05);
+
+    box-shadow:
+        0 0 18px
+        rgba(212,175,55,.35);
+}
+
+
+/* =========================================================
+   SECTION TITLE
+========================================================= */
+
+.section-title{
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    margin:43px 0 21px;
+}
+
+.section-title h2{
+    color:#f1d76f;
+
+    font-family:
+        "Cinzel",
+        Georgia,
+        serif;
+
+    font-size:19px;
+
+    letter-spacing:.5px;
+
+    white-space:nowrap;
+}
+
+.section-title::after{
+    content:"";
+
+    height:1px;
+
+    flex:1;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(212,175,55,.55),
+            rgba(143,29,60,.18),
+            transparent
+        );
+}
+
+
+/* =========================================================
+   HELP CARDS
+========================================================= */
+
+.help-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:19px;
+}
+
+.help-card{
+    padding:27px;
+
+    min-height:190px;
+
+    border-radius:18px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.19);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(73,13,30,.74),
+            rgba(27,5,14,.82)
+        );
+
+    backdrop-filter:blur(12px);
+
+    transition:
+        transform .35s ease,
+        border-color .35s ease,
+        box-shadow .35s ease;
+
+    cursor:pointer;
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+.help-card::before{
+    content:"";
+
+    position:absolute;
+
+    width:120px;
+    height:120px;
+
+    right:-50px;
+    top:-50px;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(212,175,55,.13),
+            transparent 70%
+        );
+
+    transition:.4s;
+}
+
+.help-card::after{
+    content:"";
+
+    position:absolute;
+
+    left:0;
+    right:0;
+    bottom:0;
+
+    height:2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #d4af37,
+            transparent
+        );
+
+    opacity:0;
+
+    transition:.3s;
+}
+
+.help-card:hover{
+    transform:
+        translateY(-7px);
+
+    border-color:
+        rgba(212,175,55,.58);
+
+    box-shadow:
+        0 16px 40px
+        rgba(0,0,0,.35),
+        0 0 28px
+        rgba(212,175,55,.10);
+}
+
+.help-card:hover::before{
+    transform:scale(1.5);
+}
+
+.help-card:hover::after{
+    opacity:1;
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.icon{
+    width:51px;
+    height:51px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(212,175,55,.14),
+            rgba(143,29,60,.16)
+        );
+
+    border:
+        1px solid
+        rgba(212,175,55,.28);
+
+    font-size:23px;
+
+    margin-bottom:18px;
+
+    transition:.35s;
+}
+
+.help-card:hover .icon{
+    transform:
+        translateY(-2px)
+        rotate(-3deg);
+
+    border-color:#d4af37;
+
+    box-shadow:
+        0 0 18px
+        rgba(212,175,55,.16);
+}
+
+.help-card h3{
+    color:#f1d76f;
+
+    font-size:16px;
+
+    margin-bottom:8px;
+
+    font-weight:700;
+}
+
+.help-card p{
+    color:#aa9b9d;
+
+    font-size:13px;
+
+    line-height:1.7;
+}
+
+
+/* =========================================================
+   QUICK SOLUTIONS
+========================================================= */
+
+.solutions{
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:16px;
+}
+
+.solution{
+    padding:21px 23px;
+
+    border-radius:15px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.14);
+
+    background:
+        rgba(255,255,255,.025);
+
+    backdrop-filter:blur(8px);
+
+    transition:.3s;
+}
+
+.solution:hover{
+    transform:translateY(-3px);
+
+    border-color:
+        rgba(212,175,55,.35);
+
+    background:
+        rgba(212,175,55,.035);
+
+    box-shadow:
+        0 10px 28px
+        rgba(0,0,0,.2);
+}
+
+.solution h3{
+    color:#d4af37;
+
+    font-size:15px;
+
+    margin-bottom:9px;
+}
+
+.solution p{
+    color:#a99d9f;
+
+    font-size:13px;
+
+    line-height:1.75;
+}
+
+
+/* =========================================================
+   FAQ
+========================================================= */
+
+.faq{
+    border:
+        1px solid
+        rgba(212,175,55,.20);
+
+    border-radius:16px;
+
+    overflow:hidden;
+
+    background:
+        rgba(26,5,13,.55);
+
+    backdrop-filter:blur(10px);
+
+    box-shadow:
+        0 15px 40px
+        rgba(0,0,0,.15);
+}
+
+details{
+    border-bottom:
+        1px solid
+        rgba(212,175,55,.11);
+
+    transition:.3s;
+}
+
+details:last-child{
+    border-bottom:none;
+}
+
+details[open]{
+    background:
+        rgba(212,175,55,.025);
+}
+
+summary{
+    padding:20px 55px 20px 22px;
+
+    cursor:pointer;
+
+    color:#efd46e;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    list-style:none;
+
+    position:relative;
+
+    transition:.3s;
+}
+
+summary::-webkit-details-marker{
+    display:none;
+}
+
+summary:hover{
+    color:#fff0a0;
+
+    padding-left:27px;
+}
+
+summary::after{
+    content:"+";
+
+    position:absolute;
+
+    right:22px;
+
+    top:14px;
+
+    width:28px;
+    height:28px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:8px;
+
+    color:#d4af37;
+
+    background:
+        rgba(212,175,55,.07);
+
+    border:
+        1px solid
+        rgba(212,175,55,.15);
+
+    font-size:20px;
+
+    transition:.3s;
+}
+
+details[open] summary::after{
+    content:"−";
+
+    background:
+        rgba(212,175,55,.13);
+
+    border-color:
+        rgba(212,175,55,.35);
+}
+
+details p{
+    padding:
+        0 28px 25px;
+
+    color:#a99d9f;
+
+    font-size:13px;
+
+    line-height:1.85;
+
+    max-width:1000px;
+}
+
+details p strong{
+    color:#d4af37;
+}
+
+
+/* =========================================================
+   USER PROBLEM / FEEDBACK
+========================================================= */
+
+.feedback-box{
+    margin-top:53px;
+
+    padding:39px;
+
+    border-radius:23px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.34);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(73,13,30,.75),
+            rgba(24,4,12,.91)
+        );
+
+    backdrop-filter:blur(14px);
+
+    box-shadow:
+        0 0 45px
+        rgba(212,175,55,.06);
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+.feedback-box::before{
+    content:"";
+
+    position:absolute;
+
+    width:300px;
+    height:300px;
+
+    right:-130px;
+    top:-130px;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(212,175,55,.10),
+            transparent 70%
+        );
+
+    pointer-events:none;
+}
+
+.feedback-title{
+    text-align:center;
+
+    margin-bottom:28px;
+
+    position:relative;
+}
+
+.feedback-title h2{
+    color:#f1d76f;
+
+    font-family:
+        "Cinzel",
+        Georgia,
+        serif;
+
+    font-size:28px;
+
+    letter-spacing:1px;
+
+    margin-bottom:9px;
+}
+
+.feedback-title p{
+    color:#a99b9e;
+
+    font-size:13px;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.feedback-form{
+    max-width:850px;
+
+    margin:auto;
+
+    position:relative;
+}
+
+.feedback-form label{
+    display:block;
+
+    color:#d4af37;
+
+    font-size:13px;
+
+    margin-bottom:8px;
+
+    font-weight:600;
+}
+
+.feedback-form input,
+.feedback-form textarea{
+    width:100%;
+
+    border:
+        1px solid
+        rgba(212,175,55,.20);
+
+    background:
+        rgba(8,2,6,.60);
+
+    color:#fff;
+
+    border-radius:12px;
+
+    padding:15px;
+
+    outline:none;
+
+    font-family:inherit;
+
+    margin-bottom:19px;
+
+    transition:.3s;
+}
+
+.feedback-form input:focus,
+.feedback-form textarea:focus{
+    border-color:#d4af37;
+
+    box-shadow:
+        0 0 20px
+        rgba(212,175,55,.09);
+}
+
+.feedback-form textarea{
+    min-height:135px;
+
+    resize:vertical;
+
+    line-height:1.7;
+}
+
+.feedback-form textarea::placeholder,
+.feedback-form input::placeholder{
+    color:#716267;
+}
+
+
+/* =========================================================
+   SUBMIT BUTTON
+========================================================= */
+
+.submit-btn{
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff0a0,
+            #d4af37,
+            #b78c19
+        );
+
+    color:#300712;
+
+    font-size:14px;
+
+    font-weight:800;
+
+    letter-spacing:.3px;
+
+    cursor:pointer;
+
+    transition:.35s;
+
+    box-shadow:
+        0 5px 18px
+        rgba(212,175,55,.08);
+}
+
+.submit-btn:hover{
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0 10px 30px
+        rgba(212,175,55,.22);
+}
+
+
+/* =========================================================
+   RESPONSE
+========================================================= */
+
+.response-box{
+    display:none;
+
+    margin-top:27px;
+
+    padding:23px;
+
+    border-radius:16px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.30);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(212,175,55,.07),
+            rgba(143,29,60,.07)
+        );
+}
+
+.response-box.show{
+    display:block;
+
+    animation:
+        responseIn
+        .4s
+        ease;
+}
+
+@keyframes responseIn{
+
+    from{
+        opacity:0;
+        transform:translateY(8px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.response-box h3{
+    color:#d4af37;
+
+    font-size:15px;
+
+    margin-bottom:10px;
+}
+
+.response-box p{
+    color:#b5a9aa;
+
+    font-size:13px;
+
+    line-height:1.8;
+}
+
+
+/* =========================================================
+   FEEDBACK HISTORY
+========================================================= */
+
+.feedback-history{
+    margin-top:38px;
+}
+
+.feedback-history h3{
+    color:#f1d76f;
+
+    font-family:
+        "Cinzel",
+        Georgia,
+        serif;
+
+    font-size:18px;
+
+    margin-bottom:17px;
+}
+
+.feedback-item{
+    padding:21px;
+
+    margin-bottom:14px;
+
+    border-radius:15px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.14);
+
+    background:
+        rgba(255,255,255,.025);
+
+    position:relative;
+
+    transition:.3s;
+}
+
+.feedback-item:hover{
+    border-color:
+        rgba(212,175,55,.30);
+
+    background:
+        rgba(212,175,55,.025);
+}
+
+.feedback-item .problem{
+    color:#ded7d8;
+
+    font-size:13px;
+
+    line-height:1.7;
+
+    margin-bottom:11px;
+
+    padding-right:55px;
+}
+
+.feedback-item .answer{
+    color:#a99d9f;
+
+    font-size:12px;
+
+    line-height:1.8;
+
+    border-left:
+        2px solid
+        #d4af37;
+
+    padding-left:13px;
+}
+
+.feedback-item small{
+    display:block;
+
+    color:#75666a;
+
+    margin-top:11px;
+
+    font-size:10px;
+}
+
+
+/* =========================================================
+   DELETE BUTTON
+========================================================= */
+
+.delete-btn{
+    position:absolute;
+
+    top:15px;
+    right:15px;
+
+    background:
+        rgba(143,29,60,.12);
+
+    border:
+        1px solid
+        rgba(212,175,55,.20);
+
+    color:#bca348;
+
+    border-radius:7px;
+
+    padding:5px 9px;
+
+    cursor:pointer;
+
+    font-size:11px;
+
+    transition:.3s;
+}
+
+.delete-btn:hover{
+    color:#fff;
+
+    border-color:#d4af37;
+
+    background:
+        rgba(212,175,55,.08);
+
+    box-shadow:
+        0 0 12px
+        rgba(212,175,55,.10);
+}
+
+
+/* =========================================================
+   CONTACT
+========================================================= */
+
+.contact{
+    margin-top:48px;
+
+    padding:40px;
+
+    border-radius:23px;
+
+    text-align:center;
+
+    border:
+        1px solid
+        rgba(212,175,55,.34);
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(212,175,55,.09),
+            transparent 65%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(73,13,30,.75),
+            rgba(24,4,12,.90)
+        );
+
+    box-shadow:
+        0 0 40px
+        rgba(212,175,55,.06);
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+.contact h2{
+    color:#f1d76f;
+
+    font-family:
+        "Cinzel",
+        Georgia,
+        serif;
+
+    font-size:28px;
+
+    letter-spacing:1px;
+
+    margin-bottom:10px;
+}
+
+.contact p{
+    color:#a99d9f;
+
+    font-size:13px;
+
+    margin-bottom:21px;
+}
+
+.phone{
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    color:#d4af37;
+
+    font-size:24px;
+
+    font-weight:800;
+
+    text-decoration:none;
+
+    margin-bottom:23px;
+
+    transition:.3s;
+}
+
+.phone:hover{
+    color:#fff0a0;
+
+    text-shadow:
+        0 0 15px
+        rgba(212,175,55,.35);
+}
+
+.contact-buttons{
+    display:flex;
+
+    justify-content:center;
+
+    gap:13px;
+
+    flex-wrap:wrap;
+}
+
+.contact-btn{
+    padding:13px 26px;
+
+    border-radius:11px;
+
+    text-decoration:none;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    transition:.35s;
+}
+
+.call-btn{
+    color:#300712;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff0a6,
+            #d4af37
+        );
+
+    box-shadow:
+        0 5px 20px
+        rgba(212,175,55,.08);
+}
+
+.chat-btn{
+    color:#d4af37;
+
+    border:
+        1px solid
+        rgba(212,175,55,.50);
+
+    background:
+        rgba(212,175,55,.035);
+}
+
+.contact-btn:hover{
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0 10px 25px
+        rgba(212,175,55,.16);
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+    text-align:center;
+
+    padding:27px;
+
+    border-top:
+        1px solid
+        rgba(212,175,55,.17);
+
+    color:#786c70;
+
+    font-size:11px;
+
+    background:
+        rgba(20,3,10,.35);
+}
+
+footer span{
+    color:#d4af37;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:900px){
+
+    .help-grid{
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .solutions{
+        grid-template-columns:1fr;
+    }
+}
+
+
+@media(max-width:600px){
+
+    body::before,
+    body::after{
+        display:none;
+    }
+
+    header{
+        padding:0 25px;
+    }
+
+    .logo h2{
+        font-size:17px;
+    }
+
+    .container{
+        width:92%;
+
+        padding-top:42px;
+    }
+
+    .hero h1{
+        font-size:34px;
+    }
+
+    .help-grid{
+        grid-template-columns:1fr;
+    }
+
+    .feedback-box{
+        padding:27px 19px;
+    }
+
+    .contact{
+        padding:30px 19px;
+    }
+
+    .contact h2{
+        font-size:24px;
+    }
+
+    .phone{
+        font-size:20px;
+    }
+
+    details p{
+        font-size:12.5px;
+
+        line-height:1.8;
+    }
+
+    .section-title h2{
+        font-size:16px;
+    }
+}
+
+</style>
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+
+
+<body>
+
+
+<!-- AMBIENT GLOW -->
+
+<div class="ambient-glow"></div>
+
+
+<!-- GOLD SPARKS -->
+
+<div class="spark s1"></div>
+<div class="spark s2"></div>
+<div class="spark s3"></div>
+<div class="spark s4"></div>
+<div class="spark s5"></div>
+
+
+<!-- HEADER -->
+
+<header>
+
+    <div class="logo">
+
+        <div class="logo-circle">
+
+            <img
+                src="C:\Users\LIVYA DHARSHINI\OneDrive\Desktop\Thrifty Bite-Final\image2.jpeg"
+                alt="Thrifty Bite"
+            >
+
+        </div>
+
+        <div>
+
+            <h2>THRIFTY BITE</h2>
+
+            <span>
+                ROYAL TASTE • SMART PRICE
+            </span>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- MAIN -->
+
+<main class="container">
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <h1>
+            Help Centre
+        </h1>
+
+        <p>
+            How can we help you today?
+            Find quick solutions to common problems.
+        </p>
+
+
+        <div class="search">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search your problem..."
+                onkeyup="searchHelp()"
+            >
+
+            <button onclick="searchHelp()">
+                🔍
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- HELP CATEGORIES -->
+
+    <div class="section-title">
+
+        <h2>
+            What do you need help with?
+        </h2>
+
+    </div>
+
+
+    <section class="help-grid">
+
+
+        <div
+            class="help-card"
+            data-search="order food order problem order not received">
+
+            <div class="icon">📦</div>
+
+            <h3>
+                Order Problems
+            </h3>
+
+            <p>
+                Issues with placing, modifying,
+                or receiving your food order.
+            </p>
+
+        </div>
+
+
+        <div
+            class="help-card"
+            data-search="payment card upi payment failed money">
+
+            <div class="icon">💳</div>
+
+            <h3>
+                Payment Issues
+            </h3>
+
+            <p>
+                Payment failed, money deducted,
+                or payment method problems.
+            </p>
+
+        </div>
+
+
+        <div
+            class="help-card"
+            data-search="delivery late missing delivery rider">
+
+            <div class="icon">🛵</div>
+
+            <h3>
+                Delivery Support
+            </h3>
+
+            <p>
+                Track your order or get help
+                with delayed deliveries.
+            </p>
+
+        </div>
+
+
+        <div
+            class="help-card"
+            data-search="refund cancellation cancelled refund">
+
+            <div class="icon">↩️</div>
+
+            <h3>
+                Refund & Cancellation
+            </h3>
+
+            <p>
+                Learn about cancellations,
+                refunds, and refund status.
+            </p>
+
+        </div>
+
+
+        <div
+            class="help-card"
+            data-search="offers coupons discount rewards">
+
+            <div class="icon">🎁</div>
+
+            <h3>
+                Offers & Rewards
+            </h3>
+
+            <p>
+                Problems with coupons, discounts,
+                Royal Points, or rewards.
+            </p>
+
+        </div>
+
+
+        <div
+            class="help-card"
+            data-search="account profile login password">
+
+            <div class="icon">👤</div>
+
+            <h3>
+                Account & Login
+            </h3>
+
+            <p>
+                Manage your profile, password,
+                login, and account settings.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- QUICK SOLUTIONS -->
+
+    <div class="section-title">
+
+        <h2>
+            Quick Solutions
+        </h2>
+
+    </div>
+
+
+    <section class="solutions">
+
+
+        <div class="solution">
+
+            <h3>
+                📦 My order hasn't arrived
+            </h3>
+
+            <p>
+                Open Track Order to check the
+                latest delivery status. If the
+                estimated time has passed, contact
+                our support team.
+            </p>
+
+        </div>
+
+
+        <div class="solution">
+
+            <h3>
+                💳 Payment was deducted but order failed
+            </h3>
+
+            <p>
+                Check your order history first.
+                If the order was not created,
+                contact support with your
+                payment reference.
+            </p>
+
+        </div>
+
+
+        <div class="solution">
+
+            <h3>
+                ↩️ Where is my refund?
+            </h3>
+
+            <p>
+                Check your refund status under
+                My Orders. Processing time may
+                depend on your payment provider.
+            </p>
+
+        </div>
+
+
+        <div class="solution">
+
+            <h3>
+                🎁 My coupon is not working
+            </h3>
+
+            <p>
+                Check the offer's minimum order
+                value, expiry date, and eligibility
+                requirements before applying it.
+            </p>
+
+        </div>
+
+
+        <div class="solution">
+
+            <h3>
+                👤 I cannot login
+            </h3>
+
+            <p>
+                Check your username and password.
+                If the problem continues, use the
+                account recovery option or contact
+                our support team.
+            </p>
+
+        </div>
+
+
+        <div class="solution">
+
+            <h3>
+                🛵 My delivery is delayed
+            </h3>
+
+            <p>
+                Check the live order status first.
+                If your order remains delayed,
+                contact the Help Centre for assistance.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- FAQ -->
+
+    <div class="section-title">
+
+        <h2>
+            Frequently Asked Questions
+        </h2>
+
+    </div>
+
+
+    <section class="faq">
+
+
+        <details>
+
+            <summary>
+                How can I track my order?
+            </summary>
+
+            <p>
+                You can easily track your order from the
+                <strong>Track Order</strong> section in your
+                Thrifty Bite account. It shows the current
+                status of your order, including confirmation,
+                preparation, and delivery. You can also view
+                the estimated delivery time and order details.
+                If the order is delayed, contact our support
+                team for further assistance.
+            </p>
+
+        </details>
+
+
+        <details>
+
+            <summary>
+                Can I cancel my order?
+            </summary>
+
+            <p>
+                You may be able to cancel your order
+                depending on its current preparation status.
+                Open <strong>My Orders</strong> and select the
+                order you want to cancel. If the cancellation
+                option is available, follow the instructions
+                shown on the screen. Once the cancellation is
+                confirmed, the applicable refund process will
+                begin automatically.
+            </p>
+
+        </details>
+
+
+        <details>
+
+            <summary>
+                What should I do if I receive the wrong item?
+            </summary>
+
+            <p>
+                If you receive an incorrect food item, open
+                your order details and select the support
+                option. Provide the order number and explain
+                the issue clearly to our support team.
+                You may also be asked to provide a photo of
+                the received item for verification. Our team
+                will review the issue and help you with the
+                appropriate resolution as quickly as possible.
+            </p>
+
+        </details>
+
+
+        <details>
+
+            <summary>
+                How do Royal Rewards work?
+            </summary>
+
+            <p>
+                Royal Rewards allow you to collect
+                <strong>Royal Points</strong> through eligible
+                activities and orders on Thrifty Bite.
+                Your available points can be viewed from
+                the <strong>Rewards</strong> section of your
+                account. Depending on the available offers,
+                points may be used for eligible benefits,
+                discounts, or special rewards. Check the
+                Rewards section regularly for new benefits.
+            </p>
+
+        </details>
+
+
+        <details>
+
+            <summary>
+                How can I contact Thrifty Bite?
+            </summary>
+
+            <p>
+                You can contact the Thrifty Bite Help Centre
+                whenever you need assistance with your order
+                or account. Call our support number provided
+                at the bottom of this page for direct help.
+                You can also contact us through the support
+                email provided in the Help Centre. Keep your
+                order number ready so our team can identify
+                your issue quickly and provide the right
+                solution.
+            </p>
+
+        </details>
+
+
+        <details>
+
+            <summary>
+                What should I do if my payment was deducted?
+            </summary>
+
+            <p>
+                If money has been deducted but your order
+                was not successfully placed, first check
+                your <strong>My Orders</strong> section.
+                Sometimes the payment confirmation may take
+                a short time to update. If the order does not
+                appear, keep your payment transaction details
+                ready and contact our Help Centre. Our team
+                will verify the transaction and guide you
+                through the refund or resolution process.
+            </p>
+
+        </details>
+
+
+        <details>
+
+            <summary>
+                What can I do if my delivery is delayed?
+            </summary>
+
+            <p>
+                First, open the <strong>Track Order</strong>
+                section to check the latest delivery status.
+                Delivery times can occasionally change because
+                of traffic, weather, restaurant preparation,
+                or other unexpected situations. If the order
+                has exceeded the estimated delivery time,
+                contact our Help Centre for assistance.
+                Please keep your order number available when
+                contacting the support team.
+            </p>
+
+        </details>
+
+
+        <details>
+
+            <summary>
+                Why is my coupon or discount not working?
+            </summary>
+
+            <p>
+                Check whether your coupon is still valid and
+                whether your order meets the required minimum
+                order value. Some offers may only be available
+                for selected restaurants, users, or payment
+                methods. Also make sure that the coupon code
+                has been entered correctly without extra spaces.
+                If the offer should apply but does not work,
+                contact our Help Centre for further assistance.
+            </p>
+
+        </details>
+
+    </section>
+
+
+    <!-- USER PROBLEM / FEEDBACK -->
+
+    <section class="feedback-box">
+
+
+        <div class="feedback-title">
+
+            <h2>
+                Tell Us Your Problem
+            </h2>
+
+            <p>
+                Couldn't find a solution?
+                Describe your problem and we'll guide you.
+            </p>
+
+        </div>
+
+
+        <form
+            class="feedback-form"
+            id="feedbackForm">
+
+
+            <label for="userName">
+                Your Name
+            </label>
+
+            <input
+                type="text"
+                id="userName"
+                placeholder="Enter your name"
+                required
+            >
+
+
+            <label for="problem">
+                Describe Your Problem
+            </label>
+
+            <textarea
+                id="problem"
+                placeholder="Example: My payment was deducted but my order was not placed..."
+                required
+            ></textarea>
+
+
+            <button
+                type="submit"
+                class="submit-btn">
+
+                ✦ Submit Problem & Get Help
+
+            </button>
+
+        </form>
+
+
+        <!-- AUTOMATIC RESPONSE -->
+
+        <div
+            class="response-box"
+            id="responseBox">
+
+            <h3>
+                ✨ Thrifty Bite Support Response
+            </h3>
+
+            <p id="responseText"></p>
+
+        </div>
+
+
+        <!-- FEEDBACK HISTORY -->
+
+        <div class="feedback-history">
+
+            <h3>
+                Your Submitted Problems
+            </h3>
+
+            <div id="feedbackList"></div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- CONTACT -->
+
+    <section class="contact">
+
+        <h2>
+            Still Need Help?
+        </h2>
+
+        <p>
+            Our Help Centre team is here to assist you.
+        </p>
+
+
+        <a
+            href="tel:18001234567"
+            class="phone">
+
+            📞 1800-123-4567
+
+        </a>
+
+
+        <div class="contact-buttons">
+
+            <a
+                href="tel:18001234567"
+                class="contact-btn call-btn">
+
+                📞 Call Help Centre
+
+            </a>
+
+
+            <a
+                href="mailto:support@thriftybite.com"
+                class="contact-btn chat-btn">
+
+                ✉ Contact Support
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    © 2026
+    <span>Thrifty Bite</span>
+    · Royal Taste • Smart Price
+
+</footer>
+
+
+<script>
+
+/* =================================================
+   SEARCH HELP
+================================================= */
+
+function searchHelp(){
+
+    const input =
+        document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const cards =
+        document.querySelectorAll(".help-card");
+
+    cards.forEach(card => {
+
+        const text =
+            card.innerText.toLowerCase();
+
+        const keywords =
+            card.dataset.search.toLowerCase();
+
+        if(
+            input === "" ||
+            text.includes(input) ||
+            keywords.includes(input)
+        ){
+
+            card.style.display="block";
+
+        }else{
+
+            card.style.display="none";
+
+        }
+
+    });
+
+}
+
+
+/* =================================================
+   AUTOMATIC SUPPORT RESPONSE
+================================================= */
+
+function getResponse(problem){
+
+    const text = problem.toLowerCase();
+
+
+    /* PAYMENT */
+
+    if(
+        text.includes("payment") ||
+        text.includes("money") ||
+        text.includes("upi") ||
+        text.includes("card") ||
+        text.includes("transaction")
+    ){
+
+        return `
+        We understand that you are facing a payment-related
+        issue. Please check your My Orders section to see
+        whether the order was successfully created. If money
+        was deducted but the order was not created, keep your
+        transaction reference ready. Our support team can
+        verify the payment and guide you through the refund
+        or resolution process.
+        `;
+
+    }
+
+
+    /* DELIVERY */
+
+    if(
+        text.includes("delivery") ||
+        text.includes("delayed") ||
+        text.includes("late") ||
+        text.includes("rider") ||
+        text.includes("arrived")
+    ){
+
+        return `
+        We understand that you are experiencing a delivery
+        problem. Please open the Track Order section to check
+        the latest status of your order. Delivery time can
+        sometimes change because of traffic, weather, or
+        restaurant preparation. If your order has exceeded
+        the estimated delivery time, please contact our
+        Help Centre with your order number.
+        `;
+
+    }
+
+
+    /* ORDER */
+
+    if(
+        text.includes("order") ||
+        text.includes("food") ||
+        text.includes("wrong item") ||
+        text.includes("missing")
+    ){
+
+        return `
+        We understand that you are facing an issue with your
+        order. Please open My Orders and select the affected
+        order to check its current status and details. If you
+        received the wrong or missing item, provide the order
+        number and explain the issue clearly. Our support team
+        will review your request and help you with the
+        appropriate solution.
+        `;
+
+    }
+
+
+    /* REFUND */
+
+    if(
+        text.includes("refund") ||
+        text.includes("cancel") ||
+        text.includes("cancelled")
+    ){
+
+        return `
+        We understand that you need assistance regarding a
+        cancellation or refund. Please check your order
+        details to see the current cancellation and refund
+        status. Refund processing time can depend on your
+        payment provider. If the refund has not appeared
+        within the expected period, contact our Help Centre
+        with your order and payment details.
+        `;
+
+    }
+
+
+    /* LOGIN */
+
+    if(
+        text.includes("login") ||
+        text.includes("log in") ||
+        text.includes("password") ||
+        text.includes("account") ||
+        text.includes("profile")
+    ){
+
+        return `
+        We understand that you are having trouble with your
+        account. Please check that your login details are
+        entered correctly and try again. If you have forgotten
+        your password, use the account recovery option.
+        Make sure your registered contact information is
+        correct. If the problem continues, contact our Help
+        Centre and our team will assist you further.
+        `;
+
+    }
+
+
+    /* COUPON */
+
+    if(
+        text.includes("coupon") ||
+        text.includes("offer") ||
+        text.includes("discount") ||
+        text.includes("reward")
+    ){
+
+        return `
+        We understand that you are having an issue with an
+        offer, coupon, discount, or reward. Please check the
+        coupon expiry date, minimum order value, and eligibility
+        conditions. Some offers may only apply to selected
+        restaurants or payment methods. If the offer is valid
+        but still does not work, contact our Help Centre with
+        the coupon details for further assistance.
+        `;
+
+    }
+
+
+    /* GENERAL RESPONSE */
+
+    return `
+    Thank you for sharing your problem with Thrifty Bite.
+    We have recorded your feedback and our support guidance
+    has been generated based on the information provided.
+    Please check the relevant Help Centre sections above
+    for possible solutions. If your problem requires
+    additional assistance, please contact our Help Centre
+    using the support number provided below.
+    `;
+
+}
+
+
+/* =================================================
+   SUBMIT FEEDBACK
+================================================= */
+
+document
+.getElementById("feedbackForm")
+.addEventListener("submit",function(event){
+
+    event.preventDefault();
+
+
+    const name =
+        document
+        .getElementById("userName")
+        .value
+        .trim();
+
+
+    const problem =
+        document
+        .getElementById("problem")
+        .value
+        .trim();
+
+
+    if(!name || !problem){
+
+        alert("Please enter your name and problem.");
+
+        return;
+
+    }
+
+
+    const response =
+        getResponse(problem);
+
+
+    /* SHOW RESPONSE */
+
+    document
+    .getElementById("responseText")
+    .innerHTML =
+        response;
+
+
+    document
+    .getElementById("responseBox")
+    .classList
+    .add("show");
+
+
+    /* CREATE FEEDBACK OBJECT */
+
+    const feedback = {
+
+        id:Date.now(),
+
+        name:name,
+
+        problem:problem,
+
+        response:response,
+
+        date:new Date()
+        .toLocaleString()
+
+    };
+
+
+    /* GET OLD FEEDBACK */
+
+    let feedbacks =
+        JSON.parse(
+            localStorage.getItem(
+                "thriftyBiteFeedback"
+            )
+        ) || [];
+
+
+    /* ADD NEW FEEDBACK */
+
+    feedbacks.unshift(feedback);
+
+
+    /* SAVE FEEDBACK */
+
+    localStorage.setItem(
+        "thriftyBiteFeedback",
+        JSON.stringify(feedbacks)
+    );
+
+
+    /* DISPLAY */
+
+    displayFeedback();
+
+
+    /* CLEAR FORM */
+
+    document
+    .getElementById("problem")
+    .value="";
+
+});
+
+
+/* =================================================
+   DISPLAY STORED FEEDBACK
+================================================= */
+
+function displayFeedback(){
+
+    const list =
+        document
+        .getElementById("feedbackList");
+
+
+    const feedbacks =
+        JSON.parse(
+            localStorage.getItem(
+                "thriftyBiteFeedback"
+            )
+        ) || [];
+
+
+    list.innerHTML="";
+
+
+    if(feedbacks.length === 0){
+
+        list.innerHTML = `
+            <p style="
+                color:#71666a;
+                font-size:12px;
+            ">
+                No problems submitted yet.
+            </p>
+        `;
+
+        return;
+
+    }
+
+
+    feedbacks.forEach(item => {
+
+        const div =
+            document.createElement("div");
+
+
+        div.className =
+            "feedback-item";
+
+
+        div.innerHTML = `
+
+            <button
+                class="delete-btn"
+                onclick="deleteFeedback(${item.id})">
+
+                Delete
+
+            </button>
+
+            <div class="problem">
+
+                <strong style="color:#d4af37;">
+                    ${escapeHTML(item.name)}
+                </strong>
+
+                <br>
+
+                ${escapeHTML(item.problem)}
+
+            </div>
+
+            <div class="answer">
+
+                ${item.response}
+
+            </div>
+
+            <small>
+
+                Submitted:
+                ${escapeHTML(item.date)}
+
+            </small>
+
+        `;
+
+
+        list.appendChild(div);
+
+    });
+
+}
+
+
+/* =================================================
+   DELETE FEEDBACK
+================================================= */
+
+function deleteFeedback(id){
+
+    let feedbacks =
+        JSON.parse(
+            localStorage.getItem(
+                "thriftyBiteFeedback"
+            )
+        ) || [];
+
+
+    feedbacks =
+        feedbacks.filter(
+            item => item.id !== id
+        );
+
+
+    localStorage.setItem(
+        "thriftyBiteFeedback",
+        JSON.stringify(feedbacks)
+    );
+
+
+    displayFeedback();
+
+}
+
+
+/* =================================================
+   SECURITY: ESCAPE USER TEXT
+================================================= */
+
+function escapeHTML(text){
+
+    return text
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =================================================
+   LOAD PREVIOUS FEEDBACK
+================================================= */
+
+displayFeedback();
+
+</script>
+
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+</html>

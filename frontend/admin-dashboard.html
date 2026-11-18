@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thrifty Bite | Admin Dashboard</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/theme.css">
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+/* Admin overview additions */
+.admin-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:14px 0 18px}
+.admin-toolbar .muted{font-size:13px}
+.admin-overview-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,1fr);gap:18px;margin-bottom:18px}
+.admin-insight-card{background:rgba(255,248,232,.055);border:1px solid rgba(212,175,55,.2);border-radius:16px;padding:20px;min-width:0}
+.admin-insight-card h2{font-size:17px;margin-bottom:14px;color:var(--gold-light)}
+.admin-bars{display:flex;align-items:flex-end;gap:10px;height:170px;padding:12px 2px 0;border-bottom:1px solid rgba(255,248,232,.18)}
+.admin-bar-item{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:8px}
+.admin-bar{width:min(34px,70%);min-height:4px;border-radius:7px 7px 2px 2px;background:linear-gradient(180deg,#f7df7a,#d4af37);box-shadow:0 0 16px rgba(212,175,55,.12)}
+.admin-bar-label{font-size:11px;color:var(--muted);white-space:nowrap}
+.admin-bar-value{font-size:11px;color:var(--cream);font-weight:700}
+.admin-status-list{display:grid;gap:12px}
+.admin-status-row{display:grid;grid-template-columns:110px minmax(60px,1fr) 35px;gap:10px;align-items:center;font-size:12px}
+.admin-status-track{height:8px;border-radius:99px;background:rgba(255,255,255,.09);overflow:hidden}
+.admin-status-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#22c55e,#d4af37)}
+.admin-recent-list{display:grid;gap:0}
+.admin-recent-item{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,248,232,.09);font-size:13px}
+.admin-recent-item:last-child{border-bottom:0}
+.admin-search{width:100%;max-width:320px;padding:10px 12px;border:1px solid rgba(212,175,55,.3);border-radius:10px;background:rgba(0,0,0,.16);color:var(--cream)}
+.admin-search::placeholder{color:var(--muted)}
+.admin-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.admin-empty{padding:22px;text-align:center;color:var(--muted);font-size:13px}
+@media(max-width:760px){.admin-overview-grid{grid-template-columns:1fr}.admin-status-row{grid-template-columns:92px minmax(50px,1fr) 28px}.admin-insight-card{padding:15px}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="brand">
+        THRIFTY BITE
+        <span>ADMIN DASHBOARD</span>
+    </div>
+
+    <div class="nav-right">
+        <span class="muted small" id="adminName">Admin</span>
+        <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="page-header">
+        <h1>Admin Dashboard</h1>
+        <p>Platform-wide overview: users, orders and custom orders.</p>
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <div class="admin-toolbar">
+        <span class="muted" id="lastUpdated">Dashboard data loads from your backend.</span>
+        <button type="button" class="btn btn-outline btn-sm" id="refreshDashboard">↻ Refresh dashboard</button>
+    </div>
+    <div class="grid cols-3" id="reportCards"></div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="overview">Overview</button>
+        <button class="tab-btn" data-tab="customers">Customers</button>
+        <button class="tab-btn" data-tab="restaurants">Restaurants</button>
+        <button class="tab-btn" data-tab="chefs">Master Chefs</button>
+        <button class="tab-btn" data-tab="orders">Orders</button>
+        <button class="tab-btn" data-tab="menu">Menu Availability</button>
+        <button class="tab-btn" data-tab="customorders">Custom Orders</button>
+        <button class="tab-btn" data-tab="platformprices">Platform Price Comparison</button>
+        <button class="tab-btn" data-tab="coupons">Coupons</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-overview">
+        <div class="admin-overview-grid">
+            <section class="admin-insight-card">
+                <h2>Orders over the last 7 days</h2>
+                <p class="muted small">Based on orders recorded in your database.</p>
+                <div class="admin-bars" id="weeklyOrdersChart" role="img" aria-label="Orders by day"></div>
+            </section>
+            <section class="admin-insight-card">
+                <h2>Order status overview</h2>
+                <div class="admin-status-list" id="orderStatusSummary"><div class="admin-empty">Loading order statuses…</div></div>
+            </section>
+        </div>
+        <section class="admin-insight-card">
+            <div class="admin-section-head"><h2 style="margin:0">Recent orders</h2><button type="button" class="btn btn-outline btn-sm" id="viewAllOrders">View all orders</button></div>
+            <div class="admin-recent-list" id="recentOrdersList"><div class="admin-empty">Loading recent orders…</div></div>
+        </section>
+    </div>
+
+    <div class="tab-panel" id="tab-customers">
+        <div class="card">
+            <div class="admin-section-head"><h2 style="margin:0">Customers</h2><input class="admin-search" id="customerSearch" type="search" placeholder="Search name, email or mobile…" aria-label="Search customers"></div>
+            <div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Mobile</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="customersBody"></tbody></table></div>
+        </div>
+    </div>
+
+    <div class="tab-panel" id="tab-restaurants">
+        <div class="card">
+            <h2>Restaurants</h2>
+            <div class="table-wrap"><table><thead><tr><th>Name</th><th>Owner</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="restaurantsBody"></tbody></table></div>
+        </div>
+    </div>
+
+    <div class="tab-panel" id="tab-chefs">
+        <div class="card">
+            <h2>Master Chefs</h2>
+            <div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Mobile</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="chefsBody"></tbody></table></div>
+        </div>
+    </div>
+
+    <div class="tab-panel" id="tab-orders">
+        <div class="card">
+            <div class="admin-section-head"><h2 style="margin:0">All Orders</h2><input class="admin-search" id="orderSearch" type="search" placeholder="Search customer, restaurant or status…" aria-label="Search orders"></div>
+            <div class="table-wrap"><table><thead><tr><th>Customer</th><th>Restaurant</th><th>Total</th><th>Status</th><th>Update Status</th><th>Placed</th></tr></thead>
+            <tbody id="ordersBody"></tbody></table></div>
+        </div>
+    </div>
+
+    <div class="tab-panel" id="tab-menu">
+        <div class="card">
+            <div class="admin-section-head"><div><h2 style="margin:0">Menu availability</h2><p class="muted small">Unavailable dishes are hidden from customer menu discovery where availability is respected.</p></div><input class="admin-search" id="menuAdminSearch" type="search" placeholder="Search dish or restaurant…" aria-label="Search menu items"></div>
+            <div class="table-wrap"><table><thead><tr><th>Dish</th><th>Category</th><th>Restaurant</th><th>Price</th><th>Availability</th><th>Action</th></tr></thead><tbody id="adminMenuBody"><tr><td colspan="6" class="empty-state">Loading menu…</td></tr></tbody></table></div>
+        </div>
+    </div>
+
+    <div class="tab-panel" id="tab-customorders">
+        <div class="card">
+            <h2>All Custom Orders</h2>
+            <div class="table-wrap"><table><thead><tr><th>Customer</th><th>Chef</th><th>Food</th><th>Status</th><th>Update Status</th><th>Requested</th></tr></thead>
+            <tbody id="customOrdersBody"></tbody></table></div>
+        </div>
+    </div>
+
+    <div class="tab-panel" id="tab-platformprices">
+        <div class="card">
+            <h2>Add / Update Platform Price</h2>
+            <p class="muted small">Sample/reference data only — never represented as live Swiggy or Zomato pricing.</p>
+            <div class="form-row mt-12">
+                <div class="form-group">
+                    <label>Menu Item</label>
+                    <input type="text" id="pp_menuSearch" placeholder="Search dish name..." list="pp_menuOptions">
+                    <datalist id="pp_menuOptions"></datalist>
+                </div>
+                <div class="form-group">
+                    <label>Platform</label>
+                    <select id="pp_platform">
+                        <option value="SWIGGY">Swiggy</option>
+                        <option value="ZOMATO">Zomato</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>External Restaurant Name</label><input type="text" id="pp_extRestaurant" placeholder="e.g. Paradise Restaurant"></div>
+                <div class="form-group"><label>External Food Name</label><input type="text" id="pp_extFood" placeholder="Defaults to the dish name"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Food Price (₹)</label><input type="number" id="pp_price" min="0" required></div>
+                <div class="form-group"><label>Delivery Fee (₹)</label><input type="number" id="pp_delivery" min="0" value="0"></div>
+                <div class="form-group"><label>Packaging Fee (₹)</label><input type="number" id="pp_packaging" min="0" value="0"></div>
+                <div class="form-group"><label>Tax (₹)</label><input type="number" id="pp_tax" min="0" value="0"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Availability</label>
+                    <select id="pp_availability">
+                        <option value="true">Available</option>
+                        <option value="false">Unavailable</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-sm" onclick="savePlatformPrice()">Save Platform Price</button>
+        </div>
+
+        <div class="card">
+            <h2>Platform Price Comparison Records</h2>
+            <div class="table-wrap"><table><thead><tr><th>Dish</th><th>Restaurant</th><th>Platform</th><th>Food Price</th><th>Delivery</th><th>Packaging</th><th>Tax</th><th>Total</th><th>Available</th><th>Last Updated</th><th>Actions</th></tr></thead>
+            <tbody id="platformPricesBody"></tbody></table></div>
+        </div>
+    </div>
+
+    <div class="tab-panel" id="tab-coupons">
+        <div class="card">
+            <h2>Add Special Coupon</h2>
+            <p class="muted small">Customers see active coupons on the checkout page. "First order only" coupons are hidden once a customer has placed an order.</p>
+            <div class="form-row mt-12">
+                <div class="form-group"><label>Coupon Code</label><input type="text" id="cp_code" placeholder="e.g. DIWALI25" style="text-transform:uppercase"></div>
+                <div class="form-group"><label>Title</label><input type="text" id="cp_title" placeholder="e.g. Diwali special"></div>
+            </div>
+            <div class="form-group"><label>Description</label><input type="text" id="cp_description" placeholder="e.g. 25% off on all orders above ₹249"></div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Discount Type</label>
+                    <select id="cp_type">
+                        <option value="PERCENT">Percentage (%)</option>
+                        <option value="FLAT">Flat amount (₹)</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Discount Value</label><input type="number" id="cp_value" min="1" placeholder="e.g. 25"></div>
+                <div class="form-group"><label>Max Discount (₹)</label><input type="number" id="cp_max" min="0" placeholder="No limit"></div>
+                <div class="form-group"><label>Min Order (₹)</label><input type="number" id="cp_min" min="0" value="0"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Uses per Customer</label><input type="number" id="cp_perUser" min="1" value="1"></div>
+                <div class="form-group"><label>Valid Until</label><input type="date" id="cp_validUntil"></div>
+                <div class="form-group">
+                    <label>Who can use it</label>
+                    <select id="cp_firstOrder">
+                        <option value="false">All customers</option>
+                        <option value="true">First order only</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-sm" onclick="saveCoupon()">Create Coupon</button>
+        </div>
+
+        <div class="card">
+            <h2>All Coupons</h2>
+            <div class="table-wrap"><table><thead><tr><th>Code</th><th>Offer</th><th>Min Order</th><th>For</th><th>Uses / Customer</th><th>Valid Until</th><th>Times Used</th><th>Discount Given</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="couponsBody"></tbody></table></div>
+        </div>
+    </div>
+
+</div>
+
+<script src="assets/api.js"></script>
+<script>
+
+const user = requireAuth(["ADMIN"]);
+
+if(user){
+
+    document.getElementById("adminName").textContent = user.name || user.username;
+
+    const messageEl = document.getElementById("message");
+    let adminOrdersCache = [];
+    let adminCustomersCache = [];
+    let adminMenuCache = [];
+
+    document.querySelectorAll(".tab-btn").forEach(function(btn){
+        btn.addEventListener("click", function(){
+            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+            document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+            btn.classList.add("active");
+            document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+        });
+    });
+
+    document.getElementById("refreshDashboard").addEventListener("click", refreshAdminDashboard);
+    document.getElementById("customerSearch").addEventListener("input", function(){
+        const q=this.value.trim().toLowerCase();
+        const filtered=adminCustomersCache.filter(u=>!q || [u.name,u.username,u.email,u.mobile].some(v=>String(v||"").toLowerCase().includes(q)));
+        document.getElementById("customersBody").innerHTML=filtered.length?filtered.map(u=>userRow(u,"customers")).join(""):'<tr><td colspan="5" class="empty-state">No matching customers found.</td></tr>';
+    });
+    document.getElementById("orderSearch").addEventListener("input", renderOrdersTable);
+    document.getElementById("menuAdminSearch").addEventListener("input", renderAdminMenu);
+    document.getElementById("viewAllOrders").addEventListener("click", function(){document.querySelector('[data-tab="orders"]').click();});
+
+    async function loadReports(){
+        try{
+            const data = await apiFetch("/admin/reports");
+            const r = data.report;
+            const cards = [
+                ["Customers", r.totalCustomers],
+                ["Restaurants", r.totalRestaurants],
+                ["Master Chefs", r.totalChefs],
+                ["Normal Orders", r.totalOrders],
+                ["Custom Orders", r.totalCustomOrders],
+                ["Completed Revenue", formatMoney(r.totalCompletedOrderRevenue)]
+            ];
+            document.getElementById("reportCards").innerHTML = cards.map(function(c){
+                return "<div class='card'><div class='muted small'>" + escapeHtml(c[0]) + "</div><div style='font-size:26px;color:var(--gold-light);margin-top:8px'>" + escapeHtml(c[1]) + "</div></div>";
+            }).join("");
+            document.getElementById("lastUpdated").textContent = "Last refreshed " + new Date().toLocaleTimeString("en-IN", {hour:"2-digit", minute:"2-digit"}) + " · Live database data";
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    function userRow(u, group){
+        return "<tr>"
+            + "<td>" + escapeHtml(u.name || u.username) + "</td>"
+            + (group === "restaurants" ? "<td>" + escapeHtml(u.ownerName || "-") + "</td>" : "")
+            + "<td>" + escapeHtml(u.email) + "</td>"
+            + (group !== "restaurants" ? "<td>" + escapeHtml(u.mobile || "-") + "</td>" : "")
+            + "<td><span class='badge " + (u.isActive ? "success" : "danger") + "'>" + (u.isActive ? "Active" : "Inactive") + "</span></td>"
+            + "<td><button class='btn btn-sm btn-outline' onclick=\"toggleActive('" + u._id + "', " + !u.isActive + ")\">"
+                + (u.isActive ? "Deactivate" : "Activate") + "</button></td>"
+            + "</tr>";
+    }
+
+    async function loadUsers(group, bodyId){
+        try{
+            const data = await apiFetch("/admin/" + group);
+            const body = document.getElementById(bodyId);
+            if(group === "customers") adminCustomersCache = data.users || [];
+            const users = (data.users || []).filter(function(u){
+                if(group !== "customers") return true;
+                const q = (document.getElementById("customerSearch")?.value || "").trim().toLowerCase();
+                return !q || [u.name, u.username, u.email, u.mobile].some(v => String(v || "").toLowerCase().includes(q));
+            });
+            body.innerHTML = users.length
+                ? users.map(u => userRow(u, group)).join("")
+                : '<tr><td colspan="5" class="empty-state">No matching records found.</td></tr>';
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    window.toggleActive = async function toggleActive(id, isActive){
+        try{
+            await apiFetch("/admin/users/" + id + "/status", {
+                method: "PUT",
+                body: JSON.stringify({ isActive })
+            });
+            showMessage(messageEl, "User status updated!", "success");
+            loadUsers("customers", "customersBody");
+            loadUsers("restaurants", "restaurantsBody");
+            loadUsers("chefs", "chefsBody");
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    async function loadOrders(){
+        try{
+            const data = await apiFetch("/admin/orders");
+            adminOrdersCache = data.orders || [];
+            renderOrdersTable();
+            renderAdminOverview();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    function renderOrdersTable(){
+        const body = document.getElementById("ordersBody");
+        const q = (document.getElementById("orderSearch")?.value || "").trim().toLowerCase();
+        const orders = adminOrdersCache.filter(function(o){
+            const customer = o.customerId ? (o.customerId.name || o.customerId.username || "") : "";
+            const restaurant = o.restaurantId ? (o.restaurantId.name || "") : "";
+            return !q || [customer, restaurant, o.status, o.paymentMethod, o.paymentStatus].some(v => String(v || "").toLowerCase().includes(q));
+        });
+        body.innerHTML = orders.length ? orders.map(function(o){
+            return "<tr>"
+                + "<td>" + escapeHtml(o.customerId ? (o.customerId.name || o.customerId.username) : "-") + "</td>"
+                + "<td>" + escapeHtml(o.restaurantId ? o.restaurantId.name : "-") + "</td>"
+                + "<td>" + formatMoney(o.totalAmount) + "</td>"
+                + "<td><span class='badge " + statusBadgeClass(o.status) + "'>" + escapeHtml(statusLabel(o.status)) + "</span></td>"
+                + "<td><div style='display:flex;gap:6px;min-width:220px'><select aria-label='New status' id='order-status-"+escapeHtml(o._id)+"' class='admin-search' style='max-width:155px;padding:7px'>" + orderStatusOptions(o.status) + "</select><button class='btn btn-sm' type='button' onclick=\"updateOrderStatus('"+escapeHtml(o._id)+"')\">Save</button></div></td>"
+                + "<td>" + formatDateTime(o.createdAt) + "</td>"
+                + "</tr>";
+        }).join("") : '<tr><td colspan="6" class="empty-state">No matching orders found.</td></tr>';
+    }
+
+    const ORDER_STATUS_OPTIONS = ["PLACED","ACCEPTED","PREPARING","PACKED","READY","SHIPPED","OUT_FOR_DELIVERY","DELIVERED","COMPLETED","REJECTED"];
+    const CUSTOM_STATUS_OPTIONS = ["REQUESTED","CHEF_ACCEPTED","CHEF_PROPOSED","CONFIRMED","PREPARING","READY","OUT_FOR_DELIVERY","DELIVERED","COMPLETED","REJECTED","CANCELLED"];
+    function orderStatusOptions(current){ return ORDER_STATUS_OPTIONS.map(s=>"<option value='"+s+"' "+(String(current||"").toUpperCase()===s?"selected":"")+">"+escapeHtml(statusLabel(s))+"</option>").join(""); }
+    function customStatusOptions(current){ return CUSTOM_STATUS_OPTIONS.map(s=>"<option value='"+s+"' "+(String(current||"").toUpperCase()===s?"selected":"")+">"+escapeHtml(statusLabel(s))+"</option>").join(""); }
+    window.updateOrderStatus = async function(id){
+        const select=document.getElementById("order-status-"+id); if(!select)return;
+        try{ const data=await apiFetch("/admin/orders/"+id+"/status",{method:"PUT",body:JSON.stringify({status:select.value})}); showMessage(messageEl,data.message||"Order status updated.","success"); await Promise.all([loadOrders(),loadReports()]); }
+        catch(err){showMessage(messageEl,err.message||"Could not update order status.","error");}
+    };
+    window.updateCustomOrderStatus = async function(id){
+        const select=document.getElementById("custom-status-"+id); if(!select)return;
+        try{ const data=await apiFetch("/admin/custom-orders/"+id+"/status",{method:"PUT",body:JSON.stringify({status:select.value})}); showMessage(messageEl,data.message||"Custom order status updated.","success"); await loadCustomOrders(); }
+        catch(err){showMessage(messageEl,err.message||"Could not update custom order status.","error");}
+    };
+    async function loadAdminMenu(){
+        try{const data=await apiFetch("/admin/menu");adminMenuCache=data.menu||[];renderAdminMenu();}
+        catch(err){showMessage(messageEl,err.message||"Could not load menu items.","error");}
+    }
+    function renderAdminMenu(){
+        const body=document.getElementById("adminMenuBody");if(!body)return;
+        const q=(document.getElementById("menuAdminSearch")?.value||"").trim().toLowerCase();
+        const rows=adminMenuCache.filter(m=>!q||[m.name,m.category,m.restaurantId?.name].some(v=>String(v||"").toLowerCase().includes(q)));
+        body.innerHTML=rows.length?rows.map(m=>"<tr><td>"+escapeHtml(m.name)+"</td><td>"+escapeHtml(m.category)+"</td><td>"+escapeHtml(m.restaurantId?.name||"-")+"</td><td>"+formatMoney(m.discountPrice??m.price)+"</td><td><span class='badge "+(m.isAvailable?"success":"danger")+"'>"+(m.isAvailable?"Available":"Unavailable")+"</span></td><td><button type='button' class='btn btn-sm "+(m.isAvailable?"btn-outline":"")+"' onclick=\"toggleMenuAvailability('"+escapeHtml(m._id)+"',"+(!m.isAvailable)+")\">Set "+(m.isAvailable?"Unavailable":"Available")+"</button></td></tr>").join(""):'<tr><td colspan="6" class="empty-state">No matching menu items found.</td></tr>';
+    }
+    window.toggleMenuAvailability=async function(id,isAvailable){
+        try{const data=await apiFetch("/admin/menu/"+id+"/availability",{method:"PUT",body:JSON.stringify({isAvailable})});showMessage(messageEl,data.message||"Menu availability updated.","success");await loadAdminMenu();}
+        catch(err){showMessage(messageEl,err.message||"Could not update menu availability.","error");}
+    };
+
+    function renderAdminOverview(){
+        const orders = adminOrdersCache;
+        const today = new Date();
+        const days = [];
+        for(let i=6;i>=0;i--){ const d=new Date(today); d.setHours(0,0,0,0); d.setDate(d.getDate()-i); days.push(d); }
+        const daily = days.map(function(day){
+            const next = new Date(day); next.setDate(next.getDate()+1);
+            return orders.filter(o => { const d=new Date(o.createdAt); return !isNaN(d) && d>=day && d<next; }).length;
+        });
+        const max = Math.max(1, ...daily);
+        document.getElementById("weeklyOrdersChart").innerHTML = daily.map(function(count,i){
+            const label = days[i].toLocaleDateString("en-IN", {weekday:"short"});
+            const height = Math.max(4, Math.round(count/max*112));
+            return "<div class='admin-bar-item'><span class='admin-bar-value'>"+count+"</span><div class='admin-bar' style='height:"+height+"px' title='"+count+" order(s)'></div><span class='admin-bar-label'>"+label+"</span></div>";
+        }).join("");
+        const statuses = ["PLACED","ACCEPTED","PREPARING","PACKED","READY","SHIPPED","OUT_FOR_DELIVERY","DELIVERED","COMPLETED","REJECTED"];
+        const counts = statuses.map(status => ({status, count:orders.filter(o => String(o.status || "").toUpperCase()===status).length})).filter(x=>x.count>0);
+        const maxStatus = Math.max(1,...counts.map(x=>x.count));
+        document.getElementById("orderStatusSummary").innerHTML = counts.length ? counts.map(x => "<div class='admin-status-row'><span>"+escapeHtml(statusLabel(x.status))+"</span><div class='admin-status-track'><div class='admin-status-fill' style='width:"+Math.round(x.count/maxStatus*100)+"%'></div></div><strong>"+x.count+"</strong></div>").join("") : '<div class="admin-empty">No order status data yet.</div>';
+        const recent = orders.slice().sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).slice(0,6);
+        document.getElementById("recentOrdersList").innerHTML = recent.length ? recent.map(function(o){
+            const name = o.customerId ? (o.customerId.name || o.customerId.username || "Customer") : "Customer";
+            return "<div class='admin-recent-item'><div><strong>"+escapeHtml(name)+"</strong><div class='muted small'>"+escapeHtml(statusLabel(o.status))+" · "+formatDateTime(o.createdAt)+"</div></div><strong>"+formatMoney(o.totalAmount)+"</strong></div>";
+        }).join("") : '<div class="admin-empty">No orders have been placed yet. New orders will appear here.</div>';
+    }
+
+    async function refreshAdminDashboard(){
+        const btn=document.getElementById("refreshDashboard");
+        if(btn){btn.disabled=true;btn.textContent="Refreshing…";}
+        await Promise.all([loadReports(),loadUsers("customers","customersBody"),loadUsers("restaurants","restaurantsBody"),loadUsers("chefs","chefsBody"),loadOrders(),loadCustomOrders(),loadMenuItemsForSearch(),loadAdminMenu(),loadPlatformPrices(),loadCoupons()]);
+        document.getElementById("lastUpdated").textContent="Last refreshed: "+new Date().toLocaleString();
+        if(btn){btn.disabled=false;btn.textContent="↻ Refresh dashboard";}
+    }
+
+    async function loadCustomOrders(){
+        try{
+            const data = await apiFetch("/admin/custom-orders");
+            const body = document.getElementById("customOrdersBody");
+            body.innerHTML = (data.orders || []).length
+                ? data.orders.map(function(o){
+                    return "<tr>"
+                        + "<td>" + escapeHtml(o.customerId ? (o.customerId.name || o.customerId.username) : "-") + "</td>"
+                        + "<td>" + escapeHtml(o.chefId ? (o.chefId.name || o.chefId.username) : "Unassigned") + "</td>"
+                        + "<td>" + escapeHtml(o.foodRequired) + "</td>"
+                        + "<td><span class='badge " + statusBadgeClass(o.status) + "'>" + escapeHtml(statusLabel(o.status)) + "</span></td>"
+                        + "<td><div style='display:flex;gap:6px;min-width:240px'><select id='custom-status-"+escapeHtml(o._id)+"' class='admin-search' style='max-width:170px;padding:7px' aria-label='New custom order status'>"+customStatusOptions(o.status)+"</select><button type='button' class='btn btn-sm' onclick=\"updateCustomOrderStatus('"+escapeHtml(o._id)+"')\">Save</button></div></td>"
+                        + "<td>" + formatDateTime(o.createdAt) + "</td>"
+                        + "</tr>";
+                }).join("")
+                : '<tr><td colspan="6" class="empty-state">No custom orders yet.</td></tr>';
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    /* =========================================================
+       PLATFORM PRICE COMPARISON (§19.6)
+    ========================================================= */
+
+    let menuOptionsMap = {};
+
+    async function loadMenuItemsForSearch(){
+        try{
+            const data = await apiFetch("/menu/all");
+            menuOptionsMap = {};
+
+            document.getElementById("pp_menuOptions").innerHTML = (data.menu || []).map(function(dish){
+                const restName = dish.restaurantId ? (dish.restaurantId.name || "") : "";
+                const label = dish.name + " — " + restName;
+                menuOptionsMap[label] = dish._id;
+                return "<option value=\"" + escapeHtml(label) + "\"></option>";
+            }).join("");
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    window.savePlatformPrice = async function savePlatformPrice(){
+        const menuItemId = menuOptionsMap[document.getElementById("pp_menuSearch").value];
+
+        if(!menuItemId){
+            showMessage(messageEl, "Select a valid menu item from the list.", "error");
+            return;
+        }
+
+        const price = Number(document.getElementById("pp_price").value);
+        if(!price){
+            showMessage(messageEl, "Enter a food price.", "error");
+            return;
+        }
+
+        try{
+            await apiFetch("/admin/platform-prices", {
+                method: "POST",
+                body: JSON.stringify({
+                    menuItemId,
+                    platform: document.getElementById("pp_platform").value,
+                    externalRestaurantName: document.getElementById("pp_extRestaurant").value.trim(),
+                    externalFoodName: document.getElementById("pp_extFood").value.trim(),
+                    price,
+                    deliveryFee: Number(document.getElementById("pp_delivery").value) || 0,
+                    packagingFee: Number(document.getElementById("pp_packaging").value) || 0,
+                    tax: Number(document.getElementById("pp_tax").value) || 0,
+                    availability: document.getElementById("pp_availability").value === "true"
+                })
+            });
+
+            showMessage(messageEl, "Platform price saved!", "success");
+            loadPlatformPrices();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    async function loadPlatformPrices(){
+        try{
+            const data = await apiFetch("/admin/platform-prices");
+            const body = document.getElementById("platformPricesBody");
+
+            body.innerHTML = (data.platformPrices || []).length
+                ? data.platformPrices.map(function(p){
+                    return "<tr>"
+                        + "<td>" + escapeHtml(p.menuItemId ? p.menuItemId.name : "-") + "</td>"
+                        + "<td>" + escapeHtml(p.restaurantId ? p.restaurantId.name : "-") + "</td>"
+                        + "<td>" + escapeHtml(p.platform) + "</td>"
+                        + "<td>" + formatMoney(p.price) + "</td>"
+                        + "<td>" + formatMoney(p.deliveryFee) + "</td>"
+                        + "<td>" + formatMoney(p.packagingFee) + "</td>"
+                        + "<td>" + formatMoney(p.tax) + "</td>"
+                        + "<td><strong>" + formatMoney(p.totalPrice) + "</strong></td>"
+                        + "<td><span class='badge " + (p.availability ? "success" : "danger") + "'>" + (p.availability ? "Yes" : "No") + "</span></td>"
+                        + "<td>" + formatDate(p.lastUpdated) + "</td>"
+                        + "<td><button class='btn btn-sm btn-outline' onclick=\"deletePlatformPrice('" + p._id + "')\">Delete</button></td>"
+                        + "</tr>";
+                }).join("")
+                : '<tr><td colspan="11" class="empty-state">No platform price records yet.</td></tr>';
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    window.deletePlatformPrice = async function deletePlatformPrice(id){
+        try{
+            await apiFetch("/admin/platform-prices/" + id, { method: "DELETE" });
+            showMessage(messageEl, "Platform price deleted.", "success");
+            loadPlatformPrices();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    /* =========================================================
+       COUPONS
+    ========================================================= */
+
+    window.saveCoupon = async function saveCoupon(){
+        const payload = {
+            code: document.getElementById("cp_code").value.trim(),
+            title: document.getElementById("cp_title").value.trim(),
+            description: document.getElementById("cp_description").value.trim(),
+            discountType: document.getElementById("cp_type").value,
+            discountValue: document.getElementById("cp_value").value,
+            maxDiscount: document.getElementById("cp_max").value,
+            minOrderAmount: document.getElementById("cp_min").value,
+            perUserLimit: document.getElementById("cp_perUser").value,
+            validUntil: document.getElementById("cp_validUntil").value || null,
+            firstOrderOnly: document.getElementById("cp_firstOrder").value === "true"
+        };
+
+        // "Valid until" date means valid through the end of that day
+        if(payload.validUntil) payload.validUntil = payload.validUntil + "T23:59:59";
+
+        try{
+            const data = await apiFetch("/admin/coupons", {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+            showMessage(messageEl, data.message, "success");
+            ["cp_code","cp_title","cp_description","cp_value","cp_max","cp_validUntil"].forEach(id => document.getElementById(id).value = "");
+            document.getElementById("cp_min").value = "0";
+            document.getElementById("cp_perUser").value = "1";
+            loadCoupons();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    async function loadCoupons(){
+        try{
+            const data = await apiFetch("/admin/coupons");
+            const body = document.getElementById("couponsBody");
+
+            body.innerHTML = (data.coupons || []).length
+                ? data.coupons.map(function(c){
+                    const offer = c.discountType === "PERCENT"
+                        ? c.discountValue + "%" + (c.maxDiscount ? " (max " + formatMoney(c.maxDiscount) + ")" : "")
+                        : formatMoney(c.discountValue) + " flat";
+                    const expired = c.validUntil && new Date(c.validUntil) < new Date();
+                    const status = !c.active ? ["danger", "Disabled"] : expired ? ["danger", "Expired"] : ["success", "Active"];
+
+                    return "<tr>"
+                        + "<td><strong>" + escapeHtml(c.code) + "</strong><div class='muted small'>" + escapeHtml(c.title || "") + "</div></td>"
+                        + "<td>" + offer + "</td>"
+                        + "<td>" + formatMoney(c.minOrderAmount) + "</td>"
+                        + "<td>" + (c.firstOrderOnly ? "First order" : "Everyone") + "</td>"
+                        + "<td>" + c.perUserLimit + "</td>"
+                        + "<td>" + (c.validUntil ? formatDate(c.validUntil) : "No expiry") + "</td>"
+                        + "<td>" + (c.timesUsed || 0) + "</td>"
+                        + "<td>" + formatMoney(c.totalDiscountGiven || 0) + "</td>"
+                        + "<td><span class='badge " + status[0] + "'>" + status[1] + "</span></td>"
+                        + "<td class='flex gap-8'>"
+                            + "<button class='btn btn-sm btn-outline' onclick=\"toggleCoupon('" + c._id + "', " + !c.active + ")\">" + (c.active ? "Disable" : "Enable") + "</button>"
+                            + "<button class='btn btn-sm btn-danger' onclick=\"deleteCoupon('" + c._id + "', '" + escapeHtml(c.code) + "')\">Delete</button>"
+                        + "</td>"
+                        + "</tr>";
+                }).join("")
+                : '<tr><td colspan="10" class="empty-state">No coupons yet.</td></tr>';
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    window.toggleCoupon = async function toggleCoupon(id, active){
+        try{
+            await apiFetch("/admin/coupons/" + id, {
+                method: "PUT",
+                body: JSON.stringify({ active })
+            });
+            loadCoupons();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    window.deleteCoupon = async function deleteCoupon(id, code){
+        if(!confirm("Delete coupon " + code + "? Customers will no longer be able to use it.")) return;
+        try{
+            await apiFetch("/admin/coupons/" + id, { method: "DELETE" });
+            showMessage(messageEl, "Coupon deleted.", "success");
+            loadCoupons();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    refreshAdminDashboard();
+
+}
+
+</script>
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+</html>

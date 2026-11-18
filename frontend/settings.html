@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thrifty Bite | Account Settings</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/theme.css">
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="brand">
+        THRIFTY BITE
+        <span>ACCOUNT SETTINGS</span>
+    </div>
+
+    <nav class="nav-links">
+        <a href="profile.html">Profile</a>
+    </nav>
+
+    <div class="nav-right">
+        <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="page-header">
+        <h1>Account Settings</h1>
+        <p>Manage your account security.</p>
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <div class="card" style="max-width:760px;margin-bottom:20px">
+        <h2>Website Appearance</h2>
+        <p style="margin:8px 0 16px;color:var(--muted,#6b7280)">Choose Dark Theme or Light Theme. Your choice is saved in this browser and applies throughout Thrifty Bite.</p>
+        <div class="form-group">
+          <label for="themeChoice">Colour palette</label>
+          <select id="themeChoice">
+            <option value="dark">Dark Theme — dark burgundy and gold</option>
+            <option value="light">Light Theme — light burgundy and gold</option>
+          </select>
+        </div>
+        <button type="button" class="btn" id="applyThemeBtn" style="margin-top:12px">Apply Theme</button>
+        <p id="themeMessage" role="status" aria-live="polite" style="margin-top:10px;color:var(--muted,#6b7280)">Choose a palette and click Apply Theme to use it throughout the website.</p>
+    </div>
+
+    <div class="card" style="max-width:480px">
+        <h2>Change Password</h2>
+        <form id="passwordForm">
+            <div class="form-group">
+                <label>Current Password</label>
+                <input type="password" id="currentPassword" required>
+            </div>
+            <div class="form-group">
+                <label>New Password</label>
+                <input type="password" id="newPassword" minlength="8" required>
+            </div>
+            <div class="form-group">
+                <label>Confirm New Password</label>
+                <input type="password" id="confirmPassword" minlength="8" required>
+            </div>
+            <button type="submit" class="btn">Change Password</button>
+        </form>
+    </div>
+
+
+    <div class="card" style="max-width:760px;margin-top:20px">
+        <h2>Personal Preferences</h2>
+        <p style="margin:8px 0 18px;color:var(--muted,#6b7280)">These choices are saved in this browser and apply when supported by the site.</p>
+        <div class="form-group"><label for="dietPreference">Diet preference</label><select id="dietPreference"><option value="all">No preference</option><option value="vegetarian">Vegetarian</option><option value="vegan">Vegan</option><option value="non-veg">Non-vegetarian</option></select></div>
+        <div class="form-group"><label for="defaultCuisine">Preferred cuisine</label><select id="defaultCuisine"><option value="any">Any cuisine</option><option>South Indian</option><option>North Indian</option><option>Biryani</option><option>Chinese</option><option>Italian</option></select></div>
+        <div class="form-group"><label><input type="checkbox" id="orderUpdates" style="width:auto;margin-right:8px"> Show order update notifications</label></div>
+        <div class="form-group"><label><input type="checkbox" id="saveCart" style="width:auto;margin-right:8px"> Keep my cart saved on this device</label></div>
+        <div class="form-group"><label><input type="checkbox" id="reducedMotion" style="width:auto;margin-right:8px"> Reduce animations</label></div>
+        <div class="form-group"><label><input type="checkbox" id="welcomeMusic" style="width:auto;margin-right:8px"> Enable pleasant background music on the Menu page only</label></div>
+        <div class="form-group"><label><input type="checkbox" id="welcomeVoice" style="width:auto;margin-right:8px"> Speak “Welcome to Thrifty Bite” after registration</label></div>
+        <p style="margin:0 0 14px;color:var(--muted,#6b7280);font-size:13px">Background music is a soft, looping melody generated in your browser. Music plays only on the Menu page. Use the music control there to start or mute it. Browsers require one click or key press before sound can begin.</p>
+        <button type="button" class="btn" id="savePreferences">Save Preferences</button>
+        <button type="button" class="btn btn-outline" id="resetPreferences" style="margin-left:8px">Reset Preferences</button>
+        <p id="preferencesMessage" role="status" style="margin-top:12px"></p>
+    </div>
+    <div class="card" style="max-width:760px;margin-top:20px">
+        <h2>Privacy & Account</h2>
+        <p>Review how your account information is used.</p>
+        <p style="display:flex;gap:14px;flex-wrap:wrap"><a href="terms.html">Terms &amp; Conditions</a><a href="privacy.html">Privacy Policy</a><a href="help.html">Contact Help Centre</a></p>
+        <button type="button" class="btn btn-outline" id="clearLocalPreferences">Clear saved preferences</button>
+    </div>
+
+</div>
+
+<script src="assets/api.js"></script>
+<script>
+
+requireAuth(["CUSTOMER", "RESTAURANT", "MASTER_CHEF", "ADMIN"]);
+
+const messageEl = document.getElementById("message");
+
+document.getElementById("passwordForm").addEventListener("submit", async function(e){
+    e.preventDefault();
+
+    const currentPassword = document.getElementById("currentPassword").value;
+    const newPassword = document.getElementById("newPassword").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    if(newPassword !== confirmPassword){
+        showMessage(messageEl, "New passwords do not match.", "error");
+        return;
+    }
+
+    try{
+        await apiFetch("/profile/password", {
+            method: "PUT",
+            body: JSON.stringify({ currentPassword, newPassword })
+        });
+        showMessage(messageEl, "Password changed successfully!", "success");
+        document.getElementById("passwordForm").reset();
+    }catch(err){
+        showMessage(messageEl, err.message, "error");
+    }
+});
+
+
+const PREF_KEY = "thriftyBitePreferences";
+const prefDefaults = { dietPreference: "all", defaultCuisine: "any", orderUpdates: true, saveCart: true, reducedMotion: false, welcomeMusic: true, welcomeVoice: true };
+function loadPreferences(){
+ let saved={};try{saved=JSON.parse(localStorage.getItem(PREF_KEY)||"{}")}catch(e){}
+ const prefs={...prefDefaults,...saved};
+ Object.keys(prefDefaults).forEach(key=>{const el=document.getElementById(key);if(el){if(el.type==="checkbox")el.checked=Boolean(prefs[key]);else el.value=prefs[key]}});
+ document.documentElement.classList.toggle("reduce-motion",prefs.reducedMotion);
+}
+function collectPreferences(){return {dietPreference:document.getElementById("dietPreference").value,defaultCuisine:document.getElementById("defaultCuisine").value,orderUpdates:document.getElementById("orderUpdates").checked,saveCart:document.getElementById("saveCart").checked,reducedMotion:document.getElementById("reducedMotion").checked,welcomeMusic:document.getElementById("welcomeMusic").checked,welcomeVoice:document.getElementById("welcomeVoice").checked}}
+function savePrefs(prefs){localStorage.setItem(PREF_KEY,JSON.stringify(prefs));localStorage.setItem("thriftyBiteMusic",prefs.welcomeMusic ? "on" : "off");localStorage.setItem("thriftyBiteVoice",prefs.welcomeVoice ? "on" : "off");}
+document.getElementById("savePreferences").addEventListener("click",()=>{const prefs=collectPreferences();savePrefs(prefs);document.documentElement.classList.toggle("reduce-motion",prefs.reducedMotion);if(window.ThriftyBiteMusic)window.ThriftyBiteMusic.refresh();document.getElementById("preferencesMessage").textContent=prefs.welcomeMusic?"Preferences saved. Background music is enabled; click anywhere on the page if it has not started.":"Preferences saved. Background music is muted.";});
+document.getElementById("resetPreferences").addEventListener("click",()=>{localStorage.removeItem(PREF_KEY);localStorage.setItem("thriftyBiteMusic","on");localStorage.setItem("thriftyBiteVoice","on");loadPreferences();document.getElementById("preferencesMessage").textContent="Preferences reset to defaults.";});
+document.getElementById("clearLocalPreferences").addEventListener("click",()=>{localStorage.removeItem(PREF_KEY);localStorage.setItem("thriftyBiteMusic","on");localStorage.setItem("thriftyBiteVoice","on");loadPreferences();document.getElementById("preferencesMessage").textContent="Saved preferences cleared.";});
+const motionStyle=document.createElement("style");motionStyle.textContent=".reduce-motion *, .reduce-motion *::before, .reduce-motion *::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}";document.head.appendChild(motionStyle);loadPreferences();
+
+</script>
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+<script>
+(function(){
+ const select=document.getElementById("themeChoice");
+ if(!select || !window.ThriftyBiteTheme) return;
+ select.value=window.ThriftyBiteTheme.get();
+ document.getElementById("applyThemeBtn").addEventListener("click",function(){
+   window.ThriftyBiteTheme.saveAndApply(select.value);
+   const msg=document.getElementById("themeMessage");
+   if(msg) msg.textContent="Applied and saved: "+window.ThriftyBiteTheme.palettes[select.value].label+". All pages will use this theme when opened in this browser.";
+ });
+})();
+</script>
+
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+</html>

@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thrifty Bite | Checkout</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/theme.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+.coupon-list{ display:flex; flex-direction:column; gap:10px; }
+.coupon-chip{
+    display:flex; justify-content:space-between; align-items:center; gap:12px;
+    padding:12px 14px; border:1px dashed rgba(212,175,55,.6); border-radius:10px;
+    background:rgba(212,175,55,.06);
+}
+.coupon-chip .code{ font-weight:700; letter-spacing:1px; color:#f7df7a; }
+.coupon-chip .first-badge{
+    font-size:10px; padding:2px 8px; border-radius:20px; margin-left:6px;
+    background:rgba(76,175,80,.2); color:#9be29f; vertical-align:middle;
+}
+.coupon-row{ display:flex; gap:8px; margin-top:16px; }
+.coupon-row input{ text-transform:uppercase; }
+.bill-line{ display:flex; justify-content:space-between; margin-top:8px; }
+.bill-line.discount{ color:#9be29f; }
+.pay-overlay{
+    position:fixed; inset:0; z-index:1000; display:none;
+    align-items:center; justify-content:center; padding:16px;
+    background:rgba(10,2,6,.75);
+}
+.pay-overlay.show{ display:flex; }
+.pay-box{
+    width:100%; max-width:400px; padding:26px; border-radius:16px;
+    background:#3a0a18; border:1px solid rgba(212,175,55,.55);
+    box-shadow:0 20px 50px rgba(0,0,0,.5);
+}
+.pay-box h2{ margin-bottom:6px; }
+.pay-amount{ font-size:1.6em; font-weight:700; color:#f7df7a; margin:10px 0 16px; }
+.pay-tag{
+    display:inline-block; font-size:11px; padding:3px 10px; border-radius:20px;
+    background:rgba(212,175,55,.15); color:#f7df7a; letter-spacing:1px;
+}
+.pay-actions{ display:flex; gap:10px; margin-top:18px; }
+.pay-actions .btn{ flex:1; }
+.bill-line.total{ font-size:1.1em; border-top:1px solid rgba(212,175,55,.25); padding-top:10px; margin-top:12px; }
+
+.checkout-summary{background:var(--card,#fffaf0);border:1px solid rgba(212,175,55,.7);border-radius:18px;padding:24px}
+.checkout-summary h2{font-family:Cinzel,serif;color:#d4af37;text-transform:uppercase;margin-bottom:6px}
+.split-heading{font-family:Cinzel,serif;color:#d4af37;margin:18px 0 12px}
+.split-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.split-option{display:flex;gap:9px;align-items:flex-start;padding:14px;border:1px solid rgba(212,175,55,.8);border-radius:12px;cursor:pointer;text-transform:none}
+.split-option input{width:auto;margin-top:3px;accent-color:#8f1d32}
+.split-option span{display:flex;flex-direction:column;gap:5px}.split-option small{font-size:13px;line-height:1.5;color:var(--muted,#806d63)}
+.split-option.is-selected{border:2px solid #8f1d32;background:rgba(212,175,55,.10)}
+.split-option.is-disabled{opacity:.38;filter:grayscale(.7);cursor:not-allowed;background:rgba(120,100,80,.04)}
+    #checkoutSplitOptions.is-disabled{opacity:.52;filter:grayscale(.55);pointer-events:none}
+@media(max-width:640px){.split-options{grid-template-columns:1fr}.checkout-summary{padding:16px}}
+</style>
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="brand">
+        THRIFTY BITE
+        <span>CHECKOUT</span>
+    </div>
+
+    <nav class="nav-links">
+        <a href="cart.html">Back to Cart</a>
+        <a href="my-orders.html">My Orders</a>
+    </nav>
+
+    <div class="nav-right">
+        <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="page-header">
+        <h1>Checkout</h1>
+        <p>Review your items and delivery address, choose a payment method, then complete payment. After a successful payment, use Track Order to follow delivery.</p>
+    </div>
+
+    <div id="message" class="message"></div>
+    <div id="paymentProcessingPanel" role="status" aria-live="polite" style="display:none;position:fixed;inset:0;z-index:10050;background:rgba(20,8,13,.68);backdrop-filter:blur(5px);align-items:center;justify-content:center;padding:20px">
+        <div style="width:min(420px,100%);background:var(--card,#fffdf5);color:var(--text,#1f2937);border:1px solid #d4af37;border-radius:18px;padding:28px;text-align:center;box-shadow:0 20px 70px rgba(0,0,0,.3)">
+            <div style="width:48px;height:48px;border:4px solid rgba(212,175,55,.25);border-top-color:#8f1d32;border-radius:50%;margin:0 auto 16px;animation:tbPaySpin .8s linear infinite"></div>
+            <h2 style="margin:0 0 8px">Processing Your Payment</h2>
+            <p style="margin:0;color:var(--muted,#795d62)">Please wait while we securely prepare your payment. Do not refresh or close this page.</p>
+        </div>
+    </div>
+    <style>@keyframes tbPaySpin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){#paymentProcessingPanel div[style*="border-radius:50%"]{animation:none}}</style>
+    <section id="checkoutSummary" class="card checkout-summary" aria-labelledby="checkoutSummaryTitle" style="margin-bottom:18px">
+        <h2 id="checkoutSummaryTitle">Order Summary</h2>
+        <p id="checkoutSummaryDescription" class="muted small">Review your selected items before payment.</p>
+        <div id="checkoutSummaryItems" class="table-wrap mt-12"></div>
+        <div class="bill-line total"><strong>Order total</strong><strong id="checkoutSummaryTotal">₹0</strong></div>
+        <div id="checkoutSplitBreakdown" class="mt-12" aria-live="polite"></div>
+        <h3 class="split-heading">CHOOSE BILL SPLIT</h3>
+        <div class="split-options" id="checkoutSplitOptions">
+          <label class="split-option" id="splitEqualOption"><input type="radio" name="checkoutSplitMethod" value="equal" checked><span><strong>Split Equal</strong><small>Divide the total bill equally between group members.</small></span></label>
+          <label class="split-option" id="splitItemOption"><input type="radio" name="checkoutSplitMethod" value="item"><span><strong>Split by Item</strong><small>Calculate shares from the food items assigned to each member.</small></span></label>
+        </div>
+        <p id="checkoutSplitHint" class="muted small">Individual orders do not need a bill split.</p>
+    </section>
+
+    <div class="grid cols-2">
+
+        <div>
+            <div class="card">
+                <h2>Delivery Address</h2>
+                <div id="addressList" class="mt-12"></div>
+
+                <div class="mt-20">
+                    <button type="button" class="btn btn-sm btn-outline" id="toggleAddressFormBtn">+ Add New Address</button>
+                </div>
+
+                <form id="addressForm" class="mt-20" style="display:none">
+                    <div class="form-row">
+                        <div class="form-group"><label>Full Name</label><input type="text" id="a_fullName" required></div>
+                        <div class="form-group"><label>Phone</label><input type="tel" id="a_phone" required></div>
+                    </div>
+                    <div class="form-group"><label>House / Flat / Street</label><input type="text" id="a_houseAddress" required></div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Area</label><input type="text" id="a_area" required></div>
+                        <div class="form-group"><label>City</label><input type="text" id="a_city" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>State</label><input type="text" id="a_state" required></div>
+                        <div class="form-group"><label>Pincode</label><input type="text" id="a_pincode" required></div>
+                    </div>
+                    <button type="submit" class="btn btn-sm">Save Address</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Payment Method</h2>
+                <select id="paymentMethod">
+                    <option value="UPI" selected>Scan &amp; Pay (UPI)</option>
+                    <option value="Card">Card (Razorpay)</option>
+                    <option value="Cash">Cash on Delivery</option>
+                </select>
+                <div id="paymentHint" class="muted small mt-12"></div>
+                <section id="codLocationPanel" style="display:none;margin-top:16px;padding:14px;border:1px solid rgba(212,175,55,.35);border-radius:12px">
+                    <h3 style="margin-bottom:6px">Pin your delivery location</h3>
+                    <p class="muted small" style="margin-bottom:10px">Use your current location or click the map to place the pin. A pin is required for Cash on Delivery.</p>
+                    <button type="button" class="btn btn-outline btn-sm" id="locateMeBtn">◎ Locate me</button>
+                    <span id="pinStatus" class="muted small" style="margin-left:8px">No location pinned yet</span>
+                    <div id="deliveryMap" style="height:300px;margin-top:12px;border-radius:10px;overflow:hidden;background:#eee"></div>
+                    <button type="button" class="btn btn-sm" id="usePinBtn" style="margin-top:10px" disabled>Use pinned location</button>
+                </section>
+            </div>
+
+            <div class="card">
+                <h2>Offers for you</h2>
+                <p class="muted small">Tap Apply to use a coupon on your order.</p>
+                <div id="couponList" class="coupon-list mt-12">
+                    <div class="empty-state">Loading coupons...</div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div id="orderGroups"></div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="pay-overlay" id="payOverlay">
+    <div class="pay-box">
+        <span class="pay-tag">DEMO PAYMENT · NO REAL MONEY</span>
+        <h2 class="mt-12" id="payTitle">Pay with UPI</h2>
+        <div class="muted small" id="payFor"></div>
+        <div class="pay-amount" id="payAmount"></div>
+
+        <div class="form-group" id="payUpiGroup">
+            <label>UPI ID</label>
+            <input type="text" id="payUpiId" placeholder="e.g. success@razorpay" autocomplete="off">
+            <div class="muted small mt-12">Use <strong>success@razorpay</strong> to succeed or <strong>failure@razorpay</strong> to test a failure.</div>
+        </div>
+
+        <div class="message" id="payMessage"></div>
+
+        <div class="pay-actions">
+            <button type="button" class="btn btn-outline" id="payCancelBtn">Cancel</button>
+            <button type="button" class="btn btn-outline" id="payFailBtn">Simulate Payment Failure</button>
+            <button type="button" class="btn" id="payConfirmBtn">Simulate Payment Success</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="assets/api.js"></script>
+<script>
+
+const user = requireAuth(["CUSTOMER"]);
+
+if(user){
+
+    const messageEl = document.getElementById("message");
+    function showPaymentProcessing(){
+        const panel = document.getElementById("paymentProcessingPanel");
+        if(panel) panel.style.display = "flex";
+    }
+    function hidePaymentProcessing(){
+        const panel = document.getElementById("paymentProcessingPanel");
+        if(panel) panel.style.display = "none";
+    }
+    const CART_KEY = "thriftyBiteCart";
+
+    let deliveryPin = null;
+    let deliveryMap = null;
+    let deliveryMarker = null;
+    let mapInitialized = false;
+
+    function updatePin(latlng){
+        deliveryPin = { latitude: Number(latlng.lat), longitude: Number(latlng.lng) };
+        if(deliveryMarker) deliveryMarker.setLatLng(latlng);
+        else deliveryMarker = L.marker(latlng, { draggable: true }).addTo(deliveryMap);
+        deliveryMarker.on('dragend', function(){ updatePin(deliveryMarker.getLatLng()); });
+        document.getElementById('pinStatus').textContent = deliveryPin.latitude.toFixed(5) + ', ' + deliveryPin.longitude.toFixed(5);
+        document.getElementById('usePinBtn').disabled = false;
+    }
+
+    function initDeliveryMap(){
+        if(mapInitialized || !window.L) return;
+        deliveryMap = L.map('deliveryMap').setView([12.9716, 77.5946], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(deliveryMap);
+        deliveryMap.on('click', function(e){ updatePin(e.latlng); });
+        mapInitialized = true;
+        setTimeout(function(){ deliveryMap.invalidateSize(); }, 100);
+    }
+
+    function locateDeliveryUser(){
+        initDeliveryMap();
+        if(!navigator.geolocation){ showMessage(messageEl, 'Geolocation is not supported by this browser. Click the map to pin your location.', 'error'); return; }
+        document.getElementById('pinStatus').textContent = 'Finding your location…';
+        navigator.geolocation.getCurrentPosition(function(pos){
+            const ll = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+            deliveryMap.setView(ll, 16); updatePin(ll);
+        }, function(){ document.getElementById('pinStatus').textContent = 'Location permission unavailable — click the map to pin manually.'; }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 30000 });
+    }
+
+    document.getElementById('paymentMethod').addEventListener('change', function(){
+        const panel = document.getElementById('codLocationPanel');
+        const isCod = this.value === 'Cash';
+        panel.style.display = isCod ? 'block' : 'none';
+        if(isCod){ initDeliveryMap(); if(deliveryMap) setTimeout(function(){ deliveryMap.invalidateSize(); }, 150); }
+    });
+    document.getElementById('locateMeBtn').addEventListener('click', locateDeliveryUser);
+    document.getElementById('usePinBtn').addEventListener('click', function(){
+        if(!deliveryPin) return;
+        document.getElementById('pinStatus').textContent = '✓ Delivery pin selected';
+        showMessage(messageEl, 'Delivery location pinned. You can now place your order.', 'success');
+    });
+    if(document.getElementById('paymentMethod').value === 'Cash'){
+        document.getElementById('codLocationPanel').style.display = 'block';
+        initDeliveryMap();
+    }
+
+
+    function getLocalCart(){
+        try{
+            const raw = localStorage.getItem(CART_KEY);
+            const cart = raw ? JSON.parse(raw) : [];
+            return Array.isArray(cart) ? cart : [];
+        }catch(e){
+            return [];
+        }
+    }
+
+    function saveLocalCart(cart){
+        localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    }
+
+
+    /* =========================================================
+       ADDRESSES
+    ========================================================= */
+
+    let selectedAddressId = null;
+
+    async function loadAddresses(){
+        try{
+            const data = await apiFetch("/addresses");
+            const list = document.getElementById("addressList");
+
+            if(!data.addresses || data.addresses.length === 0){
+                list.innerHTML = '<div class="empty-state">No saved addresses — add one below.</div>';
+                return;
+            }
+
+            list.innerHTML = data.addresses.map(function(a, i){
+                const checked = (selectedAddressId === a._id) || (!selectedAddressId && a.isDefault) || (!selectedAddressId && i === 0);
+                if(checked) selectedAddressId = a._id;
+
+                return "<label class='flex gap-8 mt-12' style='text-transform:none;align-items:flex-start'>"
+                    + "<input type='radio' name='address' value='" + a._id + "' style='width:auto;margin-top:4px'" + (checked ? " checked" : "") + " onchange=\"selectAddress('" + a._id + "')\">"
+                    + "<span>" + escapeHtml(a.fullName) + " &middot; " + escapeHtml(a.phone) + "<br>"
+                        + "<span class='muted small'>" + escapeHtml(a.houseAddress) + ", " + escapeHtml(a.area) + ", " + escapeHtml(a.city) + " - " + escapeHtml(a.pincode) + "</span></span>"
+                    + "</label>";
+            }).join("");
+        }catch(err){
+            hidePaymentProcessing();
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    window.selectAddress = function selectAddress(id){
+        selectedAddressId = id;
+    }
+
+    document.getElementById("toggleAddressFormBtn").addEventListener("click", function(){
+        const form = document.getElementById("addressForm");
+        form.style.display = (form.style.display === "none") ? "block" : "none";
+    });
+
+    document.getElementById("addressForm").addEventListener("submit", async function(e){
+        e.preventDefault();
+        try{
+            const data = await apiFetch("/addresses", {
+                method: "POST",
+                body: JSON.stringify({
+                    fullName: document.getElementById("a_fullName").value.trim(),
+                    phone: document.getElementById("a_phone").value.trim(),
+                    houseAddress: document.getElementById("a_houseAddress").value.trim(),
+                    area: document.getElementById("a_area").value.trim(),
+                    city: document.getElementById("a_city").value.trim(),
+                    state: document.getElementById("a_state").value.trim(),
+                    pincode: document.getElementById("a_pincode").value.trim(),
+                    isDefault: true
+                })
+            });
+            if(!data || !data.address || !data.address._id) throw new Error("Address was not saved. Please try again.");
+            selectedAddressId = data.address._id;
+            document.getElementById("addressForm").reset();
+            document.getElementById("addressForm").style.display = "none";
+            showMessage(messageEl, "Address saved and selected.", "success");
+            await loadAddresses();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    });
+
+
+    /* =========================================================
+       ORDER GROUPS (cart items grouped by restaurant)
+    ========================================================= */
+
+    async function renderOrderGroups(){
+        const container = document.getElementById("orderGroups");
+        const cart = getLocalCart();
+
+        if(cart.length === 0){
+            container.innerHTML = '<div class="card"><div class="empty-state">Your cart is empty. <a href="menu.html">Browse the menu</a>.</div></div>';
+            return;
+        }
+
+        container.innerHTML = '<div class="card"><div class="empty-state">Loading order summary...</div></div>';
+
+        try{
+            const restaurantsData = await apiFetch("/menu/restaurants");
+            const restaurantNames = {};
+            (restaurantsData.restaurants || []).forEach(r => restaurantNames[r._id] = r.name);
+
+            const menuLookups = await Promise.all(cart.map(function(item){
+                return apiFetch("/menu/" + item.menuId).then(d => d.menu).catch(() => null);
+            }));
+
+            const groups = {};
+
+            cart.forEach(function(item, i){
+                const menuItem = menuLookups[i];
+                if(!menuItem) return;
+
+                const restId = menuItem.restaurantId;
+                if(!groups[restId]){
+                    groups[restId] = { restaurantId: restId, name: restaurantNames[restId] || "Restaurant", items: [] };
+                }
+                groups[restId].items.push({
+                    menuItemId: menuItem._id,
+                    name: menuItem.name,
+                    price: menuItem.discountPrice,
+                    quantity: item.quantity
+                });
+            });
+
+            const groupList = Object.values(groups);
+
+            if(groupList.length === 0){
+                container.innerHTML = '<div class="card"><div class="empty-state">Your cart items are no longer available.</div></div>';
+                renderCheckoutSummary([]);
+                return;
+            }
+
+            groupList.forEach(g => g.subtotal = g.items.reduce((s, i) => s + i.price * i.quantity, 0));
+
+            container.innerHTML = groupList.map(function(g){
+                return "<div class='card' data-restaurant='" + g.restaurantId + "'>"
+                    + "<h2>" + escapeHtml(g.name) + "</h2>"
+                    + "<div class='table-wrap mt-12'><table><thead><tr><th>Item</th><th>Qty</th><th>Price</th></tr></thead><tbody>"
+                        + g.items.map(i => "<tr><td>" + escapeHtml(i.name) + "</td><td>" + i.quantity + "</td><td>" + formatMoney(i.price * i.quantity) + "</td></tr>").join("")
+                    + "</tbody></table></div>"
+                    + "<div class='coupon-row'>"
+                        + "<input type='text' id='couponInput-" + g.restaurantId + "' placeholder='Enter coupon code'>"
+                        + "<button class='btn btn-sm btn-outline' onclick='applyCoupon(\"" + g.restaurantId + "\")'>Apply</button>"
+                    + "</div>"
+                    + "<div id='bill-" + g.restaurantId + "'></div>"
+                    + "<div class='flex-between mt-20'>"
+                        + "<span></span>"
+                        + "<button class='btn btn-sm' onclick='placeOrder(\"" + g.restaurantId + "\")'>Proceed to Payment</button>"
+                    + "</div>"
+                    + "<div class='muted small mt-12' id='compareNote-" + g.restaurantId + "'></div>"
+                    + "</div>";
+            }).join("");
+
+            window.orderGroupsData = groups;
+            renderCheckoutSummary(groupList);
+
+            // Drop coupons for restaurants no longer in the cart
+            Object.keys(appliedCoupons).forEach(id => { if(!groups[id]) delete appliedCoupons[id]; });
+
+            groupList.forEach(g => renderBill(g.restaurantId));
+            groupList.forEach(g => loadReferencePriceNote(g));
+
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    function renderCheckoutSummary(groupList){
+        const groupMeta = (function(){try{return JSON.parse(localStorage.getItem("thriftyBiteGroupCheckout")||"null")}catch(_){return null}})();
+        const isGroup = !!(groupMeta && groupMeta.isGroupOrder === true && new URLSearchParams(window.location.search).get("groupOrder") === "1");
+        if(!isGroup && groupMeta){ localStorage.removeItem("thriftyBiteGroupCheckout"); }
+        const items = (groupList || []).flatMap(g => g.items.map(i => ({name:i.name, quantity:i.quantity, price:i.price})));
+        // Prefer the group-order payload when it contains selected dish details.
+        const sourceItems = isGroup && Array.isArray(groupMeta.items) && groupMeta.items.length ? groupMeta.items.map(i=>({name:i.name||"Food item",quantity:Number(i.quantity)||1,price:Number(i.price)||0})) : items;
+        const total = sourceItems.reduce((sum,i)=>sum+(Number(i.price)||0)*(Number(i.quantity)||1),0);
+        document.getElementById("checkoutSummaryTitle").textContent = isGroup ? "Group Order Summary" : "Order Summary";
+        document.getElementById("checkoutSummaryDescription").textContent = isGroup ? "Review the items selected in your cart and choose how to split the bill." : "Review the items selected for your order.";
+        document.getElementById("checkoutSummaryItems").innerHTML = sourceItems.length ? "<table><thead><tr><th>Item</th><th>Qty</th><th>Amount</th></tr></thead><tbody>"+sourceItems.map(i=>"<tr><td>"+escapeHtml(i.name)+"</td><td>"+(Number(i.quantity)||1)+"</td><td>"+formatMoney((Number(i.price)||0)*(Number(i.quantity)||1))+"</td></tr>").join("")+"</tbody></table>" : "<p class='empty-state'>Your selected items will appear here.</p>";
+        document.getElementById("checkoutSummaryTotal").textContent = formatMoney(total);
+        const options = document.getElementById("checkoutSplitOptions");
+        options.classList.toggle("is-disabled", !isGroup);
+        options.querySelectorAll("input").forEach(input=>{input.disabled=!isGroup; input.checked=isGroup ? input.value === ((groupMeta.splitMethod === "item") ? "item" : "equal") : input.value === "equal";});
+        options.querySelectorAll(".split-option").forEach(label=>label.classList.toggle("is-selected",label.querySelector("input").checked));
+        document.getElementById("checkoutSplitHint").textContent = isGroup ? "Your selected split method will be included with the group order at checkout." : "Bill-splitting options are unavailable for individual orders.";
+        const breakdown = document.getElementById("checkoutSplitBreakdown");
+        function renderSplitBreakdown(method){
+            if(!breakdown) return;
+            if(!isGroup){ breakdown.innerHTML=""; return; }
+            const money = value => formatMoney(Math.round((Number(value)||0)*100)/100);
+            const memberIds = Array.isArray(groupMeta.memberIds) ? groupMeta.memberIds : [];
+            const memberNames = Array.isArray(groupMeta.memberNames) ? groupMeta.memberNames : [];
+            const people = [{id:String(groupMeta.createdBy || "creator"),name:"You (group creator)"}].concat(memberIds.map((id,i)=>({id:String(id),name:memberNames[i] || ("Group member " + (i+1))})));
+            if(method === "equal"){
+                const cents=Math.round(total*100), base=Math.floor(cents/people.length), remainder=cents-base*people.length;
+                breakdown.innerHTML="<h3>Split breakdown</h3><table><thead><tr><th>Member</th><th>Share</th></tr></thead><tbody>"+people.map((person,i)=>"<tr><td>"+escapeHtml(person.name)+"</td><td>"+money((base+(i<remainder?1:0))/100)+"</td></tr>").join("")+"</tbody></table>";
+                return;
+            }
+            const shares=new Map();
+            const assignedItems=Array.isArray(groupMeta.items)?groupMeta.items:[];
+            assignedItems.forEach(item=>{
+                const id=item.memberId ? String(item.memberId) : "unassigned";
+                const person=people.find(p=>p.id===id);
+                const name=person ? person.name : "Unassigned items";
+                const key=person ? person.id : "unassigned";
+                const row=shares.get(key)||{name,amount:0,items:[]};
+                row.amount+=(Number(item.price)||0)*(Number(item.quantity)||1);
+                row.items.push((item.name||"Food item")+" × "+(Number(item.quantity)||1));
+                shares.set(key,row);
+            });
+            breakdown.innerHTML="<h3>Item-wise split breakdown</h3><table><thead><tr><th>Member</th><th>Items</th><th>Share</th></tr></thead><tbody>"+Array.from(shares.values()).map(row=>"<tr><td>"+escapeHtml(row.name)+"</td><td>"+escapeHtml(row.items.join(", "))+"</td><td>"+money(row.amount)+"</td></tr>").join("")+"</tbody></table><p class='muted small'>Unassigned items are shown separately.</p>";
+        }
+        renderSplitBreakdown(isGroup ? ((groupMeta.splitMethod === "item") ? "item" : "equal") : "equal");
+        if(isGroup){ options.querySelectorAll("input").forEach(input=>input.addEventListener("change",function(){const latest=JSON.parse(localStorage.getItem("thriftyBiteGroupCheckout")||"{}");latest.splitMethod=this.value;localStorage.setItem("thriftyBiteGroupCheckout",JSON.stringify(latest));options.querySelectorAll(".split-option").forEach(label=>label.classList.toggle("is-selected",label.querySelector("input").checked));renderSplitBreakdown(this.value);})); }
+    }
+
+    /* =========================================================
+       REFERENCE PRICE NOTE (§19.11 — reference only, never
+       blocks or changes the actual payable total)
+    ========================================================= */
+
+    async function loadReferencePriceNote(group){
+        const el = document.getElementById("compareNote-" + group.restaurantId);
+        if(!el) return;
+
+        const ids = group.items.map(i => i.menuItemId);
+
+        try{
+            const data = await apiFetch("/menu/price-comparison?ids=" + ids.join(","));
+            const rows = (data.items || []).filter(c => c.hasComparison);
+
+            if(rows.length === 0){
+                el.textContent = "Price comparison unavailable";
+                return;
+            }
+
+            let swiggy = 0, zomato = 0, any = false;
+            group.items.forEach(function(item){
+                const c = rows.find(r => String(r.menuItemId) === String(item.menuItemId));
+                if(!c) return;
+                any = true;
+                if(c.swiggy) swiggy += c.swiggy.totalPrice * item.quantity;
+                if(c.zomato) zomato += c.zomato.totalPrice * item.quantity;
+            });
+
+            el.textContent = any
+                ? "Reference only — Swiggy ~" + formatMoney(swiggy) + " · Zomato ~" + formatMoney(zomato) + " (your payable total above is what you'll be charged)"
+                : "Price comparison unavailable";
+
+        }catch(err){
+            el.textContent = "Price comparison unavailable";
+        }
+    }
+
+    /* =========================================================
+       COUPONS
+       The server re-validates the coupon when the order is placed,
+       so the discount shown here is always the one charged.
+    ========================================================= */
+
+    const appliedCoupons = {};   // restaurantId -> { code, discount }
+
+    function describeCoupon(c){
+        const off = c.discountType === "PERCENT"
+            ? c.discountValue + "% off" + (c.maxDiscount ? " up to " + formatMoney(c.maxDiscount) : "")
+            : formatMoney(c.discountValue) + " off";
+        return off + (c.minOrderAmount ? " on orders above " + formatMoney(c.minOrderAmount) : "");
+    }
+
+    async function loadCoupons(){
+        const list = document.getElementById("couponList");
+
+        try{
+            const data = await apiFetch("/coupons");
+            const coupons = data.coupons || [];
+
+            if(coupons.length === 0){
+                list.innerHTML = '<div class="empty-state">No coupons available right now.</div>';
+                return;
+            }
+
+            list.innerHTML = coupons.map(function(c){
+                return "<div class='coupon-chip'>"
+                    + "<div>"
+                        + "<span class='code'>" + escapeHtml(c.code) + "</span>"
+                        + (c.firstOrderOnly ? "<span class='first-badge'>FIRST ORDER</span>" : "")
+                        + "<div class='small' style='margin-top:4px'>" + escapeHtml(c.title || describeCoupon(c)) + "</div>"
+                        + "<div class='muted small'>" + escapeHtml(c.description || describeCoupon(c)) + "</div>"
+                    + "</div>"
+                    + "<button class='btn btn-sm btn-outline' onclick='applyCouponToAll(\"" + String(c.code || "").replace(/[^A-Za-z0-9_-]/g, "") + "\")'>Apply</button>"
+                    + "</div>";
+            }).join("");
+        }catch(err){
+            list.innerHTML = '<div class="empty-state">Could not load coupons.</div>';
+        }
+    }
+
+    function renderBill(restaurantId){
+        const group = window.orderGroupsData && window.orderGroupsData[restaurantId];
+        const el = document.getElementById("bill-" + restaurantId);
+        if(!group || !el) return;
+
+        const applied = appliedCoupons[restaurantId];
+        const discount = applied ? applied.discount : 0;
+
+        el.innerHTML = "<div class='bill-line mt-20'><span>Item total</span><span>" + formatMoney(group.subtotal) + "</span></div>"
+            + (applied
+                ? "<div class='bill-line discount'><span>Coupon " + escapeHtml(applied.code)
+                    + " <a href='#' class='small' onclick='removeCoupon(\"" + restaurantId + "\");return false;'>(remove)</a></span>"
+                    + "<span>- " + formatMoney(discount) + "</span></div>"
+                : "")
+            + "<div class='bill-line total'><strong>To pay</strong><strong>" + formatMoney(group.subtotal - discount) + "</strong></div>";
+
+        const input = document.getElementById("couponInput-" + restaurantId);
+        if(input && applied) input.value = applied.code;
+    }
+
+    async function applyCouponCode(restaurantId, code){
+        const group = window.orderGroupsData && window.orderGroupsData[restaurantId];
+        if(!group) return false;
+
+        try{
+            const data = await apiFetch("/coupons/validate", {
+                method: "POST",
+                body: JSON.stringify({ code, subtotal: group.subtotal })
+            });
+            appliedCoupons[restaurantId] = { code: data.code, discount: data.discount };
+            renderBill(restaurantId);
+            const multiple = Object.keys(window.orderGroupsData).length > 1;
+            showMessage(messageEl, data.message + (multiple ? " (" + group.name + ")" : ""), "success");
+            return true;
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+            return false;
+        }
+    }
+
+    window.applyCoupon = function applyCoupon(restaurantId){
+        const input = document.getElementById("couponInput-" + restaurantId);
+        const code = input ? input.value.trim() : "";
+        if(!code){
+            showMessage(messageEl, "Please enter a coupon code.", "error");
+            return;
+        }
+        applyCouponCode(restaurantId, code);
+    }
+
+    window.applyCouponToAll = async function applyCouponToAll(code){
+        const ids = Object.keys(window.orderGroupsData || {});
+        if(ids.length === 0){
+            showMessage(messageEl, "Add items to your cart to use a coupon.", "error");
+            return;
+        }
+        for(const id of ids){
+            const input = document.getElementById("couponInput-" + id);
+            if(input) input.value = code;
+            await applyCouponCode(id, code);
+        }
+    }
+
+    window.removeCoupon = function removeCoupon(restaurantId){
+        delete appliedCoupons[restaurantId];
+        const input = document.getElementById("couponInput-" + restaurantId);
+        if(input) input.value = "";
+        renderBill(restaurantId);
+    }
+
+    /* =========================================================
+       RAZORPAY (UPI / CARD)
+       1. backend creates a Razorpay order for the server-side total
+       2. Razorpay Checkout collects the payment
+       3. backend verifies the signature and only then places the order
+    ========================================================= */
+
+    let paymentConfig = { enabled: false };
+
+    async function loadPaymentConfig(){
+        try{
+            paymentConfig = await apiFetch("/payment/config");
+        }catch(err){
+            paymentConfig = { enabled: false };
+        }
+        updatePaymentHint();
+    }
+
+    function updatePaymentHint(){
+        const method = document.getElementById("paymentMethod").value;
+        const hint = document.getElementById("paymentHint");
+
+        if(method === "Cash"){
+            hint.textContent = "Demo flow: open a timed QR payment page, then choose simulated success or failure. No real money is charged.";
+        }else if(!paymentConfig.enabled && paymentConfig.demoMode){
+            hint.innerHTML = "Demo mode (Razorpay keys not added yet) — no real money is charged. "
+                + (method === "UPI"
+                    ? "You'll get a UPI QR code to scan with your phone, then a payment success page."
+                    : "Click Pay in the popup to complete the demo card payment.");
+        }else if(!paymentConfig.enabled){
+            hint.textContent = "Online payment is not set up yet. Please choose Cash on Delivery.";
+        }else if(paymentConfig.testMode){
+            hint.innerHTML = "Test mode — no real money is charged. "
+                + (method === "UPI"
+                    ? "Use UPI ID <strong>success@razorpay</strong> for a successful payment or <strong>failure@razorpay</strong> to test a failure."
+                    : "Use card <strong>4100 2800 0000 1007</strong>, any future expiry, any CVV, then click Success on the test page.");
+        }else{
+            hint.textContent = "You'll pay securely with Razorpay.";
+        }
+    }
+
+    document.getElementById("paymentMethod").addEventListener("change", updatePaymentHint);
+
+    /* Demo payment — used only while no Razorpay keys are set.
+       UPI  -> Razorpay-style QR page (upi-payment.html)
+       Card -> small confirm popup
+       Both end on payment-success.html */
+    async function payWithDemo(orderBody, group){
+        const created = await apiFetch("/payment/demo/create", {
+            method: "POST",
+            body: JSON.stringify(orderBody)
+        });
+
+        if(orderBody.paymentMethod === "UPI" || orderBody.paymentMethod === "Cash"){
+            window.location.href = "upi-payment.html?s=" + encodeURIComponent(created.sessionId);
+            return false;
+        }
+
+        const overlay = document.getElementById("payOverlay");
+        const payMessage = document.getElementById("payMessage");
+        const confirmBtn = document.getElementById("payConfirmBtn");
+        const cancelBtn = document.getElementById("payCancelBtn");
+        const failBtn = document.getElementById("payFailBtn");
+        const discount = appliedCoupons[orderBody.restaurantId] ? appliedCoupons[orderBody.restaurantId].discount : 0;
+
+        document.getElementById("payTitle").textContent = "Pay with Card";
+        document.getElementById("payFor").textContent = "Order from " + group.name;
+        document.getElementById("payAmount").textContent = formatMoney(group.subtotal - discount);
+        document.getElementById("payUpiGroup").style.display = "none";
+        payMessage.className = "message";
+        payMessage.textContent = "";
+        overlay.classList.add("show");
+
+        return new Promise(function(resolve){
+            function close(){
+                overlay.classList.remove("show");
+                confirmBtn.onclick = null;
+                cancelBtn.onclick = null;
+                if(failBtn) failBtn.onclick = null;
+                resolve(false);
+            }
+
+            cancelBtn.onclick = function(){
+                showMessage(messageEl, "Payment cancelled. Your cart is still saved.", "error");
+                close();
+            };
+
+            async function simulateCard(outcome){
+                confirmBtn.disabled = true;
+                if(failBtn) failBtn.disabled = true;
+                payMessage.className = "message show " + (outcome === "success" ? "success" : "error");
+                payMessage.textContent = outcome === "success" ? "Simulating payment success…" : "Simulating payment failure…";
+                try{
+                    const data = await apiFetch("/payment/demo/confirm", {
+                        method: "POST",
+                        body: JSON.stringify({ sessionId: created.sessionId, outcome })
+                    });
+                    // Only use the server-confirmed success route when a real order id was returned.
+                    // Some stale/processing sessions return a response without a usable order id.
+                    if(outcome === "success" && data && data.orderId){
+                        window.location.href = "payment-success.html?order=" + encodeURIComponent(data.orderId);
+                    } else if(outcome === "failure") {
+                        window.location.href = "payment-success.html?outcome=failure&localDemo=1&order=" + encodeURIComponent(created.sessionId);
+                    } else {
+                        throw new Error("Demo payment did not return a confirmed order. Showing the selected demo result instead.");
+                    }
+                }catch(err){
+                    // A demo must still show its selected outcome when the API/database is unavailable.
+                    // This local fallback is explicitly labelled as a browser-only demonstration.
+                    const localId = "LOCAL-DEMO-" + Date.now();
+                    const localOrder = {
+                        _id: localId, orderId: localId, outcome: outcome,
+                        status: outcome === "success" ? "PLACED" : "PAYMENT_FAILED",
+                        restaurantName: group.name || "Thrifty Bite Restaurant",
+                        totalAmount: Math.max(0, Number(group.subtotal || 0) - Number(discount || 0)),
+                        paymentMethod: orderBody.paymentMethod || "Card",
+                        items: Array.isArray(orderBody.items) ? orderBody.items.map(i => ({name:i.name || "Menu item", quantity:Number(i.quantity)||1, price:Number(i.price)||0})) : [],
+                        createdAt: new Date().toISOString(), localDemo: true,
+                        rider: {name:"Arjun Kumar", phone:"90000 10001", vehicle:"Honda Activa", plate:"KA 05 AB 1234"}
+                    };
+                    if(outcome === "success"){
+                        const saved = JSON.parse(localStorage.getItem("thriftyBiteLocalDemoOrders") || "[]");
+                        saved.unshift(localOrder);
+                        localStorage.setItem("thriftyBiteLocalDemoOrders", JSON.stringify(saved.slice(0,10)));
+                    }
+                    window.location.href = "payment-success.html?outcome=" + outcome + "&localDemo=1&order=" + encodeURIComponent(localId);
+                }
+            }
+            confirmBtn.onclick = function(){ simulateCard("success"); };
+            if(failBtn) failBtn.onclick = function(){ simulateCard("failure"); };
+        });
+    }
+
+    async function payWithRazorpay(orderBody, group){
+        // UPI and Cash use the clearly-labelled QR/demo result workflow.
+        // Card intentionally remains on the existing Razorpay integration.
+        if(orderBody.paymentMethod === "UPI" || orderBody.paymentMethod === "Cash"){
+            return payWithDemo(orderBody, group);
+        }
+        if(!paymentConfig.enabled && paymentConfig.demoMode){
+            return payWithDemo(orderBody, group);
+        }
+
+        if(!paymentConfig.enabled){
+            showMessage(messageEl, "Online payment is not set up yet. Please choose Cash on Delivery.", "error");
+            return false;
+        }
+
+        if(typeof Razorpay === "undefined"){
+            showMessage(messageEl, "Could not load Razorpay. Check your internet connection and try again.", "error");
+            return false;
+        }
+
+        const session = await apiFetch("/payment/create-order", {
+            method: "POST",
+            body: JSON.stringify(orderBody)
+        });
+
+        return new Promise(function(resolve){
+            const rzp = new Razorpay({
+                key: session.keyId,
+                order_id: session.razorpayOrderId,
+                amount: session.amount,
+                currency: session.currency,
+                name: "Thrifty Bite",
+                description: "Order from " + group.name,
+                prefill: {
+                    name: session.prefill.name || "",
+                    email: user.email || "",
+                    contact: session.prefill.contact || ""
+                },
+                theme: { color: "#8f1d32" },
+
+                handler: async function(response){
+                    try{
+                        showMessage(messageEl, "Verifying payment...", "success");
+                        const verified = await apiFetch("/payment/verify", {
+                            method: "POST",
+                            body: JSON.stringify(response)
+                        });
+                        window.location.href = "payment-success.html?order=" + encodeURIComponent(verified.order._id);
+                        resolve(false);
+                    }catch(err){
+                        showMessage(messageEl, err.message + " If money was deducted, contact support with payment ID " + response.razorpay_payment_id + ".", "error");
+                        resolve(false);
+                    }
+                },
+
+                modal: {
+                    ondismiss: function(){
+                        showMessage(messageEl, "Payment cancelled. Your cart is still saved.", "error");
+                        resolve(false);
+                    }
+                }
+            });
+
+            rzp.on("payment.failed", function(resp){
+                const reason = resp && resp.error ? resp.error.description : "Payment failed.";
+                showMessage(messageEl, reason + " You can try again.", "error");
+            });
+
+            hidePaymentProcessing();
+            rzp.open();
+        });
+    }
+
+    window.placeOrder = async function placeOrder(restaurantId){
+        if(!selectedAddressId){
+            showMessage(messageEl, "Please select or add a delivery address.", "error");
+            return;
+        }
+
+        const group = window.orderGroupsData[restaurantId];
+        if(!group) return;
+
+        const paymentMethod = document.getElementById("paymentMethod").value;
+
+        if(paymentMethod === "Cash" && !deliveryPin){
+            document.getElementById('codLocationPanel').style.display = 'block';
+            initDeliveryMap();
+            showMessage(messageEl, "Please locate yourself or click the map to pin your delivery location before placing a Cash on Delivery order.", "error");
+            document.getElementById('codLocationPanel').scrollIntoView({behavior:'smooth', block:'center'});
+            return;
+        }
+
+        const orderBody = {
+            restaurantId,
+            addressId: selectedAddressId,
+            deliveryLocation: deliveryPin,
+            paymentMethod,
+            groupOrder: (function(){ try { const g = JSON.parse(localStorage.getItem("thriftyBiteGroupCheckout") || "null"); return g && g.isGroupOrder ? { isGroupOrder: true, splitMethod: g.splitMethod, totalAmount: g.totalAmount } : undefined; } catch(_) { return undefined; } })(),
+            couponCode: appliedCoupons[restaurantId] ? appliedCoupons[restaurantId].code : undefined,
+            items: group.items.map(i => ({ menuItemId: i.menuItemId, quantity: i.quantity }))
+        };
+
+        try{
+            // Show an explicit processing state after checkout submission while payment is prepared.
+            showPaymentProcessing();
+            if(paymentMethod === "Cash" || paymentMethod === "UPI"){
+                // Both COD and UPI must enter the demo-session page. COD then
+                // displays the cash-at-doorstep summary and explicit simulate
+                // success/failure controls. Do not POST /order here: that
+                // request could leave the processing overlay waiting forever.
+                await payWithDemo(orderBody, group);
+                hidePaymentProcessing();
+                return; // payment page owns the result and order-summary redirect
+            }else{
+                const paid = await payWithRazorpay(orderBody, group);
+                if(!paid){ hidePaymentProcessing(); return; }   // cancelled or failed — cart is kept
+            }
+
+            const menuIdsInGroup = new Set(group.items.map(i => i.menuItemId));
+            const remainingCart = getLocalCart().filter(item => !menuIdsInGroup.has(item.menuId));
+            saveLocalCart(remainingCart);
+
+            const saved = appliedCoupons[restaurantId];
+            delete appliedCoupons[restaurantId];
+
+            hidePaymentProcessing();
+            showMessage(messageEl, "Payment successful! Order placed with " + group.name + "!"
+                + (saved ? " You saved " + formatMoney(saved.discount) + " with " + saved.code + "." : "")
+                + " Track it on My Orders.", "success");
+            renderOrderGroups();
+            loadCoupons();
+
+        }catch(err){
+            hidePaymentProcessing();
+            showMessage(messageEl, err.message || "Could not start the payment demo. Your cart is still saved.", "error");
+        }
+    }
+
+
+
+    loadAddresses();
+    renderOrderGroups();
+    loadCoupons();
+    loadPaymentConfig();
+
+}
+
+</script>
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+</html>

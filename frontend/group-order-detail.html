@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thrifty Bite | Group Order Details</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/theme.css">
+
+<style>
+.item-thumb{ width:44px; height:44px; object-fit:cover; border-radius:8px; border:1px solid rgba(212,175,55,.28); vertical-align:middle; margin-right:10px; }
+.item-name-cell{ display:flex; align-items:center; }
+</style>
+
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="brand">
+        THRIFTY BITE
+        <span>GROUP ORDER</span>
+    </div>
+
+    <nav class="nav-links">
+        <a href="group-order.html">My Group Orders</a>
+    </nav>
+
+    <div class="nav-right">
+        <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="page-header">
+        <h1 id="orderTitle">Group Order</h1>
+        <p id="orderSubtitle" class="muted">Loading...</p>
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <div class="grid cols-2">
+
+        <div>
+            <div class="card">
+                <h2>Order Details</h2>
+                <div id="orderDetails"></div>
+                <div id="statusControl" class="mt-20" style="display:none">
+                    <label>Update Status</label>
+                    <div class="flex gap-8 mt-12">
+                        <select id="statusSelect">
+                            <option value="ACCEPTED">Accepted</option>
+                            <option value="PREPARING">Preparing</option>
+                            <option value="READY">Ready</option>
+                            <option value="OUT_FOR_DELIVERY">Out for Delivery</option>
+                            <option value="DELIVERED">Delivered</option>
+                            <option value="COMPLETED">Completed</option>
+                            <option value="CANCELLED">Cancelled</option>
+                        </select>
+                        <button class="btn btn-sm" onclick="updateStatus()">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Bill Split</h2>
+            <div id="billSplitArea">Loading...</div>
+        </div>
+
+    </div>
+
+    <div class="card mt-20" id="detailChatPanel">
+        <h2>Group Conversation</h2>
+        <p class="muted small mt-12">Coordinate dishes, portions and budget with everyone in this accepted group.</p>
+        <div id="detailChatMessages" style="height:240px;overflow:auto;padding:10px;margin:12px 0;border-radius:10px;background:rgba(0,0,0,.18)"></div>
+        <form id="detailChatForm" class="flex gap-8"><input id="detailChatInput" maxlength="1500" placeholder="Write a message…" required style="flex:1;min-width:0"><button class="btn" type="submit">Send</button></form>
+        <p class="muted small mt-12"><a href="group-order.html#tab-normal">Continue to select food for your group →</a></p>
+    </div>
+
+    <div class="card mt-20" id="comparePanel" style="display:none">
+        <h2>Price Comparison</h2>
+        <div id="compareContent"></div>
+    </div>
+
+</div>
+
+<script src="assets/api.js"></script>
+<script>
+
+const user = requireAuth(["CUSTOMER"]);
+
+if(user){
+
+    const messageEl = document.getElementById("message");
+    const params = new URLSearchParams(window.location.search);
+    const groupOrderId = params.get("id");
+
+    if(!groupOrderId){
+        window.location.href = "group-order.html";
+    }
+
+    let groupOrder = null;
+
+    async function loadOrder(){
+        try{
+            const data = await apiFetch("/group-orders/" + groupOrderId);
+            groupOrder = data.groupOrder;
+
+            const isCustom = !!groupOrder.customOrderId;
+            const title = isCustom ? "Group Custom Chef Request" : ("Group Order — " + (groupOrder.restaurantId ? groupOrder.restaurantId.name : ""));
+
+            document.getElementById("orderTitle").textContent = title;
+            document.getElementById("orderSubtitle").innerHTML =
+                "<span class='badge " + statusBadgeClass(groupOrder.status) + "'>" + statusLabel(groupOrder.status) + "</span>";
+
+            let html = "<p><strong>Members:</strong> " + groupOrder.members.map(m => escapeHtml(m.name || m.username)).join(", ") + "</p>";
+
+            if(isCustom){
+                html += "<p class='mt-12'><a class='btn btn-sm btn-outline mt-12' href='custom-order-detail.html?id=" + groupOrder.customOrderId._id + "'>View Custom Order Progress</a></p>";
+            }else{
+                html += "<div class='table-wrap mt-12'><table><thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>For</th></tr></thead><tbody>"
+                    + groupOrder.items.map(function(i){
+                        const img = i.menuItemId && i.menuItemId.image;
+                        return "<tr><td><div class='item-name-cell'>"
+                            + "<img class='item-thumb' src='" + escapeHtml(img || "images/food-placeholder.svg") + "' onerror=\"this.src='images/food-placeholder.svg'\" alt=''>"
+                            + escapeHtml(i.name) + "</div></td><td>" + i.quantity + "</td><td>" + formatMoney(i.price)
+                            + "</td><td>" + (i.memberId ? escapeHtml(i.memberId.name || i.memberId.username) : "<span class='muted small'>Shared</span>") + "</td></tr>";
+                    }).join("")
+                    + "</tbody></table></div>"
+                    + "<p class='mt-12'><strong>Total:</strong> " + formatMoney(groupOrder.totalAmount) + "</p>";
+            }
+
+            document.getElementById("orderDetails").innerHTML = html;
+
+            if(String(groupOrder.creatorId) === String(user.id) && !isCustom){
+                document.getElementById("statusControl").style.display = "block";
+            }
+
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    window.updateStatus = async function updateStatus(){
+        const status = document.getElementById("statusSelect").value;
+        try{
+            await apiFetch("/group-orders/" + groupOrderId + "/status", {
+                method: "PUT",
+                body: JSON.stringify({ status })
+            });
+            showMessage(messageEl, "Status updated!", "success");
+            loadOrder();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+
+    /* =========================================================
+       BILL SPLIT
+    ========================================================= */
+
+    async function loadBillSplit(){
+        const area = document.getElementById("billSplitArea");
+
+        try{
+            const data = await apiFetch("/bill-split/" + groupOrderId);
+            renderBillSplit(data.billSplit, data.settlement);
+        }catch(err){
+            renderBillSplitSetup();
+        }
+    }
+
+    function renderBillSplitSetup(){
+        const area = document.getElementById("billSplitArea");
+        if(!groupOrder) return;
+
+        const memberOptions = groupOrder.members.map(m =>
+            "<option value='" + m._id + "'>" + escapeHtml(m.name || m.username) + "</option>"
+        ).join("");
+
+        const hasItems = !groupOrder.customOrderId && Array.isArray(groupOrder.items) && groupOrder.items.length > 0;
+
+        area.innerHTML = "<p class='muted small'>No bill split recorded yet.</p>"
+            + "<div class='form-group mt-12'><label>Total Bill (₹)</label><input type='number' min='0' id='totalBillInput'"
+            + (groupOrder.totalAmount ? " value='" + groupOrder.totalAmount + "'" : "") + "></div>"
+            + "<div class='form-group'><label>Paid By</label><select id='paidByInput'>" + memberOptions + "</select></div>"
+            + "<div class='flex gap-8 mt-12'>"
+            + "<button class='btn btn-sm' onclick=\"recordBillSplit('EQUAL')\">Split Equally</button>"
+            + (hasItems ? "<button class='btn btn-sm btn-outline' onclick=\"recordBillSplit('ITEM_WISE')\">Split by Item</button>" : "")
+            + "</div>"
+            + (hasItems ? "<p class='muted small mt-12'>\"Split by Item\" charges each person for the items assigned to them on the order; any \"Shared\" items are divided equally.</p>" : "");
+    }
+
+    window.recordBillSplit = async function recordBillSplit(splitType){
+        const totalBill = Number(document.getElementById("totalBillInput").value);
+        const paidBy = document.getElementById("paidByInput").value;
+
+        if(!totalBill || !paidBy){
+            showMessage(messageEl, "Enter a valid total bill and payer.", "error");
+            return;
+        }
+
+        try{
+            await apiFetch("/bill-split/" + groupOrderId, {
+                method: "POST",
+                body: JSON.stringify({ totalBill, paidBy, splitType: splitType || "EQUAL" })
+            });
+            showMessage(messageEl, "Bill split recorded!", "success");
+            loadBillSplit();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    function renderBillSplit(billSplit, settlement){
+        const area = document.getElementById("billSplitArea");
+
+        const splitTypeLabel = { EQUAL: "Equal", ITEM_WISE: "Item-wise", CUSTOM: "Custom" }[billSplit.splitType] || billSplit.splitType;
+
+        let html = "<p><strong>Total Bill:</strong> " + formatMoney(billSplit.totalBill) + "</p>"
+            + "<p class='mt-12'><strong>Paid By:</strong> " + escapeHtml(billSplit.paidBy.name || billSplit.paidBy.username) + "</p>"
+            + "<p class='mt-12'><strong>Split Type:</strong> " + escapeHtml(splitTypeLabel) + "</p>";
+
+        html += "<div class='table-wrap mt-20'><table><thead><tr><th>Member</th><th>Share</th><th>Paid</th></tr></thead><tbody>"
+            + billSplit.shares.map(function(s){
+                const person = s.userId.name || s.userId.username;
+                return "<tr><td>" + escapeHtml(person) + "</td><td>" + formatMoney(s.share) + "</td><td>" + formatMoney(s.paid) + "</td></tr>";
+            }).join("")
+            + "</tbody></table></div>";
+
+        html += "<h3 class='mt-20'>Settlement</h3>";
+
+        if(!settlement || settlement.length === 0){
+            html += "<p class='muted small mt-12'>Everyone is settled up.</p>";
+        }else{
+            html += "<div class='mt-12'>" + settlement.map(function(s){
+                return "<div class='flex-between mt-12' style='border-bottom:1px solid rgba(212,175,55,.15);padding-bottom:10px'>"
+                    + "<span>" + escapeHtml(s.from.name || s.from.username) + " owes " + escapeHtml(s.to.name || s.to.username) + " <strong>" + formatMoney(s.amount) + "</strong></span>"
+                    + "<button class='btn btn-sm btn-outline' onclick=\"settlePayment('" + s.from._id + "', " + s.amount + ")\">Mark Settled</button>"
+                    + "</div>";
+            }).join("") + "</div>";
+        }
+
+        area.innerHTML = html;
+    }
+
+    window.settlePayment = async function settlePayment(userId, amount){
+        try{
+            await apiFetch("/bill-split/" + groupOrderId + "/pay", {
+                method: "PUT",
+                body: JSON.stringify({ userId, amount })
+            });
+            showMessage(messageEl, "Settlement recorded!", "success");
+            loadBillSplit();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    };
+
+
+    /* =========================================================
+       PRICE COMPARISON (§19.7, applied to group orders too)
+       "Our App" uses the amount the group order was actually
+       placed for (groupOrder.totalAmount), not a live re-fetch of
+       today's menu prices — the order is already placed, so this
+       should reflect what was actually charged.
+    ========================================================= */
+
+    async function loadPriceComparison(){
+        const panel = document.getElementById("comparePanel");
+        const content = document.getElementById("compareContent");
+
+        if(!groupOrder || groupOrder.customOrderId || !Array.isArray(groupOrder.items) || groupOrder.items.length === 0){
+            panel.style.display = "none";
+            return;
+        }
+
+        const ids = Array.from(new Set(groupOrder.items.map(i => (i.menuItemId && i.menuItemId._id) || i.menuItemId).filter(Boolean)));
+
+        if(ids.length === 0){
+            panel.style.display = "none";
+            return;
+        }
+
+        try{
+            const data = await apiFetch("/menu/price-comparison?ids=" + ids.join(","));
+            const byId = {};
+            (data.items || []).forEach(c => byId[c.menuItemId] = c);
+
+            let swiggyTotal = 0;
+            let zomatoTotal = 0;
+            let comparableItemCount = 0;
+            let totalItemCount = 0;
+
+            groupOrder.items.forEach(function(item){
+                const menuItemId = (item.menuItemId && item.menuItemId._id) || item.menuItemId;
+                const comparison = byId[menuItemId];
+                totalItemCount += item.quantity;
+
+                if(comparison && comparison.hasComparison){
+                    comparableItemCount += item.quantity;
+                    if(comparison.swiggy) swiggyTotal += comparison.swiggy.totalPrice * item.quantity;
+                    if(comparison.zomato) zomatoTotal += comparison.zomato.totalPrice * item.quantity;
+                }
+            });
+
+            panel.style.display = "block";
+
+            if(comparableItemCount === 0){
+                content.innerHTML = '<p class="muted small">Price comparison unavailable for the items in this order right now.</p>';
+                return;
+            }
+
+            const ourAppTotal = groupOrder.totalAmount;
+            const maxOtherTotal = Math.max(swiggyTotal, zomatoTotal);
+            const savings = maxOtherTotal - ourAppTotal;
+
+            let html = "<div class='table-wrap'><table><thead><tr><th>Platform</th><th>Total</th></tr></thead><tbody>"
+                + "<tr><td><strong>Our App</strong></td><td><strong>" + formatMoney(ourAppTotal) + "</strong></td></tr>"
+                + "<tr><td>Swiggy</td><td>" + (swiggyTotal > 0 ? formatMoney(swiggyTotal) : "—") + "</td></tr>"
+                + "<tr><td>Zomato</td><td>" + (zomatoTotal > 0 ? formatMoney(zomatoTotal) : "—") + "</td></tr>"
+                + "</tbody></table></div>";
+
+            if(savings > 0){
+                html += "<p class='mt-12' style='color:#7de3a0'>🎉 This group saved up to " + formatMoney(savings) + " compared with other platforms.</p>";
+            }
+
+            if(comparableItemCount < totalItemCount){
+                html += "<p class='muted small mt-12'>Reference prices shown for " + comparableItemCount + " of " + totalItemCount
+                    + " items in this order — the rest don't have Swiggy/Zomato reference data yet.</p>";
+            }
+
+            html += "<p class='muted small mt-12'>Price comparison is based on sample/reference data. Final prices may vary based on restaurant, location, offers, taxes and delivery charges.</p>";
+
+            content.innerHTML = html;
+
+        }catch(err){
+            panel.style.display = "block";
+            content.innerHTML = '<p class="muted small">Price comparison unavailable.</p>';
+        }
+    }
+
+    (async function init(){
+        await loadOrder();
+        await loadBillSplit();
+        await loadPriceComparison();
+    })();
+
+}
+
+</script>
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+
+<section id="tb-group-chat" class="card" aria-label="Group order chat" style="max-width:900px;margin:24px auto;padding:20px;border-radius:18px">
+ <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><h2 style="margin:0">Group chat</h2><p class="muted small">Coordinate your order with the group</p></div><span class="badge">Chat</span></div>
+ <div id="tb-chat-messages" role="log" aria-live="polite" style="height:240px;overflow:auto;padding:12px;margin:12px 0;background:var(--tb-bg,#260611);border-radius:14px"></div>
+ <form id="tb-chat-form" style="display:flex;gap:8px"><input id="tb-chat-input" maxlength="500" required placeholder="Message your group…" aria-label="Chat message" style="flex:1;min-width:0;padding:12px;border-radius:12px"><button type="submit" class="btn">Send</button></form>
+ <p class="muted small" style="margin-top:8px">Messages and reactions are saved in this browser for this group.</p>
+</section>
+<style>
+.tb-chat-bubble{max-width:90%;padding:10px 12px;margin:8px 0;border-radius:14px;background:var(--tb-panel,#4b0d1d);border:1px solid var(--tb-border,#d4af37)55;overflow-wrap:anywhere}
+.tb-chat-bubble .tb-chat-meta{font-size:11px;opacity:.75;margin-bottom:4px}.tb-chat-reactions{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}.tb-chat-reactions button{border:1px solid #d4af3766;border-radius:99px;background:transparent;padding:3px 8px;cursor:pointer}
+</style>
+<script id="tb-group-chat-script">
+(function(){
+ const id=new URLSearchParams(location.search).get('id')||'general';
+ const key='thriftyBiteGroupChat:'+id, box=document.getElementById('tb-chat-messages'),form=document.getElementById('tb-chat-form'),input=document.getElementById('tb-chat-input');
+ if(!box||!form)return;
+ let messages=[];try{messages=JSON.parse(localStorage.getItem(key)||'[]');if(!Array.isArray(messages))messages=[]}catch(_){messages=[]}
+ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function save(){localStorage.setItem(key,JSON.stringify(messages.slice(-150)));render()}
+ function render(){box.innerHTML=messages.map((m,i)=>'<div class="tb-chat-bubble"><div class="tb-chat-meta">'+esc(m.name||'You')+' · '+esc(m.time||'')+'</div><div>'+esc(m.text)+'</div><div class="tb-chat-reactions">'+['👍','❤️','😂','👏'].map(e=>'<button type="button" data-i="'+i+'" data-e="'+e+'" aria-label="React '+e+'">'+e+' '+((m.reactions&&m.reactions[e])||0)+'</button>').join('')+'</div></div>').join('')||'<p class="muted">No messages yet. Say hello to your group!</p>';box.scrollTop=box.scrollHeight}
+ form.addEventListener('submit',e=>{e.preventDefault();const text=input.value.trim();if(!text)return;let user='You';try{const u=JSON.parse(localStorage.getItem('thriftyBiteUser')||'{}');user=u.name||u.fullName||'You'}catch(_){}messages.push({name:user,text,time:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}),reactions:{}});input.value='';save()});
+ box.addEventListener('click',e=>{const b=e.target.closest('button[data-i]');if(!b)return;const m=messages[Number(b.dataset.i)];if(!m)return;m.reactions=m.reactions||{};m.reactions[b.dataset.e]=(m.reactions[b.dataset.e]||0)+1;save()});
+ render();
+})();
+</script>
+
+</body>
+</html>

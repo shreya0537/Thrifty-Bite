@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thrifty Bite | Friends</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/theme.css">
+<style id="thrifty-gold-spark-css">
+/* Thrifty Bite gold-spark polish — shared across all pages */
+.gold-spark-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;contain:strict}
+.gold-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#f7df7a;box-shadow:0 0 7px 2px rgba(247,223,122,.6);opacity:0;animation:goldSparkFloat var(--duration,5s) ease-in-out var(--delay,0s) infinite}
+.gold-spark:after{content:"";position:absolute;left:1px;top:-3px;width:1px;height:9px;background:linear-gradient(transparent,#fff1ad,transparent);transform:rotate(35deg)}
+@keyframes goldSparkFloat{0%{opacity:0;transform:translate3d(0,18px,0) scale(.5)}18%{opacity:.8}65%{opacity:.55}100%{opacity:0;transform:translate3d(18px,-90px,0) scale(1.25)}}
+.card,.panel,.page-header,.order-card{transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 12px 30px rgba(0,0,0,.12)}
+button,.btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{box-shadow:0 0 18px rgba(212,175,55,.12)}
+@media(prefers-reduced-motion:reduce){.gold-spark{animation:none;display:none}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="assets/polish.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="brand">
+        THRIFTY BITE
+        <span>FRIENDS</span>
+    </div>
+
+    <nav class="nav-links">
+        <a href="home.html">Storefront</a>
+        <a href="custom-order.html">Custom Orders</a>
+        <a href="group-order.html">Group Orders</a>
+    </nav>
+
+    <div class="nav-right">
+        <span class="muted small" id="customerName">Customer</span>
+        <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="page-header">
+        <h1>Friends</h1>
+        <p>Add friends to create group orders and split bills together.</p>
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <div class="grid cols-2">
+
+        <div>
+            <div class="card">
+                <h2>Find Friends</h2>
+                <div class="flex gap-8">
+                    <input type="text" id="searchInput" placeholder="Search by name, username or email">
+                    <button class="btn btn-sm" onclick="searchUsers()">Search</button>
+                </div>
+                <div class="mt-20" id="searchResults"></div>
+            </div>
+
+            <div class="card">
+                <h2>Pending Requests</h2>
+                <div class="mt-20" id="pendingRequests">
+                    <div class="empty-state">No pending requests.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>My Friends</h2>
+            <div class="mt-20" id="friendsList">
+                <div class="empty-state">You haven't added any friends yet.</div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="assets/api.js"></script>
+<script>
+
+const user = requireAuth(["CUSTOMER"]);
+
+if(user){
+
+    document.getElementById("customerName").textContent = user.name || user.username;
+
+    const messageEl = document.getElementById("message");
+
+    function personRow(person, actionsHtml){
+        return "<div class='flex-between mt-12' style='border-bottom:1px solid rgba(212,175,55,.15);padding-bottom:10px'>"
+            + "<div><div>" + escapeHtml(person.name || person.username) + "</div>"
+            + "<div class='muted small'>" + escapeHtml(person.email) + "</div></div>"
+            + "<div class='flex gap-8'>" + actionsHtml + "</div>"
+            + "</div>";
+    }
+
+    window.searchUsers = async function searchUsers(){
+        const query = document.getElementById("searchInput").value.trim();
+        const resultsEl = document.getElementById("searchResults");
+
+        if(!query){
+            resultsEl.innerHTML = "";
+            return;
+        }
+
+        try{
+            const data = await apiFetch("/friends/search?query=" + encodeURIComponent(query));
+            if(!data.users || data.users.length === 0){
+                resultsEl.innerHTML = '<div class="empty-state">No users found.</div>';
+                return;
+            }
+            resultsEl.innerHTML = data.users.map(function(u){
+                return personRow(u, "<button class='btn btn-sm' onclick=\"sendRequest('" + u._id + "')\">Add Friend</button>");
+            }).join("");
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    window.sendRequest = async function sendRequest(recipientId){
+        try{
+            await apiFetch("/friends/request", {
+                method: "POST",
+                body: JSON.stringify({ recipientId })
+            });
+            showMessage(messageEl, "Friend request sent!", "success");
+            searchUsers();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    async function loadPendingRequests(){
+        try{
+            const data = await apiFetch("/friends/requests");
+            const el = document.getElementById("pendingRequests");
+
+            if(!data.requests || data.requests.length === 0){
+                el.innerHTML = '<div class="empty-state">No pending requests.</div>';
+                return;
+            }
+
+            el.innerHTML = data.requests.map(function(r){
+                const actions = "<button class='btn btn-sm' onclick=\"respondRequest('" + r._id + "','accept')\">Accept</button>"
+                    + " <button class='btn btn-sm btn-danger' onclick=\"respondRequest('" + r._id + "','reject')\">Reject</button>";
+                return personRow(r.requesterId, actions);
+            }).join("");
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    window.respondRequest = async function respondRequest(id, action){
+        try{
+            await apiFetch("/friends/request/" + id + "/" + action, { method: "PUT" });
+            showMessage(messageEl, action === "accept" ? "Friend request accepted!" : "Friend request rejected.", "success");
+            loadPendingRequests();
+            loadFriends();
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    async function loadFriends(){
+        try{
+            const data = await apiFetch("/friends");
+            const el = document.getElementById("friendsList");
+
+            if(!data.friends || data.friends.length === 0){
+                el.innerHTML = '<div class="empty-state">You haven\'t added any friends yet.</div>';
+                return;
+            }
+
+            el.innerHTML = data.friends.map(f => personRow(f, "")).join("");
+        }catch(err){
+            showMessage(messageEl, err.message, "error");
+        }
+    }
+
+    document.getElementById("searchInput").addEventListener("keydown", function(e){
+        if(e.key === "Enter"){
+            e.preventDefault();
+            searchUsers();
+        }
+    });
+
+    loadPendingRequests();
+    loadFriends();
+
+}
+
+</script>
+
+
+<script id="thrifty-gold-sparks">(function(){if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='gold-spark-layer';layer.setAttribute('aria-hidden','true');document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(layer);const count=window.innerWidth<600?12:22;for(let i=0;i<count;i++){const s=document.createElement('i');s.className='gold-spark';s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';s.style.setProperty('--duration',(4+Math.random()*5)+'s');s.style.setProperty('--delay',(-Math.random()*8)+'s');s.style.opacity='0';layer.appendChild(s)}})})();</script>
+<script src="assets/theme-preference.js"></script>
+
+<style id="tb-universal-back-style">
+#tb-universal-back{position:fixed;left:16px;bottom:16px;top:auto;z-index:10001;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(212,175,55,.65);border-radius:999px;background:rgba(38,6,17,.94);color:#f7df7a;font:600 13px/1.2 "DM Sans",Arial,sans-serif;text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+#tb-universal-back:hover{background:#4a1024;transform:translateY(-1px)}
+@media(max-width:600px){#tb-universal-back{left:10px;bottom:10px;top:auto;padding:9px 12px;font-size:12px}}
+</style>
+<a href="home.html" id="tb-universal-back" aria-label="Go back to previous page">← Back</a>
+<script id="tb-universal-back-script">(function(){var a=document.getElementById('tb-universal-back');if(!a)return;a.addEventListener('click',function(e){e.preventDefault();try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(_){}location.href='home.html';});})();</script>
+
+</body>
+</html>

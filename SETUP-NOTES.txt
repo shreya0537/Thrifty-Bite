@@ -1,0 +1,19 @@
+THRIFTY BITE - UPDATED PROJECT NOTES
+
+Changes in this update:
+- Registration policy links now open in an in-page dialog (Terms & Conditions / Privacy Policy).
+- Registration password strength feedback remains live; registration checks strong passwords and matching confirmation. Passwords are no longer saved to sessionStorage while typing.
+- Occasion Planner now fetches available dishes from GET /api/menu/all and builds its plan from database menu records, using menu item IDs and listed prices.
+- Voice ordering uses one-shot speech recognition and stops after the final spoken result so the microphone does not keep listening indefinitely.
+- Settings now include browser-saved dietary/cuisine preferences, order notification preference, cart preference and reduced-motion setting, plus policy/support links.
+- Added About and Offers pages and fixed missing sidebar destinations; removed the obsolete wallet link from the menu sidebar.
+
+Run instructions:
+1. Open PowerShell in this folder's backend directory.
+2. Run: npm install
+3. Copy .env.example to .env: Copy-Item .env.example .env
+4. Edit backend/.env and set MONGODB_URI to your own MongoDB Atlas connection string. Do not share this file publicly.
+5. Run: npm run dev
+6. Open http://localhost:5500 in your browser.
+
+The database-backed features require a working MongoDB connection and menu records marked as available. The project ZIP intentionally excludes backend/.env and node_modules; create your own .env from .env.example and run npm install.
