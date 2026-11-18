@@ -4,7 +4,7 @@
    formatting/DOM utilities reused across dashboard pages.
 ========================================================= */
 
-const API_BASE = window.location.origin + "/api";
+const API_BASE = "https://thrifty-bite.onrender.com/api";
 
 const DASHBOARD_BY_ROLE = {
     CUSTOMER: "home.html",
